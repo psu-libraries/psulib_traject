@@ -32,13 +32,5 @@ For testing purposes you can run `traject` with the `--debug-mode` flag to
 display the output to the console (and not push the data to Solr).
 
 ```
-traject --debug-mode -c config.rb /full/path/to/marcfile.mrc
+traject --debug-mode -c psulib_config.rb /full/path/to/marcfile.mrc
 ```
-
-
-(.env defines SOLR_URL)
-
-Notice that in this case we run Traject against our daily *update* MARC files,
-not against our full MARC files. The daily update files only include records
-that changed in the last day or two. (TODO: how long does it take to run it
-against the full files?)
