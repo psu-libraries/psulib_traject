@@ -20,7 +20,8 @@ extend Traject::Macros::MarcFormats
 # config files as you like, `traject -c one.rb -c two.rb -c etc.rb`
 settings do
 #  provide "solr.url", "http://solr.somewhere.edu:8983/solr/corename"
-  provide "solr.url", ENV['SOLR_URL']
+  provide "solr.url", "http://localhost:8983/solr/blacklight-core"
+#  provide "solr.url", ENV['SOLR_URL']
 end
 
 # Extract first 001, then supply code block to add "bib_" prefix to it
