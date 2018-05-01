@@ -12,16 +12,12 @@ rbenv local jruby-9.1.16.0
 gem install traject
 gem install traject-marc4j_reader
 
-cp sample.env .env
-vi .env    (Change the SOLR_URL to point to your instance of SOLR)
 ```
 
 To build your indexes:
 ```
 solr_wrapper -d .solr_wrapper.yml clean
 bundle exec solr_wrapper
-
-source .env (.env defines SOLR_URL and is only necessary to run once during your session)
 
 traject -c psulib_config.rb /full/path/to/marcfile.mrc
 
