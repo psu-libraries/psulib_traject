@@ -1,10 +1,7 @@
-# A sample traject configuration, save as say `traject_config.rb`, then
-# run `traject -c traject_config.rb marc_file.marc` to index to
-# solr specified in config file, according to rules specified in
-# config file
+# Translation maps
+# './lib/translation_maps/'
+$:.unshift  "#{File.dirname(__FILE__)}/lib"
 
-# To have access to various built-in logic
-# for pulling things out of MARC21, like `marc_languages`
 require 'traject/macros/marc21_semantics'
 extend  Traject::Macros::Marc21Semantics
 
@@ -12,148 +9,169 @@ extend  Traject::Macros::Marc21Semantics
 require 'traject/macros/marc_format_classifier'
 extend Traject::Macros::MarcFormats
 
+require 'marc/fastxmlwriter'
+require 'library_stdnums'
 
-# In this case for simplicity we provide all our settings, including
-# solr connection details, in this one file. But you could choose
-# to separate them into antoher config file; divide things between
-# files however you like, you can call traject with as many
-# config files as you like, `traject -c one.rb -c two.rb -c etc.rb`
+ATOZ = ('a'..'z').to_a.join('')
+ATOU = ('a'..'u').to_a.join('')
+
 settings do
-#  provide "solr.url", "http://solr.somewhere.edu:8983/solr/corename"
   provide "solr.url", "http://localhost:8983/solr/blacklight-core"
-#  provide "solr.url", ENV['SOLR_URL']
+# type may be 'binary', 'xml', or 'json'
+# provide "marc_source.type", "binary"
+# set this to be non-negative if threshold should be enforced
+  provide 'solr_writer.max_skipped', -1
+  provide "reader_class_name", "Traject::MarcReader"
+  provide 'processing_thread_pool', 2
+  provide "log.batch_size", 10_000
+  provide "solr_writer.commit_on_close", "true"
 end
 
-# Extract first 001, then supply code block to add "bib_" prefix to it
 to_field "id", extract_marc("001", :first => true)
-#to_field "id", extract_marc("001", :first => true) do |marc_record, accumulator, context|
-#  accumulator.collect! {|s| "bib_#{s}"}
-#end
 
-# An exact literal string, always this string:
-#to_field "source",              literal("traject_test_last")
+to_field "marc_display", serialized_marc(:format => "xml", :allow_oversized => true)
 
-to_field "marc_display",        serialized_marc(:format => "binary", :binary_escape => false, :allow_oversized => true)
+to_field "text", extract_all_marc_values do |r, acc|
+  acc.replace [acc.join(' ')] # turn it into a single string
+end
 
-to_field "text",                extract_all_marc_values
+to_field "language_facet", marc_languages("008[35-37]:041a:041d:")
 
-to_field "text_extra_boost_t",  extract_marc("505art")
+#    to_field "format", get_format
+to_field "format", marc_formats
 
-to_field "publisher_t",         extract_marc("260abef:261abef:262ab:264ab")
+to_field "isbn_t",  extract_marc('020a', :separator=>nil) do |rec, acc|
+  orig = acc.dup
+  acc.map!{|x| StdNum::ISBN.allNormalizedValues(x)}
+  acc << orig
+  acc.flatten!
+  acc.uniq!
+end
 
-to_field "language_facet",      marc_languages
+to_field 'material_type_display', extract_marc('300a', :trim_punctuation => true)
 
-to_field "format",              marc_formats
+# Title fields
+#    primary title
 
+to_field 'title_t', extract_marc('245a')
+to_field 'title_display', extract_marc('245a', :trim_punctuation => true, :alternate_script=>false)
+to_field 'title_vern_display', extract_marc('245a', :trim_punctuation => true, :alternate_script=>:only)
 
-to_field "isbn_t",              extract_marc("020a:773z:776z:534z:556z")
-#to_field "lccn",                extract_marc("010a")
+#    subtitle
 
-to_field "material_type_display", extract_marc("300a", :separator => nil, :trim_punctuation => true)
+to_field 'subtitle_t', extract_marc('245b')
+to_field 'subtitle_display', extract_marc('245b', :trim_punctuation => true, :alternate_script=>false)
+to_field 'subtitle_vern_display', extract_marc('245b', :trim_punctuation => true, :alternate_script=>:only)
 
-to_field "title_t",             extract_marc("245ak")
-to_field "title1_t",            extract_marc("245abk")
-to_field "title2_t",            extract_marc("245nps:130:240abcdefgklmnopqrs:210ab:222ab:242abcehnp:243abcdefgklmnopqrs:246abcdefgnp:247abcdefgnp")
-to_field "title3_t",            extract_marc("700gklmnoprst:710fgklmnopqrst:711fgklnpst:730abdefgklmnopqrst:740anp:505t:780abcrst:785abcrst:773abrst")
+#    additional title fields
+to_field 'title_addl_t', extract_marc(%W{
+  245abnps
+  130#{ATOZ}
+  240abcdefgklmnopqrs
+  210ab
+  222ab
+  242abnp
+  243abcdefgklmnopqrs
+  246abcdefgnp
+  247abcdefgnp
+}.join(':'))
 
-# Note we can mention the same field twice, these
-# ones will be added on to what's already there. Some custom
-# logic for extracting 505$t, but only from 505 field that
-# also has $r -- we consider that more likely to be a titleish string
-to_field "title3_t" do |record, accumulator|
-  record.each_by_tag('505') do |field|
-    if field['r']
-      accumulator.concat field.subfields.collect {|sf| sf.value if sf.code == 't'}.compact
+to_field 'title_added_entry_t', extract_marc(%W{
+  700gklmnoprst
+  710fgklmnopqrst
+  711fgklnpst
+  730abcdefgklmnopqrst
+  740anp
+}.join(':'))
+
+to_field 'title_series_t', extract_marc("440anpv:490av")
+
+to_field 'title_sort', marc_sortable_title
+
+# Author fields
+
+to_field 'author_t', extract_marc("100abcegqu:110abcdegnu:111acdegjnqu")
+to_field 'author_addl_t', extract_marc("700abcegqu:710abcdegnu:711acdegjnqu")
+to_field 'author_display', extract_marc("100abcdq:110#{ATOZ}:111#{ATOZ}", :alternate_script=>false)
+to_field 'author_vern_display', extract_marc("100abcdq:110#{ATOZ}:111#{ATOZ}", :alternate_script=>:only)
+
+# JSTOR isn't an author. Try to not use it as one
+to_field 'author_sort', marc_sortable_author
+
+# Subject fields
+to_field 'subject_t', extract_marc(%W(
+  600#{ATOU}
+  610#{ATOU}
+  611#{ATOU}
+  630#{ATOU}
+  650abcde
+  651ae
+  653a:654abcde:655abc
+).join(':'))
+to_field 'subject_addl_t', extract_marc("600vwxyz:610vwxyz:611vwxyz:630vwxyz:650vwxyz:651vwxyz:654vwxyz:655vwxyz")
+to_field 'subject_topic_facet', extract_marc("600abcdq:610ab:611ab:630aa:650aa:653aa:654ab:655ab", :trim_punctuation => true)
+to_field 'subject_era_facet',  extract_marc("650y:651y:654y:655y", :trim_punctuation => true)
+to_field 'subject_geo_facet',  extract_marc("651a:650z",:trim_punctuation => true )
+
+# Publication fields
+to_field 'published_display', extract_marc('260a', :trim_punctuation => true, :alternate_script=>false)
+to_field 'published_vern_display', extract_marc('260a', :trim_punctuation => true, :alternate_script=>:only)
+to_field 'pub_date', marc_publication_date
+
+# Call Number fields
+to_field 'lc_callnum_display', extract_marc('050ab', :first => true)
+to_field 'lc_1letter_facet', extract_marc('050ab', :first=>true, :translation_map=>'callnumber_map') do |rec, acc|
+# Just get the first letter to send to the translation map
+  acc.map!{|x| x[0]}
+end
+
+alpha_pat = /\A([A-Z]{1,3})\d.*\Z/
+to_field 'lc_alpha_facet', extract_marc('050a', :first=>true) do |rec, acc|
+  acc.map! do |x|
+    (m = alpha_pat.match(x)) ? m[1] : nil
+  end
+  acc.compact! # eliminate nils
+end
+
+to_field 'lc_b4cutter_facet', extract_marc('050a', :first=>true)
+
+# URL Fields
+
+notfulltext = /abstract|description|sample text|table of contents|/i
+
+to_field('url_fulltext_display') do |rec, acc|
+  rec.fields('856').each do |f|
+    case f.indicator2
+    when '0'
+      f.find_all{|sf| sf.code == 'u'}.each do |url|
+        acc << url.value
+      end
+    when '2'
+      # do nothing
+    else
+      z3 = [f['z'], f['3']].join(' ')
+      unless notfulltext.match(z3)
+        acc << f['u'] unless f['u'].nil?
+      end
     end
   end
 end
 
-to_field "title_display",       extract_marc("245abk", :trim_punctuation => true, :first => true)
-to_field "title_sort",          marc_sortable_title
-
-to_field "title_series_t",      extract_marc("440a:490a:800abcdt:400abcd:810abcdt:410abcd:811acdeft:411acdef:830adfgklmnoprst:760ast:762ast")
-to_field "series_facet",        marc_series_facet
-
-#to_field "author_unstem",       extract_marc("100abcdgqu:110abcdgnu:111acdegjnqu")
-
-#to_field "author2_unstem",      extract_marc("700abcdegqu:710abcdegnu:711acdegjnqu:720a:505r:245c:191abcdegqu")
-to_field "author_display",      extract_marc("100abcdq:110:111")
-to_field "author_sort",         marc_sortable_author
-
-
-to_field "author_facet",        extract_marc("100abcdq:110abcdgnu:111acdenqu:700abcdq:710abcdgnu:711acdenqu", :trim_punctuation => true)
-
-to_field "subject_t",           extract_marc("600:610:611:630:650:651avxyz:653aa:654abcvyz:655abcvxyz:690abcdxyz:691abxyz:692abxyz:693abxyz:656akvxyz:657avxyz:652axyz:658abcd")
-
-to_field "subject_topic_facet", extract_marc("600abcdtq:610abt:610x:611abt:611x:630aa:630x:648a:648x:650aa:650x:651a:651x:691a:691x:653aa:654ab:656aa:690a:690x",
-          :trim_punctuation => true, ) do |record, accumulator|
-  #upcase first letter if needed, in MeSH sometimes inconsistently downcased
-  accumulator.collect! do |value|
-    value.gsub(/\A[a-z]/) do |m|
-      m.upcase
+# Very similar to url_fulltext_display. Should DRY up.
+to_field 'url_suppl_display' do |rec, acc|
+  rec.fields('856').each do |f|
+    case f.indicator2
+    when '2'
+      f.find_all{|sf| sf.code == 'u'}.each do |url|
+        acc << url.value
+      end
+    when '0'
+      # do nothing
+    else
+      z3 = [f['z'], f['3']].join(' ')
+      if notfulltext.match(z3)
+        acc << f['u'] unless f['u'].nil?
+      end
     end
   end
 end
-
-to_field "subject_geo_facet",   marc_geo_facet
-to_field "subject_era_facet",   marc_era_facet
-
-# not doing this at present.
-#to_field "subject_facet",     extract_marc("600:610:611:630:650:651:655:690")
-
-to_field "published_display", extract_marc("260a", :trim_punctuation => true)
-
-to_field "pub_date",          marc_publication_date
-
-# An example of more complex ruby logic 'in line' in the config file--
-# too much more complicated than this, and you'd probably want to extract
-# it to an external routine to keep things tidy.
-#
-# Use traject's LCC to broad category routine, but then supply
-# custom block to also use our local holdings 9xx info, and
-# also classify sudoc-possessing records as 'Government Publication' discipline
-to_field "discipline_facet",  marc_lcc_to_broad_category(:default => nil) do |record, accumulator|
-  # add in our local call numbers
-  Traject::MarcExtractor.cached("991:937").each_matching_line(record) do |field, spec, extractor|
-      # we output call type 'processor' in subfield 'f' of our holdings
-      # fields, that sort of maybe tells us if it's an LCC field.
-      # When the data is right, which it often isn't.
-    call_type = field['f']
-    if call_type == "sudoc"
-      # we choose to call it:
-      accumulator << "Government Publication"
-    elsif call_type.nil? ||
-          call_type == "lc" ||
-        Traject::Macros::Marc21Semantics::LCC_REGEX.match(field['a'])
-      # run it through the map
-      s = field['a']
-      s = s.slice(0, 1) if s
-      accumulator << Traject::TranslationMap.new("lcc_top_level")[s]
-    end
-  end
-
-
-  # If it's got an 086, we'll put it in "Government Publication", to be
-  # consistent with when we do that from a local SuDoc call #.
-  if Traject::MarcExtractor.cached("086a").extract(record).length > 0
-    accumulator << "Government Publication"
-  end
-
-  # uniq it in case we added the same thing twice with GovPub
-  accumulator.uniq!
-
-  if accumulator.empty?
-    accumulator << "Unknown"
-  end
-end
-
-to_field "instrumentation_facet",       marc_instrumentation_humanized
-#to_field "instrumentation_code_unstem", marc_instrument_codes_normalized
-
-#to_field "issn",                extract_marc("022a:022l:022y:773x:774x:776x", :separator => nil)
-#to_field "issn_related",        extract_marc("490x:440x:800x:400x:410x:411x:810x:811x:830x:700x:710x:711x:730x:780x:785x:777x:543x:760x:762x:765x:767x:770x:772x:775x:786x:787x", :separator => nil)
-
-to_field "oclcnum_t",           oclcnum
-
-#to_field "other_number_unstem", extract_marc("024a:028a")
-
