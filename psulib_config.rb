@@ -1,3 +1,14 @@
+#
+# PSU Library MARC to Solr indexing
+# Uses traject: https://github.com/traject-project/traject
+#
+
+#Check if we are using jruby and store.
+is_jruby = RUBY_ENGINE == 'jruby'
+if is_jruby
+  require 'traject/marc4j_reader'
+end
+
 # Translation maps
 # './lib/translation_maps/'
 $:.unshift  "#{File.dirname(__FILE__)}/lib"
@@ -9,7 +20,6 @@ extend  Traject::Macros::Marc21Semantics
 require 'traject/macros/marc_format_classifier'
 extend Traject::Macros::MarcFormats
 
-require 'marc/fastxmlwriter'
 require 'library_stdnums'
 
 ATOZ = ('a'..'z').to_a.join('')
@@ -17,15 +27,18 @@ ATOU = ('a'..'u').to_a.join('')
 
 settings do
   provide "solr.url", "http://localhost:8983/solr/blacklight-core"
-# type may be 'binary', 'xml', or 'json'
-# provide "marc_source.type", "binary"
-# set this to be non-negative if threshold should be enforced
-  provide 'solr_writer.max_skipped', -1
-  provide "reader_class_name", "Traject::MarcReader"
-  provide 'processing_thread_pool', 2
   provide "log.batch_size", 10_000
-  provide "solr_writer.commit_on_close", "true"
+# set this to be non-negative if threshold should be enforced
+#  provide 'solr_writer.max_skipped', -1
+  if is_jruby
+    provide "reader_class_name", "Traject::Marc4JReader"
+    provide "marc4j_reader.source_encoding", "UTF-8"
+    provide 'processing_thread_pool', 2
+    provide "solrj_writer.commit_on_close", "true"
+  end
 end
+
+logger.info RUBY_DESCRIPTION
 
 to_field "id", extract_marc("001", :first => true)
 
