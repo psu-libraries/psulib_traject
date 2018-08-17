@@ -132,18 +132,6 @@ to_field 'published_vern_display', extract_marc('260a', :trim_punctuation => tru
 to_field 'pub_date', marc_publication_date
 
 # Call Number fields
-to_field 'callnum_display', extract_marc('949a', :first => false)
-#to_field 'location_display', extract_marc('949l', :first=>false)
-to_field 'location_display', extract_marc('949l', :first=>false, :translation_map=>'location_map')
-to_field 'location_facet', extract_marc('949l', :first=>false, :translation_map=>'location_map')
-to_field 'library_facet', extract_marc('949m', :first=>false, :translation_map=>'library_map')
-
-#to_field 'library_facet', extract_marc('949m', :translation_map=>'library_map') do |rec, acc|
-#  acc.map!{|x| x}.uniq!
-#end
-
-
-# Call Number fields
 to_field 'lc_callnum_display', extract_marc('050ab', :first => true)
 to_field 'lc_1letter_facet', extract_marc('050ab', :first=>true, :translation_map=>'callnumber_map') do |rec, acc|
 # Just get the first letter to send to the translation map
