@@ -1,2 +1,8 @@
+# Ignore junk
+.DS*
+._.DS*
+*.sublime-*
+.idea
+
 .env
 debug_output.txt
