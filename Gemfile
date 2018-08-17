@@ -1,9 +1,7 @@
 source "https://rubygems.org"
 
 gem 'marc'
-gem 'rspec'
-gem 'traject', :git => 'https://github.com/traject-project/traject.git'
-#gem 'traject', :git => 'https://github.com/traject-project/traject.git', :tag => 'v2.0.0.rc.1'
+gem 'traject', '2.3.4'
 
 #Check if we are using jruby and store.
 is_jruby = RUBY_ENGINE == 'jruby'
