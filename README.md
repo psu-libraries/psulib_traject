@@ -3,16 +3,35 @@
 This project transforms MARC records into Solr documents using the [Traject](https://github.com/traject-project/traject) tools developed by [Bill Dueber](https://github.com/billdueber/) and [Jonathan Rochkind](https://github.com/jrochkind).
 
 # Dependencies
+## Java
+To run JRuby you will need a JRE (the JVM runtime environment) version 7 or higher.
+```
+$ java --version
+  java 9
+  Java(TM) SE Runtime Environment (build 9+181)
+  Java HotSpot(TM) 64-Bit Server VM (build 9+181, mixed mode)
+```
+
+## Ruby
+```
+$ ruby --version
+  jruby 9.2.0.0
+```
 
 # Development setup
 1.  Make sure you have ssh keys established on your machine and make sure your public key is stored on git.psu.edu: https://docs.gitlab.com/ee/gitlab-basics/create-your-ssh-keys.html
-1.  Clone the application (parallel to psulib_blacklight folder) and install:
+1.  Clone the application (parallel to psulib_blacklight folder) and install.
     ``` 
-    git clone git@git.psu.edu:i-tech/psulib_traject.git
-    cd psulib_traject
-    bundle install
+    $ git clone git@git.psu.edu:i-tech/psulib_traject.git
+    $ cd psulib_traject
+    $ bundle install
     ```
-    
+ 
+1.  Install Traject
+    ```
+    $ gem install traject -v 3.0.0.alpha.1
+    ```
+      
 # Build an index
 1. Start up solr. You need to run the clean command if running a full index.
    ```
@@ -22,7 +41,7 @@ This project transforms MARC records into Solr documents using the [Traject](htt
    ```
 
 1. Index records
-   You can download the full marc records from https://psu.app.box.com/file/288054273524.
+   You can download a sample file from https://psu.app.box.com/file/287669838155.
    ```
    $ cd /path/to/psulib_traject
    $ traject -c psulib_config.rb /full/path/to/marcfile.mrc
