@@ -1,7 +1,8 @@
 source "https://rubygems.org"
 
 gem 'marc'
-gem 'traject', '2.3.4'
+gem 'traject', '~> 3.0a'
+gem 'library_stdnums'
 
 #Check if we are using jruby and store.
 is_jruby = RUBY_ENGINE == 'jruby'
