@@ -13,6 +13,7 @@ $ java --version
 ```
 
 ## Ruby
+Follow these instructions to [install JRuby](https://git.psu.edu/i-tech/psulib_traject/wikis/Install-JRuby) if you do not already have it.
 ```
 $ ruby --version
   jruby 9.2.0.0
@@ -27,11 +28,16 @@ $ ruby --version
     $ bundle install
     ```
  
-1.  Install Traject
+1.  Install [Traject](https://git.psu.edu/i-tech/psulib_traject/wikis/Install-JRuby)
     ```
     $ gem install traject -v 3.0.0.alpha.1
     ```
-      
+    
+1. Install [Traject::Marc4JReader](https://github.com/traject/traject-marc4j_reader)
+   ```
+   $ gem install traject-marc4j_reader
+   ```
+   
 # Build an index
 1. Start up solr. You need to run the clean command if running a full index.
    ```
