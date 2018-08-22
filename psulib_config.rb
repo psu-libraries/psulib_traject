@@ -32,6 +32,7 @@ settings do
 #  provide 'solr_writer.max_skipped', -1
   if is_jruby
     provide "reader_class_name", "Traject::Marc4JReader"
+    provide "marc4j_reader.permissive", true
     provide "marc4j_reader.source_encoding", "UTF-8"
     provide 'processing_thread_pool', 2
     provide "solrj_writer.commit_on_close", "true"
