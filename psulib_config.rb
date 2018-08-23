@@ -26,10 +26,17 @@ ATOZ = ('a'..'z').to_a.join('')
 ATOU = ('a'..'u').to_a.join('')
 
 settings do
+  # Where to find solr server to write to
   provide "solr.url", "http://localhost:8983/solr/blacklight-core"
   provide "log.batch_size", 10_000
-# set this to be non-negative if threshold should be enforced
-#  provide 'solr_writer.max_skipped', -1
+  # set this to be non-negative if threshold should be enforced
+  # provide 'solr_writer.max_skipped', -1
+
+  # solr.version doesn't currently do anything, but set it
+  # anyway, in the future it will warn you if you have settings
+  # that may not work with your version.
+  provide "solr.version", "7.4.0"
+
   if is_jruby
     provide "reader_class_name", "Traject::Marc4JReader"
     provide "marc4j_reader.permissive", true

@@ -1,8 +1,12 @@
+
+# Ignore bundler config.
+/.bundle
+
 # Ignore junk
 .DS*
 ._.DS*
 *.sublime-*
 .idea
 
-.env
-debug_output.txt
+# Ignore sample data
+/sample_data
