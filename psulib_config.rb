@@ -76,7 +76,7 @@ to_field 'material_type_display', extract_marc('300a', :trim_punctuation => true
 
 # Extract only the title a, then the title/subtitle for title searching, exact matches, weighting.
 to_field 'title_t', extract_marc('245a')
-to_field 'title_245ab_t', extract_marc('245ab')
+to_field 'title_245ab_t', extract_marc('245ab', :trim_punctuation => true)
 
 # display forms of the title
 to_field 'title_display', extract_marc('245abcfgknps', :alternate_script=>false, :trim_punctuation => true)
