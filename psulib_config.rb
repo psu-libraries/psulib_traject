@@ -73,17 +73,23 @@ end
 to_field 'material_type_display', extract_marc('300a', :trim_punctuation => true)
 
 # Title fields
-#    primary title
 
+# Extract only the title a, then the title/subtitle for title searching, exact matches, weighting.
 to_field 'title_t', extract_marc('245a')
-to_field 'title_display', extract_marc('245a', :trim_punctuation => true, :alternate_script=>false)
-to_field 'title_vern_display', extract_marc('245a', :trim_punctuation => true, :alternate_script=>:only)
+to_field 'title_245ab_t', extract_marc('245ab')
 
-#    subtitle
+# display forms of the title
+to_field 'title_display', extract_marc('245abcfgknps', :alternate_script=>false, :trim_punctuation => true)
+to_field 'title_vern_display', extract_marc('245abcfgknps', :alternate_script=>true, :trim_punctuation => true)
 
-to_field 'subtitle_t', extract_marc('245b')
-to_field 'subtitle_display', extract_marc('245b', :trim_punctuation => true, :alternate_script=>false)
-to_field 'subtitle_vern_display', extract_marc('245b', :trim_punctuation => true, :alternate_script=>:only)
+to_field 'uniform_title_display', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai', :alternate_script=>false, :trim_punctuation => true)
+to_field 'uniform_title_vern_display', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai', :alternate_script=>true, :trim_punctuation => true)
+
+to_field 'additional_title_display', extract_marc('210ab:246iabfgnp:247abcdefgnp', :alternate_script=>false)
+to_field 'additional_title_vern_display', extract_marc('210ab:246iabfgnp:247abcdefgnp', :alternate_script=>true)
+
+to_field 'related_title_display', extract_marc('700ilktmnoprs3:710ilktmnoprs3:711ilktmnoprs3:730adfgiklmnoprst3:740anp', :alternate_script=>false, :trim_punctuation => true)
+to_field 'related_title_vern_display', extract_marc('700ilktmnoprs3:710ilktmnoprs3:711ilktmnoprs3:730adfgiklmnoprst3:740anp', :alternate_script=>true, :trim_punctuation => true)
 
 #    additional title fields
 to_field 'title_addl_t', extract_marc(%W{
@@ -106,7 +112,39 @@ to_field 'title_added_entry_t', extract_marc(%W{
   740anp
 }.join(':'))
 
-to_field 'title_series_t', extract_marc("440anpv:490av")
+to_field 'title_related_t', extract_marc(%W{
+  505t
+  700lktmnoprs
+  710lktmnoprs
+  711lktmnoprs
+  730adfgklmnoprst
+  740anp
+  760st
+  762st
+  765st
+  767st
+  770st
+  772st
+  773st
+  774st
+  775st
+  776st
+  777st
+  780st
+  785st
+  786st
+  787st
+  790lktmnoprs
+  791lktmnoprs
+  792lktmnoprs
+  793adflktmnoprs
+  796lktmnoprs
+  797lktmnoprs
+  798lktmnoprs
+  799alktmnoprs
+}.join(':'), :trim_punctuation => true)
+
+# Could we slice ` --` off this in cases from 505? Trim punctuation doesn't handle it
 
 to_field 'title_sort', marc_sortable_title
 
@@ -139,6 +177,11 @@ to_field 'subject_geo_facet',  extract_marc("651a:650z",:trim_punctuation => tru
 to_field 'published_display', extract_marc('260a', :trim_punctuation => true, :alternate_script=>false)
 to_field 'published_vern_display', extract_marc('260a', :trim_punctuation => true, :alternate_script=>:only)
 to_field 'pub_date', marc_publication_date
+
+# Series fields
+
+to_field 'series_title_t', extract_marc("440anpv:490av")
+to_field 'series_title_display', extract_marc('490avlx3:440anpvx', :alternate_script=>false, :trim_punctuation => true)
 
 # Call Number fields
 to_field 'lc_callnum_display', extract_marc('050ab', :first => true)
