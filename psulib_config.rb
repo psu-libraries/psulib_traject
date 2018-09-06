@@ -70,8 +70,6 @@ to_field "isbn_t",  extract_marc('020a', :separator=>nil) do |rec, acc|
   acc.uniq!
 end
 
-to_field 'material_type_display', extract_marc('300a', :trim_punctuation => true)
-
 # Title fields
 #    primary title
 
@@ -139,6 +137,54 @@ to_field 'subject_geo_facet',  extract_marc("651a:650z",:trim_punctuation => tru
 to_field 'published_display', extract_marc('260a', :trim_punctuation => true, :alternate_script=>false)
 to_field 'published_vern_display', extract_marc('260a', :trim_punctuation => true, :alternate_script=>:only)
 to_field 'pub_date', marc_publication_date
+
+## work physical characteristics
+
+# 300 / 340 (physical description / physical medium)
+to_field "phys_desc_display", extract_marc("300abcefg3:340abcdefhijkmno", :trim_punctuation => true)
+
+# 380 form of work
+to_field "form_work_display", extract_marc("380a", :trim_punctuation => true)
+
+## work other characteristics
+
+# 310 / 321 (current publication frequency / former publication frequency)
+# this version has the dates combined, vs. current and ongoing. However, as former things hould have dates attached and will be secondary, it should work for display.
+to_field "frequency_display", extract_marc("310ab:321ab")
+
+# 385
+# review how well these choices work
+to_field "audience_display", extract_marc("385ma")
+
+## a/v and print music works
+
+# 306 duration
+# this field will be one or more NNNNNN and should be interpreted to HH:MM:SS or even a textual way of reading it
+to_field "duration_display", extract_marc("306a")
+
+# 344 sound characteristics
+to_field "sound_display", extract_marc("344abcdefgh")
+
+# 383 numeric designation of musical work
+to_field "music_numerical_display", extract_marc("383abcde")
+
+# 348 format of notated music
+to_field "music_format_display", extract_marc("348a")
+
+# 384  musical key
+to_field "music_key_display", extract_marc("384a")
+
+# 382 medium of performance
+# this will need to be parsed to be useful, it may need more delicate indexing. It may just require display parsing.
+to_field "performance_display", extract_marc("382abdenprst")
+
+# 346 video characteristics
+to_field "video_file_display", extract_marc("346ab3")
+
+## digital files
+
+# 347 digital file characteristics
+to_field "digital_file_display", extract_marc("347abcdef3")
 
 # Call Number fields
 to_field 'lc_callnum_display', extract_marc('050ab', :first => true)
