@@ -1,27 +1,19 @@
-Encoding.default_external = "UTF-8"
-#
 # PSU Library MARC to Solr indexing
 # Uses traject: https://github.com/traject-project/traject
-#
 
-#Check if we are using jruby and store.
+require 'bundler/setup'
+require 'library_stdnums'
 is_jruby = RUBY_ENGINE == 'jruby'
 if is_jruby
   require 'traject/marc4j_reader'
 end
-
-# Translation maps
-# './lib/translation_maps/'
-$:.unshift  "#{File.dirname(__FILE__)}/lib"
-
 require 'traject/macros/marc21_semantics'
-extend  Traject::Macros::Marc21Semantics
-
-# To have access to the traject marc format/carrier classifier
 require 'traject/macros/marc_format_classifier'
+extend Traject::Macros::Marc21Semantics
 extend Traject::Macros::MarcFormats
 
-require 'library_stdnums'
+# Add lib directory to the ruby load path
+$:.unshift  "#{File.dirname(__FILE__)}/lib"
 
 ATOZ = ('a'..'z').to_a.join('')
 ATOU = ('a'..'u').to_a.join('')
@@ -38,11 +30,16 @@ settings do
   # that may not work with your version.
   provide "solr.version", "7.4.0"
 
+  # Where to send logging
+  provide "log.file", "traject.log"
+  provide "log.error_file", "traject_error.log"
+
   if is_jruby
     provide "reader_class_name", "Traject::Marc4JReader"
     provide "marc4j_reader.permissive", true
     provide "marc4j_reader.source_encoding", "UTF-8"
-    provide 'processing_thread_pool', 2
+    # defaults to 1 less than the number of processors detected on your machine
+    # provide 'processing_thread_pool', 2
     provide "solrj_writer.commit_on_close", "true"
   end
 end
@@ -58,8 +55,6 @@ to_field "text", extract_all_marc_values do |r, acc|
 end
 
 to_field "language_facet", marc_languages("008[35-37]:041a:041d:")
-
-#    to_field "format", get_format
 to_field "format", marc_formats
 
 to_field "isbn_t",  extract_marc('020a', :separator=>nil) do |rec, acc|

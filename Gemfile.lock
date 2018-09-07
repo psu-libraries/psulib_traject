@@ -30,7 +30,7 @@ GEM
     public_suffix (3.0.3)
     scrub_rb (1.0.1)
     slop (3.6.0)
-    traject (3.0.0.alpha.1)
+    traject (3.0.0.alpha.2)
       concurrent-ruby (>= 0.8.0)
       dot-properties (>= 0.1.1)
       hashie (~> 3.1)
@@ -53,7 +53,7 @@ PLATFORMS
 DEPENDENCIES
   library_stdnums
   marc
-  traject (~> 3.0a)
+  traject (= 3.0.0.alpha.2)
   traject-marc4j_reader
 
 BUNDLED WITH

@@ -10,3 +10,7 @@
 
 # Ignore sample data
 /sample_data
+/solr/sample_data
+
+# Ignore log files
+/log
