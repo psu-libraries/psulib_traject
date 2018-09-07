@@ -50,7 +50,7 @@ $ ruby --version
    You can download a sample file from https://psu.app.box.com/folder/53004724072.
    ```
    $ cd /path/to/psulib_traject
-   $ traject -c psulib_config.rb /full/path/to/sample_psucat.mrc 
+   $ bundle exec traject -c psulib_config.rb /full/path/to/sample_psucat.mrc 
    ```
 
 # Traject in debug mode
