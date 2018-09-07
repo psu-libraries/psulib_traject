@@ -136,9 +136,24 @@ to_field 'subject_era_facet',  extract_marc("650y:651y:654y:655y", :trim_punctua
 to_field 'subject_geo_facet',  extract_marc("651a:650z",:trim_punctuation => true )
 
 # Publication fields
-to_field 'published_display', extract_marc('260a', :trim_punctuation => true, :alternate_script=>false)
-to_field 'published_vern_display', extract_marc('260a', :trim_punctuation => true, :alternate_script=>:only)
+
+to_field "production_display", extract_marc("264|*0|abc3")
+to_field "published_display", extract_marc("264|*1|abc3:260abcefg3", :trim_punctuation => true, :alternate_script=>false)
+to_field 'published_vern_display', extract_marc('264|*1|abc3:260abcefg3', :trim_punctuation => true, :alternate_script=>:only)
+to_field "distribution_display", extract_marc("264|*2|abc3")
+to_field "manufacture_display", extract_marc("264|*3|abc3")
+to_field "copyright_display", extract_marc("264|*4|c", trim_punctuation: true)
+to_field "edition_statement", extract_marc("250ab3", trim_punctuation: true)
+
+# we need to evaluate marc_publication_date to see if it does what we really need.
+
 to_field 'pub_date', marc_publication_date
+
+# publication info for search
+
+to_field "pub_location_t", extract_marc("260a:264a", trim_punctuation: true)
+to_field "publisher_t", extract_marc("260b:264|*1|b", trim_punctuation: true)
+to_field "manufacturer_t", extract_marc("260f:264|*3|b", trim_punctuation: true)
 
 # Call Number fields
 to_field 'lc_callnum_display', extract_marc('050ab', :first => true)
