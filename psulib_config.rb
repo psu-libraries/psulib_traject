@@ -21,7 +21,7 @@ ATOU = ('a'..'u').to_a.join('')
 settings do
   # Where to find solr server to write to
   provide "solr.url", "http://localhost:8983/solr/blacklight-core"
-  provide "log.batch_size", 10_000
+  provide "log.batch_size", 10000
   # set this to be non-negative if threshold should be enforced
   # provide 'solr_writer.max_skipped', -1
 
@@ -31,15 +31,15 @@ settings do
   provide "solr.version", "7.4.0"
 
   # Where to send logging
-  provide "log.file", "traject.log"
-  provide "log.error_file", "traject_error.log"
+  provide "log.file", "log/traject.log"
+  provide "log.error_file", "log/traject_error.log"
 
   if is_jruby
     provide "reader_class_name", "Traject::Marc4JReader"
     provide "marc4j_reader.permissive", true
     provide "marc4j_reader.source_encoding", "UTF-8"
     # defaults to 1 less than the number of processors detected on your machine
-    # provide 'processing_thread_pool', 2
+    provide 'processing_thread_pool', 7
     provide "solrj_writer.commit_on_close", "true"
   end
 end
