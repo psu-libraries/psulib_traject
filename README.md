@@ -30,7 +30,7 @@ $ ruby --version
  
 1.  Install [Traject](https://git.psu.edu/i-tech/psulib_traject/wikis/Install-JRuby)
     ```
-    $ gem install traject -v 3.0.0.alpha.1
+    $ gem install traject -v 3.0.0.alpha.2
     ```
     
 1. Install [Traject::Marc4JReader](https://github.com/traject/traject-marc4j_reader)
