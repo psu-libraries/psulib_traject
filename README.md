@@ -41,15 +41,13 @@ $ ruby --version
 # Build an index
 1. Start up solr. You need to run the clean command if running a full index.
    ```
-   $ cd /path/to/psul_blacklight   
-   $ solr_wrapper -d .solr_wrapper.yml clean
+   $ bundle exec solr_wrapper -d .solr_wrapper.yml clean
    $ bundle exec solr_wrapper
    ```
 
 1. Index records
    You can download a sample file from https://psu.app.box.com/folder/53004724072.
    ```
-   $ cd /path/to/psulib_traject
    $ bundle exec traject -c psulib_config.rb /full/path/to/sample_psucat.mrc 
    ```
 
