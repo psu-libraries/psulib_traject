@@ -2,12 +2,11 @@ source "https://rubygems.org"
 
 gem 'marc'
 gem 'traject', '3.0.0.alpha.2'
+gem 'traject-marc4j_reader', platform: :jruby
 gem 'library_stdnums'
+gem 'rake'
 
-#Check if we are using jruby and store.
-is_jruby = RUBY_ENGINE == 'jruby'
-if is_jruby
-  gem 'traject-marc4j_reader'
-else
-  gem 'byebug'
+group :development, :test do
+  gem 'solr_wrapper', github: 'cbeer/solr_wrapper', branch: 'master'
+  gem 'byebug', platform: :mri
 end
