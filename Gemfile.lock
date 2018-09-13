@@ -14,6 +14,7 @@ GEM
   specs:
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
+    builder (3.2.3)
     byebug (10.0.2)
     concurrent-ruby (1.0.5)
     concurrent-ruby (1.0.5-java)
@@ -50,6 +51,9 @@ GEM
     public_suffix (3.0.3)
     rake (12.3.1)
     retriable (3.1.2)
+    rsolr (2.2.1)
+      builder (>= 2.1.2)
+      faraday (>= 0.9.0)
     ruby-progressbar (1.10.0)
     rubyzip (1.2.2)
     scrub_rb (1.0.1)
@@ -83,6 +87,7 @@ DEPENDENCIES
   library_stdnums
   marc
   rake
+  rsolr
   solr_wrapper!
   traject (= 3.0.0.alpha.2)
   traject-marc4j_reader

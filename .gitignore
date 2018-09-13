@@ -14,3 +14,6 @@
 
 # Ignore log files
 /log
+
+# Ignore solr conf files downloaded from https://github.com/pulibrary/pul_solr/
+solr/conf/*
