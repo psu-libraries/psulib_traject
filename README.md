@@ -39,6 +39,11 @@ $ ruby --version
    ```
    
 # Build an index
+1. Solr config files needs to be downloaded from https://git.psu.edu/i-tech/psulib_blacklight/blob/master/solr/conf using the rake task:
+   ```
+   $ bundle exec rake psulib_traject:solr:update
+   ```
+
 1. Start up solr. You need to run the clean command if running a full index.
    ```
    $ bundle exec solr_wrapper -d .solr_wrapper.yml clean
