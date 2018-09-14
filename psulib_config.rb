@@ -39,7 +39,7 @@ settings do
     provide "marc4j_reader.permissive", true
     provide "marc4j_reader.source_encoding", "UTF-8"
     # defaults to 1 less than the number of processors detected on your machine
-    provide 'processing_thread_pool', 7
+    # provide 'processing_thread_pool', 7
     provide "solrj_writer.commit_on_close", "true"
   end
 end
