@@ -21,7 +21,7 @@ ATOU = ('a'..'u').to_a.join('')
 settings do
   # Where to find solr server to write to
   provide "solr.url", "http://localhost:8983/solr/blacklight-core"
-  provide "log.batch_size", 10000
+  provide "log.batch_size", 100000
   # set this to be non-negative if threshold should be enforced
   # provide 'solr_writer.max_skipped', -1
 
