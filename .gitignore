@@ -2,17 +2,17 @@
 # Ignore bundler config.
 /.bundle
 
-# Ignore junk
+# Ignore junk.
 .DS*
 ._.DS*
 *.sublime-*
 .idea
 
-# Ignore sample data
+# Ignore sample data.
 /sample_data
 /solr/sample_data
 
-# Ignore log files
+# Ignore log files.
 /log
 
 # Ignore solr conf files downloaded from https://github.com/pulibrary/pul_solr/
@@ -21,3 +21,6 @@ solr/conf/*.xml
 solr/conf/*.txt
 solr/conf/*.conf
 solr/conf/*.json
+
+# Ignore solr_wrapper config.
+.solr_wrapper.yml
