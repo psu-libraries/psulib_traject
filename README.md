@@ -39,7 +39,7 @@ $ ruby --version
    ```
    
 # Build an index
-1. Solr config files needs to be downloaded from https://git.psu.edu/i-tech/psulib_blacklight/blob/master/solr/conf using the rake task:
+1. Solr config files needs to be downloaded from https://git.psu.edu/i-tech/psulib_blacklight/blob/master/solr/conf and .solr_wrapper.yml from https://git.psu.edu/i-tech/psulib_blacklight/raw/master/.solr_wrapper.yml using the rake task:
    ```
    $ bundle exec rake psulib_traject:solr:update
    ```
