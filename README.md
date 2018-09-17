@@ -30,7 +30,7 @@ $ ruby --version
  
 1.  Install [Traject](https://git.psu.edu/i-tech/psulib_traject/wikis/Install-JRuby)
     ```
-    $ gem install traject -v 3.0.0.alpha.1
+    $ gem install traject -v 3.0.0.alpha.2
     ```
     
 1. Install [Traject::Marc4JReader](https://github.com/traject/traject-marc4j_reader)
@@ -39,23 +39,26 @@ $ ruby --version
    ```
    
 # Build an index
+1. Solr config files needs to be downloaded from https://git.psu.edu/i-tech/psulib_blacklight/blob/master/solr/conf using the rake task:
+   ```
+   $ bundle exec rake psulib_traject:solr:update
+   ```
+
 1. Start up solr. You need to run the clean command if running a full index.
    ```
-   $ cd /path/to/psul_blacklight   
-   $ solr_wrapper -d .solr_wrapper.yml clean
+   $ bundle exec solr_wrapper -d .solr_wrapper.yml clean
    $ bundle exec solr_wrapper
    ```
 
 1. Index records
    You can download a sample file from https://psu.app.box.com/folder/53004724072.
    ```
-   $ cd /path/to/psulib_traject
-   $ traject -c psulib_config.rb /full/path/to/sample_psucat.mrc 
+   $ bundle exec traject -c psulib_config.rb /full/path/to/sample_psucat.mrc 
    ```
 
 # Traject in debug mode
 For testing purposes you can run traject with the `--debug-mode` flag to
 display the output to the console (and not push the data to Solr).
 ```
-$ traject --debug-mode -c psulib_config.rb /full/path/to/marcfile.mrc
+$ bundle exec traject --debug-mode -c psulib_config.rb /full/path/to/marcfile.mrc
 ```
