@@ -1,0 +1,21 @@
+#!/usr/bin/bash
+
+# Indexes first MARC file in the /data/symphony_data/adds_updates directory.
+
+total_files_in_load_dir=`ls -l /data/symphony_data/adds_updates/blackcat_MARC.* | wc -l`
+if [ $total_files_in_load_dir -gt 0 ]
+  then
+    marc_file=`ls -tr /data/symphony_data/adds_updates/blackcat_MARC.* | head -1`
+    date=`ls -tr /data/symphony_data/adds_updates/blackcat_MARC.* | head -1 | awk -F"." '{print $2}'`
+    log_file=/data/symphony_data/adds_updates/${date}.log
+
+    echo "Total files in load directory is $total_files_in_load_dir" > $log_file
+    echo "MARC file is $marc_file" >> $log_file
+    echo "Log file is $log_file" >> $log_file
+    echo "Date is $date" >> $log_file
+
+    cd /opt/psulib_traject
+    bash -lc "bundle exec traject -s processing_thread_pool=7 -s log.file=/var/log/traject/traject.log -s log.error_file=/var/log/traject/traject_error.log -c /opt/psulib_traject/psulib_config.rb $marc_file"
+    mv $marc_file /data/symphony_data/adds_updates/done
+    mv $log_file /data/symphony_data/adds_updates/done
+fi
