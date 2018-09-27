@@ -14,13 +14,13 @@ MAILTO=root
 # *  *  *  *  * user-name  command to be executed
 
 #######  SOLR adds updates and deletes ######################
-10,25,40,50 * * * * ansible_deploy_bot /data/symphony_data/add_upd_solr_indexes >> /data/symphony_data/cron_logs/add_upd_log.`date +\%Y\%m` 2> /data/symphony_data/cron_logs/add_upd_err_log.`date +\%Y\%m`
-10,25,40,55 * * * * ansible_deploy_bot /data/symphony_data/delete_solr_indexes >> /data/symphony_data/cron_logs/delete_log.`date +\%Y\%m` 2> /data/symphony_data/cron_logs/delete_err_log.`date +\%Y\%m`
+10,25,40,50 * * * * ansible_deploy_bot /data/symphony_data/add_upd_solr_indexes >> /data/symphony_data/cron_logs/adds_updates.log 2>> /data/symphony_data/cron_logs/adds_updates_err.log
+10,25,40,55 * * * * ansible_deploy_bot /data/symphony_data/delete_solr_indexes >> /data/symphony_data/cron_logs/deletes.log 2>> /data/symphony_data/cron_logs/deletes_err.log
 
 #######  Library and location facets   ######################
 0 1 * * * root cp /data/symphony_data/*_map.properties /data/websites/psulib_blacklight; chown apache:apache /data/websites/psulib_blacklight/*_map.properties; chmod 755 /data/websites/psulib_blacklight/*_map.properties
 
 #######  Cleanup                       #####################
-0 3 1 * * root find /data/symphony_data/adds_updates/done/* -mtime +365 -type f -delete
-0 3 1 * * root find /data/symphony_data/deletes/done/* -mtime +365 -type f -delete
-0 3 1 * * root find /data/symphony_data/cron_logs/* -mtime +365 -type f -delete
+0 3 1 * * root find /data/symphony_data/adds_updates/done/*MARC* -mtime +30 -type f -delete
+0 3 1 * * root find /data/symphony_data/deletes/done/*blackcat_deletes* -mtime +30 -type f -delete
+0 3 1 * * root find /data/symphony_data/deletes/done/*.sh -mtime +30 -type f -delete
