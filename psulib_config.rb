@@ -107,10 +107,24 @@ to_field 'title_sort', marc_sortable_title
 
 # Author fields
 
-to_field 'author_t', extract_marc("100abcegqu:110abcdegnu:111acdegjnqu")
-to_field 'author_addl_t', extract_marc("700abcegqu:710abcdegnu:711acdegjnqu")
-to_field 'author_display', extract_marc("100abcdq:110#{ATOZ}:111#{ATOZ}", :alternate_script=>false)
-to_field 'author_vern_display', extract_marc("100abcdq:110#{ATOZ}:111#{ATOZ}", :alternate_script=>:only)
+## Search and Facet
+
+to_field 'author_t', extract_marc("100aqbcdk:110abcdfgkln:111abcdfgklnpq")
+to_field 'author_addl_t', extract_marc("700aqbcdk:710abcdfgkln:711abcdfgklnpq")
+to_field 'all_authors_facet', extract_marc("100abcdqj:110abcdj:111ancdj:700abcdqj:710abcdj:711ancdj", trim_punctuation: true)
+
+
+## Display
+to_field 'author_person_display', extract_marc('100aqbcdkj', trim_punctuation: true, alternate_script: false)
+to_field 'author_corp_display', extract_marc('110abcdfgklnj', trim_punctuation: true, alternate_script: false)
+to_field 'author_meeting_display', extract_marc('111abcdfgklnpqj', trim_punctuation: true, alternate_script: false)
+to_field 'addl_author_display', extract_marc('700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq', trim_punctuation: true, alternate_script: false)
+
+## Vernacular field copies
+to_field 'author_person_vern_display', extract_marc('100aqbcdkj', trim_punctuation: true, :alternate_script=>:only)
+to_field 'author_corp_vern_display', extract_marc('110abcdfgklnj', trim_punctuation: true, :alternate_script=>:only)
+to_field 'author_meeting_vern_display', extract_marc('111abcdfgklnpqj', trim_punctuation: true, :alternate_script=>:only)
+to_field 'addl_author_vern_display', extract_marc('700aqbcdkj:710abcdfgklnj:711abcdfgklnpqj', trim_punctuation: true, :alternate_script=>:only)
 
 # JSTOR isn't an author. Try to not use it as one
 to_field 'author_sort', marc_sortable_author
