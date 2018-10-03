@@ -9,8 +9,12 @@ if is_jruby
 end
 require 'traject/macros/marc21_semantics'
 require 'traject/macros/marc_format_classifier'
+
 extend Traject::Macros::Marc21Semantics
 extend Traject::Macros::MarcFormats
+
+Marc21 = Traject::Macros::Marc21
+MarcExtractor = Traject::MarcExtractor
 
 # Add lib directory to the ruby load path
 $:.unshift  "#{File.dirname(__FILE__)}/lib"
@@ -140,7 +144,17 @@ to_field 'subject_t', extract_marc(%W(
   653a:654abcde:655abc
 ).join(':'))
 to_field 'subject_addl_t', extract_marc("600vwxyz:610vwxyz:611vwxyz:630vwxyz:650vwxyz:651vwxyz:654vwxyz:655vwxyz")
-to_field 'subject_topic_facet', extract_marc("600abcdq:610ab:611ab:630aa:650aa:653aa:654ab:655ab", :trim_punctuation => true)
+to_field 'subject_topic_facet', extract_marc("600|*0|abcdq:610|*0|ab:611|*0|ab:630|*0|ab:650|*0|a:653|*0|a", :trim_punctuation => true) do |record, accumulator, context|
+  # Include Fast Headings
+  MarcExtractor.new("650|*7|2").collect_matching_lines(record) do |field, spec, extractor|
+    if field['2'].downcase.include? "fast"
+      fast_subject = Marc21.trim_punctuation field['a']
+      accumulator << fast_subject unless fast_subject.nil?
+    end
+  end
+  accumulator.compact!
+  accumulator.uniq!
+end
 
 # Publication fields
 to_field 'published_display', extract_marc('260a', :trim_punctuation => true, :alternate_script=>false)
