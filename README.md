@@ -28,7 +28,7 @@ $ ruby --version
     $ bundle install
     ```
  
-1.  Install [Traject](https://git.psu.edu/i-tech/psulib_traject/wikis/Install-JRuby)
+1.  Install [Traject](https://github.com/traject-project/traject)
     ```
     $ gem install traject -v 3.0.0.alpha.2
     ```
