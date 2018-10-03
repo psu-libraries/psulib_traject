@@ -1,0 +1,31 @@
+#!/usr/bin/bash
+
+# Deletes from solr indexes using first file in /data/symphony_data/deletes
+
+total_files_in_delete_dir=`ls -l /data/symphony_data/deletes/blackcat_deletes.* | wc -l`
+if [ $total_files_in_delete_dir -gt 0 ]
+  then
+    keys_file=`ls -tr /data/symphony_data/deletes/blackcat_deletes.* | head -1`
+    date=`ls -tr /data/symphony_data/deletes/blackcat_deletes.* | head -1 | awk -F"." '{print $2}'`
+    log_file=/data/symphony_data/deletes/done/deletes.log
+    cmd_file=/data/symphony_data/deletes/${date}.sh
+
+    echo "Total files in deletes directory is $total_files_in_delete_dir" >> $log_file
+    echo "Keys file is $keys_file" >> $log_file
+    echo "Log file is $log_file" >> $log_file
+    echo "Date is $date" >> $log_file
+    echo "#!/usr/bin/bash" > $cmd_file
+
+    while IFS="" read -r key || [ -n "$p" ]
+    do
+        echo "Command we are building is /usr/bin/curl 'http://localhost:8983/solr/blacklight-core/update?commit=true' -H 'Content-type:text/xml' -d '<delete><id>$key</id></delete>' >> $cmd_file" >> $log_file
+        echo "/usr/bin/curl 'http://localhost:8983/solr/blacklight-core/update?commit=true' -H 'Content-type:text/xml' -d '<delete><id>$key</id></delete>'" >> $cmd_file
+#####        /usr/bin/curl 'http://localhost:8983/solr/blacklight-core/update?commit=true' -H 'Content-type:text/xml' -d '<delete><id>$key</id></delete>' >> $log_file
+    done < ${keys_file}
+
+    chmod 755 $cmd_file
+    $cmd_file >> $log_file
+    mv ${keys_file} /data/symphony_data/deletes/done
+    mv ${cmd_file} /data/symphony_data/deletes/done
+fi
+
