@@ -13,14 +13,14 @@ $ java --version
 ```
 
 ## Ruby
-Follow these instructions to [install JRuby](https://git.psu.edu/i-tech/psulib_traject/wikis/Install-JRuby) if you do not already have it.
+Follow these instructions to [install JRuby](https://github.com/psu-libraries/psulib_traject/wiki/Install-JRuby) if you do not already have it.
 ```
 $ ruby --version
   jruby 9.2.0.0
 ```
 
 # Development setup
-1.  Make sure you have ssh keys established on your machine and make sure your public key is stored on git.psu.edu: https://docs.gitlab.com/ee/gitlab-basics/create-your-ssh-keys.html
+1.  Make sure you have ssh keys established on your machine https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/#generating-a-new-ssh-key
 1.  Clone the application (parallel to psulib_blacklight folder) and install.
     ``` 
     $ git clone git@git.psu.edu:i-tech/psulib_traject.git
@@ -39,7 +39,7 @@ $ ruby --version
    ```
    
 # Build an index
-1. Solr config files needs to be downloaded from https://git.psu.edu/i-tech/psulib_blacklight/blob/master/solr/conf and .solr_wrapper.yml from https://git.psu.edu/i-tech/psulib_blacklight/raw/master/.solr_wrapper.yml using the rake task:
+1. Solr config files needs to be downloaded from https://github.com/psu-libraries/psulib_blacklight/tree/master/solr/conf and .solr_wrapper.yml from https://github.com/psu-libraries/psulib_blacklight/blob/master/.solr_wrapper.yml using the rake task:
    ```
    $ bundle exec rake psulib_traject:solr:update
    ```

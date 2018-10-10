@@ -147,7 +147,7 @@ to_field 'subject_addl_t', extract_marc("600vwxyz:610vwxyz:611vwxyz:630vwxyz:650
 to_field 'subject_topic_facet', extract_marc("600|*0|abcdq:610|*0|ab:611|*0|ab:630|*0|ab:650|*0|a:653|*0|a", :trim_punctuation => true) do |record, accumulator, context|
   # Include Fast Headings
   MarcExtractor.new("650|*7|2").collect_matching_lines(record) do |field, spec, extractor|
-    if field['2'].downcase.include? "fast"
+    if field['2'].to_s.downcase.include? "fast"
       fast_subject = Marc21.trim_punctuation field['a']
       accumulator << fast_subject unless fast_subject.nil?
     end

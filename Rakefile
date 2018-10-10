@@ -22,7 +22,7 @@ namespace :psulib_traject do
     end
 
     def url_for_file(file)
-      "https://git.psu.edu/i-tech/psulib_blacklight/raw/master/#{file}"
+      "https://raw.githubusercontent.com/psu-libraries/psulib_blacklight/master/#{file}"
     end
   end
 end
