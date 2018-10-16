@@ -45,9 +45,9 @@ GEM
       marc (~> 1)
     mini_portile2 (2.3.0)
     multipart-post (2.0.0)
-    nokogiri (1.8.4)
+    nokogiri (1.8.5)
       mini_portile2 (~> 2.3.0)
-    nokogiri (1.8.4-java)
+    nokogiri (1.8.5-java)
     public_suffix (3.0.3)
     rake (12.3.1)
     retriable (3.1.2)
@@ -58,7 +58,7 @@ GEM
     rubyzip (1.2.2)
     scrub_rb (1.0.1)
     slop (3.6.0)
-    traject (3.0.0.alpha.2)
+    traject (3.0.0)
       concurrent-ruby (>= 0.8.0)
       dot-properties (>= 0.1.1)
       hashie (~> 3.1)
@@ -89,7 +89,7 @@ DEPENDENCIES
   rake
   rsolr
   solr_wrapper!
-  traject (= 3.0.0.alpha.2)
+  traject (= 3.0.0)
   traject-marc4j_reader
 
 BUNDLED WITH
