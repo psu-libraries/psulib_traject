@@ -10,4 +10,5 @@ gem 'rsolr'
 group :development, :test do
   gem 'solr_wrapper', github: 'cbeer/solr_wrapper', branch: 'master'
   gem 'byebug', platform: :mri
+  gem 'ruby-debug'
 end
