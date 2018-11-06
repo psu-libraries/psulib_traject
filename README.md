@@ -19,46 +19,45 @@ $ ruby --version
   jruby 9.2.0.0
 ```
 
-# Development setup
-1.  Make sure you have ssh keys established on your machine https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/#generating-a-new-ssh-key
-1.  Clone the application (parallel to psulib_blacklight folder) and install.
+# Development Setup
+
+1.  [Make sure you have ssh keys established on your machine](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/#generating-a-new-ssh-key)
+1.  [Make sure you have docker installed and running](https://docs.docker.com/install/)
+1.  Clone the application and install.
     ``` 
     $ git clone git@git.psu.edu:i-tech/psulib_traject.git
     $ cd psulib_traject
     $ bundle install
     ```
- 
-1.  Install [Traject](https://github.com/traject-project/traject)
+   
+# Build an Index
+
+1. Solr config files need to be copied from [psulib_blacklight](https://github.com/psu-libraries/psulib_blacklight/tree/master/solr/conf):
+    
     ```
-    $ gem install traject -v 3.0.0.alpha.2
+    $ bundle exec rake solr:conf
+    ```
+   
+1. Start Solr
+
+    If Docker Solr isn't running (check `docker ps`) run
+
+    ```
+    $ bundle exec rake solr:up
     ```
     
-1. Install [Traject::Marc4JReader](https://github.com/traject/traject-marc4j_reader)
-   ```
-   $ gem install traject-marc4j_reader
-   ```
-   
-# Build an index
-1. Solr config files needs to be downloaded from https://github.com/psu-libraries/psulib_blacklight/tree/master/solr/conf and .solr_wrapper.yml from https://github.com/psu-libraries/psulib_blacklight/blob/master/.solr_wrapper.yml using the rake task:
-   ```
-   $ bundle exec rake psulib_traject:solr:update
-   ```
+1. Convert marc records and import into Solr
 
-1. Start up solr. You need to run the clean command if running a full index.
-   ```
-   $ bundle exec solr_wrapper -d .solr_wrapper.yml clean
-   $ bundle exec solr_wrapper
-   ```
-
-1. Index records
-   You can download a sample file from https://psu.app.box.com/folder/53004724072.
+   You can download [a sample file from Box](https://psu.app.box.com/folder/53004724072).
    ```
    $ bundle exec traject -c psulib_config.rb /full/path/to/sample_psucat.mrc 
    ```
 
-# Traject in debug mode
+## Traject in debug mode
+
 For testing purposes you can run traject with the `--debug-mode` flag to
 display the output to the console (and not push the data to Solr).
+
 ```
 $ bundle exec traject --debug-mode -c psulib_config.rb /full/path/to/marcfile.mrc
 ```
