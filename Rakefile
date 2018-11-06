@@ -48,6 +48,10 @@ namespace :solr do
     print `docker stop felix`
   end
 
+  task :ps do
+    print `docker ps`
+  end
+
   def url_for_file(file)
     "https://raw.githubusercontent.com/psu-libraries/psulib_blacklight/master/#{file}"
   end
