@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 gem 'marc'
-gem 'traject', '3.0.0.alpha.2'
+gem 'traject', '3.0.0'
 gem 'traject-marc4j_reader', platform: :jruby
 gem 'library_stdnums'
 gem 'rake'

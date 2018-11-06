@@ -5,7 +5,6 @@ GEM
       public_suffix (>= 2.0.2, < 4.0)
     builder (3.2.3)
     byebug (10.0.2)
-    concurrent-ruby (1.0.5)
     concurrent-ruby (1.0.5-java)
     domain_name (0.5.20180417)
       unf (>= 0.0.5, < 1.0.0)
@@ -21,7 +20,6 @@ GEM
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     http-form_data (2.1.1)
-    http_parser.rb (0.6.0)
     http_parser.rb (0.6.0-java)
     httpclient (2.8.3)
     library_stdnums (1.6.0)
@@ -32,11 +30,8 @@ GEM
       marc (~> 1.0)
     marc-marc4j (1.0.0-java)
       marc (~> 1)
-    mini_portile2 (2.3.0)
     multipart-post (2.0.0)
-    nokogiri (1.8.4)
-      mini_portile2 (~> 2.3.0)
-    nokogiri (1.8.4-java)
+    nokogiri (1.8.5-java)
     public_suffix (3.0.3)
     rake (12.3.1)
     rsolr (2.2.1)
@@ -44,7 +39,7 @@ GEM
       faraday (>= 0.9.0)
     scrub_rb (1.0.1)
     slop (3.6.0)
-    traject (3.0.0.alpha.2)
+    traject (3.0.0)
       concurrent-ruby (>= 0.8.0)
       dot-properties (>= 0.1.1)
       hashie (~> 3.1)
@@ -74,7 +69,7 @@ DEPENDENCIES
   marc
   rake
   rsolr
-  traject (= 3.0.0.alpha.2)
+  traject (= 3.0.0)
   traject-marc4j_reader
 
 BUNDLED WITH

@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
+require 'faraday'
+
 namespace :solr do
-  desc 'Updates .solr_wrapper.yml and solr config files from gitlab'
+  desc 'Updates solr config files from gitlab'
   task :conf do
     solr_dir = "#{File.dirname(__FILE__)}/solr"
-    solr_files = ['elevate.xml', 'mapping-ISOLatin1Accent.txt', 'protwords.txt', 'schema.xml',
-                 'scripts.conf', 'solrconfig.xml', 'spellings.txt', 'stopwords.txt', 'stopwords_en.txt',
-                 'synonyms.txt', 'admin-extra.html', '_rest_managed.json']
+    solr_files = ['protwords.txt', 'schema.xml', 'solrconfig.xml',
+                  'stopwords.txt', 'stopwords_en.txt', 'synonyms.txt', ]
 
     solr_files.each do |file|
       response = Faraday.get url_for_file("solr/conf/#{file}")
