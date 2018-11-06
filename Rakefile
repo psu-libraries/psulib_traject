@@ -25,7 +25,7 @@ namespace :solr do
       print `docker start felix`
     end
 
-    Rake::Task['docker:ps'].invoke
+    Rake::Task['solr:ps'].invoke
   end
 
   task :clean do
