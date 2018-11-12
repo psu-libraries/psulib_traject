@@ -58,7 +58,7 @@ to_field "text", extract_all_marc_values do |r, acc|
   acc.replace [acc.join(' ')] # turn it into a single string
 end
 
-to_field "language_facet", marc_languages("008[35-37]:041a:041d:")
+to_field "language_facet_ssim", marc_languages("008[35-37]:041a:041d:")
 to_field "format", marc_formats
 
 to_field "isbn_ssim",  extract_marc('020a', :separator=>nil) do |rec, acc|
