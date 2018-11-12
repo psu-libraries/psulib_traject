@@ -119,10 +119,10 @@ to_field 'all_authors_facet_sim', extract_marc("100abcdqj:110abcdj:111ancdj:700a
 
 
 ## Display
-to_field 'author_personm', extract_marc('100aqbcdkj', trim_punctuation: true, alternate_script: false)
-to_field 'author_corpm', extract_marc('110abcdfgklnj', trim_punctuation: true, alternate_script: false)
-to_field 'author_meetingm', extract_marc('111abcdfgklnpqj', trim_punctuation: true, alternate_script: false)
-to_field 'addl_authorm', extract_marc('700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq', trim_punctuation: true, alternate_script: false)
+to_field 'author_person_display_ssm', extract_marc('100aqbcdkj', trim_punctuation: true, alternate_script: false)
+to_field 'author_corp_display_ssm', extract_marc('110abcdfgklnj', trim_punctuation: true, alternate_script: false)
+to_field 'author_meeting_display_ssm', extract_marc('111abcdfgklnpqj', trim_punctuation: true, alternate_script: false)
+to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq', trim_punctuation: true, alternate_script: false)
 
 ## Vernacular field copies
 to_field 'author_person_vern_display_ssm', extract_marc('100aqbcdkj', trim_punctuation: true, :alternate_script=>:only)
