@@ -74,18 +74,18 @@ to_field 'material_type_display', extract_marc('300a', :trim_punctuation => true
 # Title fields
 #    primary title
 
-to_field 'title_t', extract_marc('245a')
+to_field 'title_tsim', extract_marc('245a')
 to_field 'title_display', extract_marc('245a', :trim_punctuation => true, :alternate_script=>false)
 to_field 'title_vern_display', extract_marc('245a', :trim_punctuation => true, :alternate_script=>:only)
 
 #    subtitle
 
-to_field 'subtitle_t', extract_marc('245b')
+to_field 'subtitle_tsim', extract_marc('245b')
 to_field 'subtitle_display', extract_marc('245b', :trim_punctuation => true, :alternate_script=>false)
 to_field 'subtitle_vern_display', extract_marc('245b', :trim_punctuation => true, :alternate_script=>:only)
 
 #    additional title fields
-to_field 'title_addl_t', extract_marc(%W{
+to_field 'title_addl_tsim', extract_marc(%W{
   245abnps
   130#{ATOZ}
   240abcdefgklmnopqrs
@@ -97,7 +97,7 @@ to_field 'title_addl_t', extract_marc(%W{
   247abcdefgnp
 }.join(':'))
 
-to_field 'title_added_entry_t', extract_marc(%W{
+to_field 'title_added_entry_tsim', extract_marc(%W{
   700gklmnoprst
   710fgklmnopqrst
   711fgklnpst
@@ -105,7 +105,7 @@ to_field 'title_added_entry_t', extract_marc(%W{
   740anp
 }.join(':'))
 
-to_field 'title_series_t', extract_marc("440anpv:490av")
+to_field 'title_series_tsim', extract_marc("440anpv:490av")
 
 to_field 'title_sort', marc_sortable_title
 
@@ -113,8 +113,8 @@ to_field 'title_sort', marc_sortable_title
 
 ## Search and Facet
 
-to_field 'author_t', extract_marc("100aqbcdk:110abcdfgkln:111abcdfgklnpq")
-to_field 'author_addl_t', extract_marc("700aqbcdk:710abcdfgkln:711abcdfgklnpq")
+to_field 'author_tsim', extract_marc("100aqbcdk:110abcdfgkln:111abcdfgklnpq")
+to_field 'author_addl_tsim', extract_marc("700aqbcdk:710abcdfgkln:711abcdfgklnpq")
 to_field 'all_authors_facet', extract_marc("100abcdqj:110abcdj:111ancdj:700abcdqj:710abcdj:711ancdj", trim_punctuation: true)
 
 
@@ -134,7 +134,7 @@ to_field 'addl_author_vern_display', extract_marc('700aqbcdkj:710abcdfgklnj:711a
 to_field 'author_sort', marc_sortable_author
 
 # Subject fields
-to_field 'subject_t', extract_marc(%W(
+to_field 'subject_tsim', extract_marc(%W(
   600#{ATOU}
   610#{ATOU}
   611#{ATOU}
@@ -143,7 +143,7 @@ to_field 'subject_t', extract_marc(%W(
   651ae
   653a:654abcde:655abc
 ).join(':'))
-to_field 'subject_addl_t', extract_marc("600vwxyz:610vwxyz:611vwxyz:630vwxyz:650vwxyz:651vwxyz:654vwxyz:655vwxyz")
+to_field 'subject_addl_tsim', extract_marc("600vwxyz:610vwxyz:611vwxyz:630vwxyz:650vwxyz:651vwxyz:654vwxyz:655vwxyz")
 to_field 'subject_topic_facet', extract_marc("600|*0|abcdq:610|*0|ab:611|*0|ab:630|*0|ab:650|*0|a:653|*0|a", :trim_punctuation => true) do |record, accumulator, context|
   # Include Fast Headings
   MarcExtractor.new("650|*7|2").collect_matching_lines(record) do |field, spec, extractor|
