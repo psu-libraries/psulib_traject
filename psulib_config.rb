@@ -61,7 +61,7 @@ end
 to_field "language_facet", marc_languages("008[35-37]:041a:041d:")
 to_field "format", marc_formats
 
-to_field "isbn_t",  extract_marc('020a', :separator=>nil) do |rec, acc|
+to_field "isbn_ssim",  extract_marc('020a', :separator=>nil) do |rec, acc|
   orig = acc.dup
   acc.map!{|x| StdNum::ISBN.allNormalizedValues(x)}
   acc << orig
