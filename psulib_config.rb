@@ -52,7 +52,7 @@ logger.info RUBY_DESCRIPTION
 
 to_field "id", extract_marc("001", :first => true)
 
-to_field "marc_display", serialized_marc(:format => "xml", :allow_oversized => true)
+to_field "marc_display_ss", serialized_marc(:format => "xml", :allow_oversized => true)
 
 to_field "text", extract_all_marc_values do |r, acc|
   acc.replace [acc.join(' ')] # turn it into a single string
