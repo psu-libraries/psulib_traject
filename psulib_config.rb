@@ -115,7 +115,7 @@ to_field 'title_sort', marc_sortable_title
 
 to_field 'author_tsim', extract_marc("100aqbcdk:110abcdfgkln:111abcdfgklnpq")
 to_field 'author_addl_tsim', extract_marc("700aqbcdk:710abcdfgkln:711abcdfgklnpq")
-to_field 'all_authors_facet', extract_marc("100abcdqj:110abcdj:111ancdj:700abcdqj:710abcdj:711ancdj", trim_punctuation: true)
+to_field 'all_authors_facet_sim', extract_marc("100abcdqj:110abcdj:111ancdj:700abcdqj:710abcdj:711ancdj", trim_punctuation: true)
 
 
 ## Display
