@@ -54,7 +54,7 @@ to_field "id", extract_marc("001", :first => true)
 
 to_field "marc_display_ss", serialized_marc(:format => "xml", :allow_oversized => true)
 
-to_field "text", extract_all_marc_values do |r, acc|
+to_field "all_text_timv", extract_all_marc_values do |r, acc|
   acc.replace [acc.join(' ')] # turn it into a single string
 end
 
