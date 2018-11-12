@@ -52,16 +52,16 @@ logger.info RUBY_DESCRIPTION
 
 to_field "id", extract_marc("001", :first => true)
 
-to_field "marc_display", serialized_marc(:format => "xml", :allow_oversized => true)
+to_field "marc_display_ss", serialized_marc(:format => "xml", :allow_oversized => true)
 
 to_field "text", extract_all_marc_values do |r, acc|
   acc.replace [acc.join(' ')] # turn it into a single string
 end
 
-to_field "language_facet", marc_languages("008[35-37]:041a:041d:")
+to_field "language_facet_ssim", marc_languages("008[35-37]:041a:041d:")
 to_field "format", marc_formats
 
-to_field "isbn_t",  extract_marc('020a', :separator=>nil) do |rec, acc|
+to_field "isbn_ssim",  extract_marc('020a', :separator=>nil) do |rec, acc|
   orig = acc.dup
   acc.map!{|x| StdNum::ISBN.allNormalizedValues(x)}
   acc << orig
