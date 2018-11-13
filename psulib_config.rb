@@ -163,20 +163,20 @@ to_field 'pub_date', marc_publication_date
 
 # Call Number fields
 to_field 'lc_callnum_display_ssm', extract_marc('050ab', :first => true)
-to_field 'lc_1letter_facet', extract_marc('050ab', :first=>true, :translation_map=>'callnumber_map') do |rec, acc|
+to_field 'lc_1letter_facet_sim', extract_marc('050ab', :first=>true, :translation_map=>'callnumber_map') do |rec, acc|
 # Just get the first letter to send to the translation map
   acc.map!{|x| x[0]}
 end
 
 alpha_pat = /\A([A-Z]{1,3})\d.*\Z/
-to_field 'lc_alpha_facet', extract_marc('050a', :first=>true) do |rec, acc|
+to_field 'lc_alpha_facet_sim', extract_marc('050a', :first=>true) do |rec, acc|
   acc.map! do |x|
     (m = alpha_pat.match(x)) ? m[1] : nil
   end
   acc.compact! # eliminate nils
 end
 
-to_field 'lc_b4cutter_facet', extract_marc('050a', :first=>true)
+to_field 'lc_b4cutter_facet_sim', extract_marc('050a', :first=>true)
 
 # URL Fields
 
