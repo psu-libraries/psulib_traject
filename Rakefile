@@ -3,7 +3,7 @@
 require 'faraday'
 
 namespace :solr do
-  desc 'Updates solr config files from gitlab'
+  desc 'Updates solr config files from psulib_blacklight'
   task :conf do
     solr_dir = "#{File.dirname(__FILE__)}/solr"
     solr_files = ['protwords.txt', 'schema.xml', 'solrconfig.xml',

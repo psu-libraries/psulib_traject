@@ -52,16 +52,16 @@ logger.info RUBY_DESCRIPTION
 
 to_field "id", extract_marc("001", :first => true)
 
-to_field "marc_display", serialized_marc(:format => "xml", :allow_oversized => true)
+to_field "marc_display_ss", serialized_marc(:format => "xml", :allow_oversized => true)
 
-to_field "text", extract_all_marc_values do |r, acc|
+to_field "all_text_timv", extract_all_marc_values do |r, acc|
   acc.replace [acc.join(' ')] # turn it into a single string
 end
 
-to_field "language_facet", marc_languages("008[35-37]:041a:041d:")
+to_field "language_facet_ssim", marc_languages("008[35-37]:041a:041d:")
 to_field "format", marc_formats
 
-to_field "isbn_t",  extract_marc('020a', :separator=>nil) do |rec, acc|
+to_field "isbn_ssim",  extract_marc('020a', :separator=>nil) do |rec, acc|
   orig = acc.dup
   acc.map!{|x| StdNum::ISBN.allNormalizedValues(x)}
   acc << orig
@@ -69,23 +69,23 @@ to_field "isbn_t",  extract_marc('020a', :separator=>nil) do |rec, acc|
   acc.uniq!
 end
 
-to_field 'material_type_display', extract_marc('300a', :trim_punctuation => true)
+to_field 'material_type_display_ssm', extract_marc('300a', :trim_punctuation => true)
 
 # Title fields
 #    primary title
 
-to_field 'title_t', extract_marc('245a')
-to_field 'title_display', extract_marc('245a', :trim_punctuation => true, :alternate_script=>false)
-to_field 'title_vern_display', extract_marc('245a', :trim_punctuation => true, :alternate_script=>:only)
+to_field 'title_tsim', extract_marc('245a')
+to_field 'title_display_ssm', extract_marc('245a', :trim_punctuation => true, :alternate_script=>false)
+to_field 'title_vern_display_ssm', extract_marc('245a', :trim_punctuation => true, :alternate_script=>:only)
 
 #    subtitle
 
-to_field 'subtitle_t', extract_marc('245b')
-to_field 'subtitle_display', extract_marc('245b', :trim_punctuation => true, :alternate_script=>false)
-to_field 'subtitle_vern_display', extract_marc('245b', :trim_punctuation => true, :alternate_script=>:only)
+to_field 'subtitle_tsim', extract_marc('245b')
+to_field 'subtitle_display_ssm', extract_marc('245b', :trim_punctuation => true, :alternate_script=>false)
+to_field 'subtitle_vern_display_ssm', extract_marc('245b', :trim_punctuation => true, :alternate_script=>:only)
 
 #    additional title fields
-to_field 'title_addl_t', extract_marc(%W{
+to_field 'title_addl_tsim', extract_marc(%W{
   245abnps
   130#{ATOZ}
   240abcdefgklmnopqrs
@@ -97,7 +97,7 @@ to_field 'title_addl_t', extract_marc(%W{
   247abcdefgnp
 }.join(':'))
 
-to_field 'title_added_entry_t', extract_marc(%W{
+to_field 'title_added_entry_tsim', extract_marc(%W{
   700gklmnoprst
   710fgklmnopqrst
   711fgklnpst
@@ -105,36 +105,36 @@ to_field 'title_added_entry_t', extract_marc(%W{
   740anp
 }.join(':'))
 
-to_field 'title_series_t', extract_marc("440anpv:490av")
+to_field 'title_series_tsim', extract_marc("440anpv:490av")
 
-to_field 'title_sort', marc_sortable_title
+to_field 'title_ssort', marc_sortable_title
 
 # Author fields
 
 ## Search and Facet
 
-to_field 'author_t', extract_marc("100aqbcdk:110abcdfgkln:111abcdfgklnpq")
-to_field 'author_addl_t', extract_marc("700aqbcdk:710abcdfgkln:711abcdfgklnpq")
-to_field 'all_authors_facet', extract_marc("100abcdqj:110abcdj:111ancdj:700abcdqj:710abcdj:711ancdj", trim_punctuation: true)
+to_field 'author_tsim', extract_marc("100aqbcdk:110abcdfgkln:111abcdfgklnpq")
+to_field 'author_addl_tsim', extract_marc("700aqbcdk:710abcdfgkln:711abcdfgklnpq")
+to_field 'all_authors_facet_sim', extract_marc("100abcdqj:110abcdj:111ancdj:700abcdqj:710abcdj:711ancdj", trim_punctuation: true)
 
 
 ## Display
-to_field 'author_person_display', extract_marc('100aqbcdkj', trim_punctuation: true, alternate_script: false)
-to_field 'author_corp_display', extract_marc('110abcdfgklnj', trim_punctuation: true, alternate_script: false)
-to_field 'author_meeting_display', extract_marc('111abcdfgklnpqj', trim_punctuation: true, alternate_script: false)
-to_field 'addl_author_display', extract_marc('700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq', trim_punctuation: true, alternate_script: false)
+to_field 'author_person_display_ssm', extract_marc('100aqbcdkj', trim_punctuation: true, alternate_script: false)
+to_field 'author_corp_display_ssm', extract_marc('110abcdfgklnj', trim_punctuation: true, alternate_script: false)
+to_field 'author_meeting_display_ssm', extract_marc('111abcdfgklnpqj', trim_punctuation: true, alternate_script: false)
+to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq', trim_punctuation: true, alternate_script: false)
 
 ## Vernacular field copies
-to_field 'author_person_vern_display', extract_marc('100aqbcdkj', trim_punctuation: true, :alternate_script=>:only)
-to_field 'author_corp_vern_display', extract_marc('110abcdfgklnj', trim_punctuation: true, :alternate_script=>:only)
-to_field 'author_meeting_vern_display', extract_marc('111abcdfgklnpqj', trim_punctuation: true, :alternate_script=>:only)
-to_field 'addl_author_vern_display', extract_marc('700aqbcdkj:710abcdfgklnj:711abcdfgklnpqj', trim_punctuation: true, :alternate_script=>:only)
+to_field 'author_person_vern_display_ssm', extract_marc('100aqbcdkj', trim_punctuation: true, :alternate_script=>:only)
+to_field 'author_corp_vern_display_ssm', extract_marc('110abcdfgklnj', trim_punctuation: true, :alternate_script=>:only)
+to_field 'author_meeting_vern_display_ssm', extract_marc('111abcdfgklnpqj', trim_punctuation: true, :alternate_script=>:only)
+to_field 'addl_author_vern_display_ssm', extract_marc('700aqbcdkj:710abcdfgklnj:711abcdfgklnpqj', trim_punctuation: true, :alternate_script=>:only)
 
 # JSTOR isn't an author. Try to not use it as one
-to_field 'author_sort', marc_sortable_author
+to_field 'author_ssort', marc_sortable_author
 
 # Subject fields
-to_field 'subject_t', extract_marc(%W(
+to_field 'subject_tsim', extract_marc(%W(
   600#{ATOU}
   610#{ATOU}
   611#{ATOU}
@@ -143,8 +143,8 @@ to_field 'subject_t', extract_marc(%W(
   651ae
   653a:654abcde:655abc
 ).join(':'))
-to_field 'subject_addl_t', extract_marc("600vwxyz:610vwxyz:611vwxyz:630vwxyz:650vwxyz:651vwxyz:654vwxyz:655vwxyz")
-to_field 'subject_topic_facet', extract_marc("600|*0|abcdq:610|*0|ab:611|*0|ab:630|*0|ab:650|*0|a:653|*0|a", :trim_punctuation => true) do |record, accumulator, context|
+to_field 'subject_addl_tsim', extract_marc("600vwxyz:610vwxyz:611vwxyz:630vwxyz:650vwxyz:651vwxyz:654vwxyz:655vwxyz")
+to_field 'subject_topic_facet_ssim', extract_marc("600|*0|abcdq:610|*0|ab:611|*0|ab:630|*0|ab:650|*0|a:653|*0|a", :trim_punctuation => true) do |record, accumulator, context|
   # Include Fast Headings
   MarcExtractor.new("650|*7|2").collect_matching_lines(record) do |field, spec, extractor|
     if field['2'].to_s.downcase.include? "fast"
@@ -157,32 +157,32 @@ to_field 'subject_topic_facet', extract_marc("600|*0|abcdq:610|*0|ab:611|*0|ab:6
 end
 
 # Publication fields
-to_field 'published_display', extract_marc('260a', :trim_punctuation => true, :alternate_script=>false)
-to_field 'published_vern_display', extract_marc('260a', :trim_punctuation => true, :alternate_script=>:only)
-to_field 'pub_date', marc_publication_date
+to_field 'published_display_ssm', extract_marc('260a', :trim_punctuation => true, :alternate_script=>false)
+to_field 'published_vern_display_ssm', extract_marc('260a', :trim_punctuation => true, :alternate_script=>:only)
+to_field 'pub_date_ssim', marc_publication_date
 
 # Call Number fields
-to_field 'lc_callnum_display', extract_marc('050ab', :first => true)
-to_field 'lc_1letter_facet', extract_marc('050ab', :first=>true, :translation_map=>'callnumber_map') do |rec, acc|
+to_field 'lc_callnum_display_ssm', extract_marc('050ab', :first => true)
+to_field 'lc_1letter_facet_sim', extract_marc('050ab', :first=>true, :translation_map=>'callnumber_map') do |rec, acc|
 # Just get the first letter to send to the translation map
   acc.map!{|x| x[0]}
 end
 
 alpha_pat = /\A([A-Z]{1,3})\d.*\Z/
-to_field 'lc_alpha_facet', extract_marc('050a', :first=>true) do |rec, acc|
+to_field 'lc_alpha_facet_sim', extract_marc('050a', :first=>true) do |rec, acc|
   acc.map! do |x|
     (m = alpha_pat.match(x)) ? m[1] : nil
   end
   acc.compact! # eliminate nils
 end
 
-to_field 'lc_b4cutter_facet', extract_marc('050a', :first=>true)
+to_field 'lc_b4cutter_facet_sim', extract_marc('050a', :first=>true)
 
 # URL Fields
 
 notfulltext = /abstract|description|sample text|table of contents|/i
 
-to_field('url_fulltext_display') do |rec, acc|
+to_field('url_fulltext_display_ssm') do |rec, acc|
   rec.fields('856').each do |f|
     case f.indicator2
     when '0'
@@ -200,8 +200,8 @@ to_field('url_fulltext_display') do |rec, acc|
   end
 end
 
-# Very similar to url_fulltext_display. Should DRY up.
-to_field 'url_suppl_display' do |rec, acc|
+# Very similar to url_fulltext_display_ssm. Should DRY up.
+to_field 'url_suppl_display_ssm' do |rec, acc|
   rec.fields('856').each do |f|
     case f.indicator2
     when '2'
