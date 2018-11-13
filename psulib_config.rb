@@ -159,7 +159,7 @@ end
 # Publication fields
 to_field 'published_display_ssm', extract_marc('260a', :trim_punctuation => true, :alternate_script=>false)
 to_field 'published_vern_display_ssm', extract_marc('260a', :trim_punctuation => true, :alternate_script=>:only)
-to_field 'pub_date', marc_publication_date
+to_field 'pub_date_ssim', marc_publication_date
 
 # Call Number fields
 to_field 'lc_callnum_display_ssm', extract_marc('050ab', :first => true)
