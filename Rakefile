@@ -53,6 +53,6 @@ namespace :solr do
   end
 
   def url_for_file(file)
-    "https://raw.githubusercontent.com/psu-libraries/psulib_blacklight/%23175-schema-updates/#{file}"
+    "https://raw.githubusercontent.com/psu-libraries/psulib_blacklight/master/#{file}"
   end
 end
