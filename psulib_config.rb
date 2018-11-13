@@ -107,7 +107,7 @@ to_field 'title_added_entry_tsim', extract_marc(%W{
 
 to_field 'title_series_tsim', extract_marc("440anpv:490av")
 
-to_field 'title_sort', marc_sortable_title
+to_field 'title_ssort', marc_sortable_title
 
 # Author fields
 
@@ -131,7 +131,7 @@ to_field 'author_meeting_vern_display_ssm', extract_marc('111abcdfgklnpqj', trim
 to_field 'addl_author_vern_display_ssm', extract_marc('700aqbcdkj:710abcdfgklnj:711abcdfgklnpqj', trim_punctuation: true, :alternate_script=>:only)
 
 # JSTOR isn't an author. Try to not use it as one
-to_field 'author_sort', marc_sortable_author
+to_field 'author_ssort', marc_sortable_author
 
 # Subject fields
 to_field 'subject_tsim', extract_marc(%W(
