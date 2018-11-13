@@ -70,19 +70,17 @@ end
 to_field 'material_type_display_ssm', extract_marc('300a', trim_punctuation: true)
 
 # Title fields
-#    primary title
-
+## Primary title
 to_field 'title_tsim', extract_marc('245a')
 to_field 'title_display_ssm', extract_marc('245a', trim_punctuation: true, alternate_script: false)
 to_field 'title_vern_display_ssm', extract_marc('245a', trim_punctuation: true, alternate_script: :only)
 
-#    subtitle
-
+## Subtitle
 to_field 'subtitle_tsim', extract_marc('245b')
 to_field 'subtitle_display_ssm', extract_marc('245b', trim_punctuation: true, alternate_script: false)
 to_field 'subtitle_vern_display_ssm', extract_marc('245b', trim_punctuation: true, alternate_script: :only)
 
-#    additional title fields
+## Additional title fields
 to_field 'title_addl_tsim', extract_marc(%W[
   245abnps
   130#{ATOZ}
@@ -108,29 +106,32 @@ to_field 'title_series_tsim', extract_marc('440anpv:490av')
 to_field 'title_ssort', marc_sortable_title
 
 # Author fields
-
-## Search and Facet
-
+## Primary author
 to_field 'author_tsim', extract_marc('100aqbcdk:110abcdfgkln:111abcdfgklnpq')
+
+## Additional authors
 to_field 'author_addl_tsim', extract_marc('700aqbcdk:710abcdfgkln:711abcdfgklnpq')
+
+## Authors for faceting
 to_field 'all_authors_facet_sim', extract_marc('100abcdqj:110abcdj:111ancdj:700abcdqj:710abcdj:711ancdj', trim_punctuation: true)
 
-## Display
+## Author display
 to_field 'author_person_display_ssm', extract_marc('100aqbcdkj', trim_punctuation: true, alternate_script: false)
 to_field 'author_corp_display_ssm', extract_marc('110abcdfgklnj', trim_punctuation: true, alternate_script: false)
 to_field 'author_meeting_display_ssm', extract_marc('111abcdfgklnpqj', trim_punctuation: true, alternate_script: false)
 to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq', trim_punctuation: true, alternate_script: false)
 
-## Vernacular field copies
+## Author ernacular field copies
 to_field 'author_person_vern_display_ssm', extract_marc('100aqbcdkj', trim_punctuation: true, alternate_script: :only)
 to_field 'author_corp_vern_display_ssm', extract_marc('110abcdfgklnj', trim_punctuation: true, alternate_script: :only)
 to_field 'author_meeting_vern_display_ssm', extract_marc('111abcdfgklnpqj', trim_punctuation: true, alternate_script: :only)
 to_field 'addl_author_vern_display_ssm', extract_marc('700aqbcdkj:710abcdfgklnj:711abcdfgklnpqj', trim_punctuation: true, alternate_script: :only)
 
-# JSTOR isn't an author. Try to not use it as one
+## Author sorting field
 to_field 'author_ssort', marc_sortable_author
 
 # Subject fields
+## Primary subject
 to_field 'subject_tsim', extract_marc(%W[
   600#{ATOU}
   610#{ATOU}
@@ -140,6 +141,8 @@ to_field 'subject_tsim', extract_marc(%W[
   651ae
   653a:654abcde:655abc
 ].join(':'))
+
+## Additional subject fields
 to_field 'subject_addl_tsim', extract_marc('600vwxyz:610vwxyz:611vwxyz:630vwxyz:650vwxyz:651vwxyz:654vwxyz:655vwxyz')
 to_field 'subject_topic_facet_ssim', extract_marc('600|*0|abcdq:610|*0|ab:611|*0|ab:630|*0|ab:650|*0|a:653|*0|a', trim_punctuation: true) do |record, accumulator, _context|
   # Include Fast Headings
@@ -175,8 +178,7 @@ end
 
 to_field 'lc_b4cutter_facet_sim', extract_marc('050a', first: true)
 
-# URL Fields
-
+# URL fields
 notfulltext = /abstract|description|sample text|table of contents|/i
 
 to_field('url_fulltext_display_ssm') do |rec, acc|
