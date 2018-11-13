@@ -7,7 +7,7 @@ namespace :solr do
   task :conf do
     solr_dir = "#{File.dirname(__FILE__)}/solr"
     solr_files = ['protwords.txt', 'schema.xml', 'solrconfig.xml',
-                  'stopwords.txt', 'stopwords_en.txt', 'synonyms.txt', ]
+                  'stopwords.txt', 'stopwords_en.txt', 'synonyms.txt']
 
     solr_files.each do |file|
       response = Faraday.get url_for_file("solr/conf/#{file}")
