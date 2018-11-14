@@ -70,22 +70,22 @@ end
 to_field 'material_type_display_ssm', extract_marc('300a', trim_punctuation: true)
 
 # Title fields
-## Primary Title/Subtitle
-## Extract only the title a, then the title/subtitle for title searching, exact matches, weighting.
+#
+# 245 - main title
+# 130 / 240 / 730 - uniform title (a standardized form of the title with different intensities)
+# 210 - abbreviated title
+# 222 - key title
+# 242 - translation of title by cataloging agency
+# 246 - sub/alternate titles
+# 247 - previous titles
+# 700 - added entry name (not only title-related subfields should be displayed/etc.)
+# 710 - added entry corporate names (same as above)
+# 711 - added entry meeting name (same as above)
+# 740 - uncontrolled/alternate title
+#
+## Title Search Fields
 to_field 'title_tsim', extract_marc('245a')
 to_field 'title_245ab_tsim', extract_marc('245ab', trim_punctuation: true)
-
-## Title Display
-to_field 'title_display_ssm', extract_marc('245abcfgknps', alternate_script: false, trim_punctuation: true)
-to_field 'title_vern_display_ssm', extract_marc('245abcfgknps', alternate_script: true, trim_punctuation: true)
-to_field 'uniform_title_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai', alternate_script: false, trim_punctuation: true)
-to_field 'uniform_title_vern_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai', alternate_script: true, trim_punctuation: true)
-to_field 'additional_title_display_ssm', extract_marc('210ab:246iabfgnp:247abcdefgnp', alternate_script: false)
-to_field 'additional_title_vern_display_ssm', extract_marc('210ab:246iabfgnp:247abcdefgnp', alternate_script: true)
-to_field 'related_title_display_ssm', extract_marc('700ilktmnoprs3:710ilktmnoprs3:711ilktmnoprs3:730adfgiklmnoprst3:740anp', alternate_script: false, trim_punctuation: true)
-to_field 'related_title_vern_display_ssm', extract_marc('700ilktmnoprs3:710ilktmnoprs3:711ilktmnoprs3:730adfgiklmnoprst3:740anp', alternate_script: true, trim_punctuation: true)
-
-## Additional title fields
 to_field 'title_addl_tsim', extract_marc(%W[
   245abnps
   130#{ATOZ}
@@ -97,7 +97,6 @@ to_field 'title_addl_tsim', extract_marc(%W[
   246abcdefgnp
   247abcdefgnp
 ].join(':'))
-
 to_field 'title_added_entry_tsim', extract_marc(%w[
   700gklmnoprst
   710fgklmnopqrst
@@ -105,10 +104,8 @@ to_field 'title_added_entry_tsim', extract_marc(%w[
   730abcdefgklmnopqrst
   740anp
 ].join(':'))
-
-
-# Could we slice ` --` off this in cases from 505? Trim punctuation doesn't handle it
-to_field 'title_related_tsim', extract_marc(%W{
+# TODO: slice ` --` off this in cases from 505? Trim punctuation doesn't handle it
+to_field 'title_related_tsim', extract_marc(%w[
   505t
   700lktmnoprs
   710lktmnoprs
@@ -138,8 +135,19 @@ to_field 'title_related_tsim', extract_marc(%W{
   797lktmnoprs
   798lktmnoprs
   799alktmnoprs
-}.join(':'), trim_punctuation: true)
+].join(':'), trim_punctuation: true)
 
+## Title Display Fields
+to_field 'title_display_ssm', extract_marc('245abcfgknps', alternate_script: false, trim_punctuation: true)
+to_field 'title_vern_display_ssm', extract_marc('245abcfgknps', alternate_script: true, trim_punctuation: true)
+to_field 'uniform_title_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai', alternate_script: false, trim_punctuation: true)
+to_field 'uniform_title_vern_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai', alternate_script: true, trim_punctuation: true)
+to_field 'additional_title_display_ssm', extract_marc('210ab:246iabfgnp:247abcdefgnp', alternate_script: false, trim_punctuation: true)
+to_field 'additional_title_vern_display_ssm', extract_marc('210ab:246iabfgnp:247abcdefgnp', alternate_script: true, trim_punctuation: true)
+to_field 'related_title_display_ssm', extract_marc('700ilktmnoprs3:710ilktmnoprs3:711ilktmnoprs3:730adfgiklmnoprst3:740anp', alternate_script: false, trim_punctuation: true)
+to_field 'related_title_vern_display_ssm', extract_marc('700ilktmnoprs3:710ilktmnoprs3:711ilktmnoprs3:730adfgiklmnoprst3:740anp', alternate_script: true, trim_punctuation: true)
+
+## Title Sort Fields
 to_field 'title_ssort', marc_sortable_title
 
 # Author fields
@@ -199,7 +207,17 @@ to_field 'published_vern_display_ssm', extract_marc('260a', trim_punctuation: tr
 to_field 'pub_date_ssim', marc_publication_date
 
 # Series fields
-to_field 'series_title_tsim', extract_marc("440anpv:490av")
+#
+# Series Titles
+#
+# Series titles can cause some confusion, as they may contain keywords which aren't necessarily related to the series.
+# For example, "Penguin History of Britain" will return in a title search for "Penguin" if it's part of the title search.
+#
+# 490a - the title of a series.
+# 440a - deprecated same as 490a. We still have a lot of these, though, so if we index 490, we should index 440.
+#
+# Note: 400/410/411 subfield t were deprecated but we still have indexing set up for them
+to_field 'series_title_tsim', extract_marc('440anpv:490av')
 to_field 'series_title_display_ssm', extract_marc('490avlx3:440anpvx', alternate_script: false, trim_punctuation: true)
 
 # Call Number fields
