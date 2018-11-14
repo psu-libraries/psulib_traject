@@ -73,17 +73,17 @@ to_field 'material_type_display_ssm', extract_marc('300a', trim_punctuation: tru
 ## Primary Title/Subtitle
 ## Extract only the title a, then the title/subtitle for title searching, exact matches, weighting.
 to_field 'title_tsim', extract_marc('245a')
-to_field 'title_245ab_tsim', extract_marc('245ab', :trim_punctuation => true)
+to_field 'title_245ab_tsim', extract_marc('245ab', trim_punctuation: true)
 
 ## Title Display
-to_field 'title_display_ssm', extract_marc('245abcfgknps', :alternate_script=>false, :trim_punctuation => true)
-to_field 'title_vern_display_ssm', extract_marc('245abcfgknps', :alternate_script=>true, :trim_punctuation => true)
-to_field 'uniform_title_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai', :alternate_script=>false, :trim_punctuation => true)
-to_field 'uniform_title_vern_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai', :alternate_script=>true, :trim_punctuation => true)
-to_field 'additional_title_display_ssm', extract_marc('210ab:246iabfgnp:247abcdefgnp', :alternate_script=>false)
-to_field 'additional_title_vern_display_ssm', extract_marc('210ab:246iabfgnp:247abcdefgnp', :alternate_script=>true)
-to_field 'related_title_display_ssm', extract_marc('700ilktmnoprs3:710ilktmnoprs3:711ilktmnoprs3:730adfgiklmnoprst3:740anp', :alternate_script=>false, :trim_punctuation => true)
-to_field 'related_title_vern_display_ssm', extract_marc('700ilktmnoprs3:710ilktmnoprs3:711ilktmnoprs3:730adfgiklmnoprst3:740anp', :alternate_script=>true, :trim_punctuation => true)
+to_field 'title_display_ssm', extract_marc('245abcfgknps', alternate_script: false, trim_punctuation: true)
+to_field 'title_vern_display_ssm', extract_marc('245abcfgknps', alternate_script: true, trim_punctuation: true)
+to_field 'uniform_title_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai', alternate_script: false, trim_punctuation: true)
+to_field 'uniform_title_vern_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai', alternate_script: true, trim_punctuation: true)
+to_field 'additional_title_display_ssm', extract_marc('210ab:246iabfgnp:247abcdefgnp', alternate_script: false)
+to_field 'additional_title_vern_display_ssm', extract_marc('210ab:246iabfgnp:247abcdefgnp', alternate_script: true)
+to_field 'related_title_display_ssm', extract_marc('700ilktmnoprs3:710ilktmnoprs3:711ilktmnoprs3:730adfgiklmnoprst3:740anp', alternate_script: false, trim_punctuation: true)
+to_field 'related_title_vern_display_ssm', extract_marc('700ilktmnoprs3:710ilktmnoprs3:711ilktmnoprs3:730adfgiklmnoprst3:740anp', alternate_script: true, trim_punctuation: true)
 
 ## Additional title fields
 to_field 'title_addl_tsim', extract_marc(%W[
@@ -138,7 +138,7 @@ to_field 'title_related_tsim', extract_marc(%W{
   797lktmnoprs
   798lktmnoprs
   799alktmnoprs
-}.join(':'), :trim_punctuation => true)
+}.join(':'), trim_punctuation: true)
 
 to_field 'title_ssort', marc_sortable_title
 
@@ -200,7 +200,7 @@ to_field 'pub_date_ssim', marc_publication_date
 
 # Series fields
 to_field 'series_title_tsim', extract_marc("440anpv:490av")
-to_field 'series_title_display_ssm', extract_marc('490avlx3:440anpvx', :alternate_script=>false, :trim_punctuation => true)
+to_field 'series_title_display_ssm', extract_marc('490avlx3:440anpvx', alternate_script: false, trim_punctuation: true)
 
 # Call Number fields
 to_field 'lc_callnum_display_ssm', extract_marc('050ab', first: true)
