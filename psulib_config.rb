@@ -139,13 +139,13 @@ to_field 'title_related_tsim', extract_marc(%w[
 
 ## Title Display Fields
 to_field 'title_display_ssm', extract_marc('245abcfgknps', alternate_script: false, trim_punctuation: true)
-to_field 'title_vern_display_ssm', extract_marc('245abcfgknps', alternate_script: true, trim_punctuation: true)
+to_field 'title_vern_display_ssm', extract_marc('245abcfgknps', alternate_script: :only, trim_punctuation: true)
 to_field 'uniform_title_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai', alternate_script: false, trim_punctuation: true)
-to_field 'uniform_title_vern_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai', alternate_script: true, trim_punctuation: true)
+to_field 'uniform_title_vern_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai', alternate_script: :only, trim_punctuation: true)
 to_field 'additional_title_display_ssm', extract_marc('210ab:246iabfgnp:247abcdefgnp', alternate_script: false, trim_punctuation: true)
-to_field 'additional_title_vern_display_ssm', extract_marc('210ab:246iabfgnp:247abcdefgnp', alternate_script: true, trim_punctuation: true)
+to_field 'additional_title_vern_display_ssm', extract_marc('210ab:246iabfgnp:247abcdefgnp', alternate_script: :only, trim_punctuation: true)
 to_field 'related_title_display_ssm', extract_marc('700ilktmnoprs3:710ilktmnoprs3:711ilktmnoprs3:730adfgiklmnoprst3:740anp', alternate_script: false, trim_punctuation: true)
-to_field 'related_title_vern_display_ssm', extract_marc('700ilktmnoprs3:710ilktmnoprs3:711ilktmnoprs3:730adfgiklmnoprst3:740anp', alternate_script: true, trim_punctuation: true)
+to_field 'related_title_vern_display_ssm', extract_marc('700ilktmnoprs3:710ilktmnoprs3:711ilktmnoprs3:730adfgiklmnoprst3:740anp', alternate_script: :only, trim_punctuation: true)
 
 ## Title Sort Fields
 to_field 'title_ssort', marc_sortable_title
