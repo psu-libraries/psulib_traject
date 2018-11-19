@@ -104,7 +104,6 @@ to_field 'title_added_entry_tsim', extract_marc(%w[
   730abcdefgklmnopqrst
   740anp
 ].join(':'))
-# TODO: slice ` --` off this in cases from 505? Trim punctuation doesn't handle it
 to_field 'title_related_tsim', extract_marc(%w[
   505t
   700lktmnoprs
