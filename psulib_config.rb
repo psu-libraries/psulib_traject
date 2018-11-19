@@ -135,7 +135,11 @@ to_field 'title_related_tsim', extract_marc(%w[
   797lktmnoprs
   798lktmnoprs
   799alktmnoprs
-].join(':'), trim_punctuation: true)
+].join(':'), trim_punctuation: true) do |record, accumulator|
+  if !!record.fields('505')
+    accumulator.each { |value| value.chomp!(' --') }
+  end
+end
 
 ## Title Display Fields
 to_field 'title_display_ssm', extract_marc('245abcfgknps', alternate_script: false, trim_punctuation: true)
