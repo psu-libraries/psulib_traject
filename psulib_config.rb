@@ -141,8 +141,23 @@ to_field 'title_related_tsim', extract_marc(%w[
 end
 
 ## Title Display Fields
-to_field 'title_display_ssm', extract_marc('245abcfgknps', alternate_script: false, trim_punctuation: true)
-to_field 'title_vern_display_ssm', extract_marc('245abcfgknps', alternate_script: :only, trim_punctuation: true)
+to_field 'title_latin_display_ssm', extract_marc('245abcfgknps', alternate_script: false, trim_punctuation: true)
+to_field 'title_vern', extract_marc('245abcfgknps', alternate_script: :only, trim_punctuation: true)
+# use vern title as title_display_ssm if exists
+# otherwise use latin character title as title_display_ssm
+each_record do |record, context|
+  title_latin = context.output_hash['title_latin_display_ssm']
+  title_vern = context.output_hash['title_vern']
+  if title_vern.nil?
+    context.output_hash['title_display_ssm'] = title_latin
+    # remove duplicate latin title
+    context.output_hash.delete('title_latin_display_ssm')
+  else
+    context.output_hash['title_display_ssm'] = title_vern
+    # remove duplicate vern title
+    context.output_hash.delete('title_vern')
+  end
+end
 to_field 'uniform_title_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai', alternate_script: false, trim_punctuation: true)
 to_field 'uniform_title_vern_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai', alternate_script: :only, trim_punctuation: true)
 to_field 'additional_title_display_ssm', extract_marc('210ab:246iabfgnp:247abcdefgnp', alternate_script: false, trim_punctuation: true)
