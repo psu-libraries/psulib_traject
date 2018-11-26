@@ -135,9 +135,7 @@ to_field 'title_related_tsim', extract_marc(%w[
   798lktmnoprs
   799alktmnoprs
 ].join(':'), trim_punctuation: true) do |record, accumulator|
-  if !record.fields('505').empty?
-    accumulator.each { |value| value.chomp!(' --') }
-  end
+  accumulator.each { |value| value.chomp!(' --') } unless record.fields('505').empty?
 end
 
 ## Title Display Fields
@@ -145,7 +143,7 @@ to_field 'title_latin_display_ssm', extract_marc('245abcfgknps', alternate_scrip
 to_field 'title_vern', extract_marc('245abcfgknps', alternate_script: :only, trim_punctuation: true)
 # use vern title as title_display_ssm if exists
 # otherwise use latin character title as title_display_ssm
-each_record do |record, context|
+each_record do |_record, context|
   title_latin = context.output_hash['title_latin_display_ssm']
   title_vern = context.output_hash['title_vern']
   if title_vern.nil?
