@@ -158,12 +158,9 @@ each_record do |record, context|
     context.output_hash.delete('title_vern')
   end
 end
-to_field 'uniform_title_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai', alternate_script: false, trim_punctuation: true)
-to_field 'uniform_title_vern_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai', alternate_script: :only, trim_punctuation: true)
-to_field 'additional_title_display_ssm', extract_marc('210ab:246iabfgnp:247abcdefgnp', alternate_script: false, trim_punctuation: true)
-to_field 'additional_title_vern_display_ssm', extract_marc('210ab:246iabfgnp:247abcdefgnp', alternate_script: :only, trim_punctuation: true)
-to_field 'related_title_display_ssm', extract_marc('700ilktmnoprs3:710ilktmnoprs3:711ilktmnoprs3:730adfgiklmnoprst3:740anp', alternate_script: false, trim_punctuation: true)
-to_field 'related_title_vern_display_ssm', extract_marc('700ilktmnoprs3:710ilktmnoprs3:711ilktmnoprs3:730adfgiklmnoprst3:740anp', alternate_script: :only, trim_punctuation: true)
+to_field 'uniform_title_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai', trim_punctuation: true)
+to_field 'additional_title_display_ssm', extract_marc('210ab:246iabfgnp:247abcdefgnp', trim_punctuation: true)
+to_field 'related_title_display_ssm', extract_marc('700ilktmnoprs3:710ilktmnoprs3:711ilktmnoprs3:730adfgiklmnoprst3:740anp', trim_punctuation: true)
 
 ## Title Sort Fields
 to_field 'title_ssort', marc_sortable_title
@@ -184,7 +181,7 @@ to_field 'author_corp_display_ssm', extract_marc('110abcdfgklnj', trim_punctuati
 to_field 'author_meeting_display_ssm', extract_marc('111abcdfgklnpqj', trim_punctuation: true, alternate_script: false)
 to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq', trim_punctuation: true, alternate_script: false)
 
-## Author ernacular field copies
+## Author vernacular field copies
 to_field 'author_person_vern_display_ssm', extract_marc('100aqbcdkj', trim_punctuation: true, alternate_script: :only)
 to_field 'author_corp_vern_display_ssm', extract_marc('110abcdfgklnj', trim_punctuation: true, alternate_script: :only)
 to_field 'author_meeting_vern_display_ssm', extract_marc('111abcdfgklnpqj', trim_punctuation: true, alternate_script: :only)
