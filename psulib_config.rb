@@ -171,7 +171,7 @@ to_field 'author_tsim', extract_marc('100aqbcdk:110abcdfgkln:111abcdfgklnpq')
 to_field 'author_addl_tsim', extract_marc('700aqbcdk:710abcdfgkln:711abcdfgklnpq')
 
 ## Authors for faceting
-to_field 'all_authors_facet_sim', extract_marc('100abcdqj:110abcdj:111ancdj:700abcdqj:710abcdj:711ancdj', trim_punctuation: true)
+to_field 'all_authors_facet_ssim', extract_marc('100abcdqj:110abcdj:111ancdj:700abcdqj:710abcdj:711ancdj', trim_punctuation: true)
 
 ## Author display
 to_field 'author_person_display_ssm', extract_marc('100aqbcdkj', trim_punctuation: true, alternate_script: false)
