@@ -174,16 +174,10 @@ to_field 'author_addl_tsim', extract_marc('700aqbcdk:710abcdfgkln:711abcdfgklnpq
 to_field 'all_authors_facet_ssim', extract_marc('100abcdqj:110abcdj:111ancdj:700abcdqj:710abcdj:711ancdj', trim_punctuation: true)
 
 ## Author display
-to_field 'author_person_display_ssm', extract_marc('100aqbcdkj', trim_punctuation: true, alternate_script: false)
-to_field 'author_corp_display_ssm', extract_marc('110abcdfgklnj', trim_punctuation: true, alternate_script: false)
-to_field 'author_meeting_display_ssm', extract_marc('111abcdfgklnpqj', trim_punctuation: true, alternate_script: false)
-to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq', trim_punctuation: true, alternate_script: false)
-
-## Author vernacular field copies
-to_field 'author_person_vern_display_ssm', extract_marc('100aqbcdkj', trim_punctuation: true, alternate_script: :only)
-to_field 'author_corp_vern_display_ssm', extract_marc('110abcdfgklnj', trim_punctuation: true, alternate_script: :only)
-to_field 'author_meeting_vern_display_ssm', extract_marc('111abcdfgklnpqj', trim_punctuation: true, alternate_script: :only)
-to_field 'addl_author_vern_display_ssm', extract_marc('700aqbcdkj:710abcdfgklnj:711abcdfgklnpqj', trim_punctuation: true, alternate_script: :only)
+to_field 'author_person_display_ssm', extract_marc('100aqbcdkj', trim_punctuation: true)
+to_field 'author_corp_display_ssm', extract_marc('110abcdfgklnj', trim_punctuation: true)
+to_field 'author_meeting_display_ssm', extract_marc('111abcdfgklnpqj', trim_punctuation: true)
+to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq', trim_punctuation: true)
 
 ## Author sorting field
 to_field 'author_ssort', marc_sortable_author
