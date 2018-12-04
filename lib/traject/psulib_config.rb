@@ -1,40 +1,30 @@
-# PSU Library MARC to Solr indexing
-# Uses traject: https://github.com/traject-project/traject
+$LOAD_PATH << File.expand_path('../', __dir__)
 
 require 'bundler/setup'
 require 'library_stdnums'
+require 'traject'
 is_jruby = RUBY_ENGINE == 'jruby'
 require 'traject/marc4j_reader' if is_jruby
 require 'traject/macros/marc21_semantics'
 require 'traject/macros/marc_format_classifier'
 
+extend Traject::Macros::Marc21
 extend Traject::Macros::Marc21Semantics
 extend Traject::Macros::MarcFormats
 
 Marc21 = Traject::Macros::Marc21
 MarcExtractor = Traject::MarcExtractor
 
-# Add lib directory to the ruby load path
-$LOAD_PATH.unshift "#{File.dirname(__FILE__)}/lib"
-
 ATOZ = ('a'..'z').to_a.join('')
 ATOU = ('a'..'u').to_a.join('')
 
 settings do
-  # Where to find solr server to write to
   provide 'solr.url', 'http://localhost:8983/solr/blacklight-core'
   provide 'log.batch_size', 100_000
-  # set this to be non-negative if threshold should be enforced
-  # provide 'solr_writer.max_skipped', -1
-
-  # solr.version doesn't currently do anything, but set it
-  # anyway, in the future it will warn you if you have settings
-  # that may not work with your version.
   provide 'solr.version', '7.4.0'
-
-  # Where to send logging
   provide 'log.file', 'log/traject.log'
   provide 'log.error_file', 'log/traject_error.log'
+  provide 'solr_writer.commit_on_close', 'true'
 
   if is_jruby
     provide 'reader_class_name', 'Traject::Marc4JReader'
@@ -42,7 +32,6 @@ settings do
     provide 'marc4j_reader.source_encoding', 'UTF-8'
     # defaults to 1 less than the number of processors detected on your machine
     # provide 'processing_thread_pool', 7
-    provide 'solrj_writer.commit_on_close', 'true'
   end
 end
 

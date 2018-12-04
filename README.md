@@ -50,7 +50,7 @@ $ ruby --version
 
    You can download [a sample file from Box](https://psu.app.box.com/folder/53004724072).
    ```
-   $ bundle exec traject -c psulib_config.rb /full/path/to/sample_psucat.mrc 
+   $ bundle exec traject -c lib/traject/psulib_config.rb /full/path/to/sample_psucat.mrc 
    ```
 
 ## Traject in debug mode
@@ -59,5 +59,5 @@ For testing purposes you can run traject with the `--debug-mode` flag to
 display the output to the console (and not push the data to Solr).
 
 ```
-$ bundle exec traject --debug-mode -c psulib_config.rb /full/path/to/marcfile.mrc
+$ bundle exec traject --debug-mode -c lib/traject/psulib_config.rb /full/path/to/marcfile.mrc
 ```
