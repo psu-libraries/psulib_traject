@@ -5,7 +5,7 @@ require 'faraday'
 namespace :solr do
   desc 'Updates solr config files from psulib_blacklight'
   task :conf do
-    solr_dir = "#{File.dirname(__FILE__)}/solr"
+    solr_dir = File.join(File.dirname(__FILE__), '../../solr')
     solr_files = ['protwords.txt', 'schema.xml', 'solrconfig.xml',
                   'stopwords.txt', 'stopwords_en.txt', 'synonyms.txt']
 

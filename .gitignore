@@ -9,8 +9,10 @@
 .idea
 
 # Ignore sample data.
-/sample_data
 /solr/sample_data
 
-# Ignore solr_wrapper config.
-.solr_wrapper.yml
+# Ignore solr conf.
+/solr/conf
+
+# Ignore log files.
+/log
