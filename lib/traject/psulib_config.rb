@@ -272,3 +272,7 @@ to_field 'url_suppl_display_ssm' do |rec, acc|
     end
   end
 end
+
+## Notes fields
+# Bound with
+to_field 'bound_with_ss', extract_marc('590ac', separator: ', ')
