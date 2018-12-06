@@ -1,19 +1,21 @@
 # frozen_string_literal: true
 
 RSpec.describe 'Bound with spec:' do
-  let(:indexer) do
-    Traject::Indexer.new.tap do |i|
-      i.load_config_file('./lib/traject/psulib_config.rb')
-    end
+  let(:leader) { '1234567890' }
+  let(:field) { 'bound_with_ssm' }
+
+  before(:all) do
+    c = './lib/traject/psulib_config.rb'
+    @indexer = Traject::Indexer.new
+    @indexer.load_config_file(c)
   end
-  let(:fixtures_doc) { File.new('./spec/fixtures/bound_with_fixtures.mrc') }
-  let(:records) { MARC::Reader.new(fixtures_doc, external_encoding: 'UTF-8').to_a }
-  let(:results) { records.map { |rec| indexer.map_record(rec) }.to_a }
 
   describe 'Child items bound in' do
-    subject(:result) { results.select { |r| r['id'] == ['1591'] }.first }
-    it 'show the parent item it is bound into' do
-      expect(result['bound_with_ss']).to include('Bound in: The high-caste Hindu woman / With introduction by Rachel L. Bodley, 355035 (parent record ckey)')
+    let(:bound_with_catkey) { { '591' => { "ind1"=>" ","ind2"=>" ","subfields"=>[{'a'=>'The high-caste Hindu woman / With introduction by Rachel L. Bodley'}, {'c'=>'355035'}] } } }
+    let(:bound_with_marc) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [bound_with_catkey], 'leader' => leader)) }
+    # let(:bound_with_marc) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [bound_with_catkey])) }
+    it 'show the linked parent item it is bound into' do
+      expect(bound_with_marc[field]).to include('<a href="/catalog/355035">The high-caste Hindu woman / With introduction by Rachel L. Bodley</a>')
     end
   end
 end

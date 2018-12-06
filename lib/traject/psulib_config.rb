@@ -275,4 +275,16 @@ end
 
 ## Notes fields
 # Bound with
-to_field 'bound_with_ss', extract_marc('590ac', separator: ', ')
+# =591  \\$aThe high-caste Hindu woman / With introduction by Rachel L. Bodley$c355035
+to_field 'bound_with_ssm', extract_marc('591ac') do |record, accumulator|
+  if record.fields('591').any?
+    datafield = record.fields('591')[0]
+    subfield_c = datafield.find_all {|subfield| subfield.code == 'c'}
+
+    if subfield_c.any?
+      subfield_a = datafield.find_all {|subfield| subfield.code == 'a'}
+      link = "<a href=\"/catalog/#{subfield_c[0].value}\">#{subfield_a[0].value}</a>"
+      accumulator[0] = link
+    end
+  end
+end
