@@ -3,20 +3,29 @@
 RSpec::Matchers.define_negated_matcher :not_include, :include
 
 RSpec.describe 'Title spec:' do
-  let(:indexer) do
-    Traject::Indexer.new.tap do |i|
-      i.load_config_file('./lib/traject/psulib_config.rb')
-    end
+  let(:leader) { '1234567890' }
+
+  before(:all) do
+    c = './lib/traject/psulib_config.rb'
+    @indexer = Traject::Indexer.new
+    @indexer.load_config_file(c)
   end
 
-  let(:records) { MARC::Reader.new(fixtures_doc, external_encoding: 'UTF-8').to_a }
-  let(:results) { records.map { |rec| indexer.map_record(rec) }.to_a }
-
   describe 'Record with a vernacular title' do
-    let(:fixtures_doc) { File.new('./spec/fixtures/title_fixtures.mrc') }
     let(:field) { 'title_display_ssm' }
     let(:subfield) { 'title_latin_display_ssm' }
-    subject(:result) { results.select { |r| r['id'] == ['2788022'] }.first }
+    let(:title_245) do
+      { '245' => { 'ind1' => '1', 'ind2' => '0', 'subfields' => [{ '6' => '880-02' },
+                                                                 { 'a' => 'Shōsetsu wandafuru raifu /' },
+                                                                 { 'c' => 'Koreeda Hirokazu' }] } }
+    end
+    let(:title_vern_245) do
+      { '880' => { 'ind1' => '1', 'ind2' => '0', 'subfields' => [{ '6' => '245-02' },
+                                                                 { 'a' => '小說ワンダフルライフ /' },
+                                                                 { 'c' => '是枝裕和.' }] } }
+    end
+    let(:result) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [title_245, title_vern_245], 'leader' => leader)) }
+
     it 'has the vernacular title as the title statement' do
       expect(result[field]).to eq ['小說ワンダフルライフ / 是枝裕和']
       expect(result[field].length).to eq 1
@@ -33,10 +42,15 @@ RSpec.describe 'Title spec:' do
   end
 
   describe 'Record with no vernacular title' do
-    let(:fixtures_doc) { File.new('./spec/fixtures/title_fixtures.mrc') }
     let(:field) { 'title_display_ssm' }
     let(:subfield) { 'title_latin_display_ssm' }
-    subject(:result) { results.select { |r| r['id'] == ['2431513'] }.first }
+    let(:title_245) do
+      { '245' => { 'ind1' => '1', 'ind2' => '3', 'subfields' => [{ 'a' => 'La ressemblance :' },
+                                                                 { 'b' => 'suivi de la feintise, Jeff Edmunds /' },
+                                                                 { 'c' => 'Jean Lahougue, Jeff Edmunds' }] } }
+    end
+    let(:result) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [title_245], 'leader' => leader)) }
+
     it 'has the latin title as the title statement' do
       expect(result[field]).to eq ['La ressemblance : suivi de la feintise, Jeff Edmunds / Jean Lahougue, Jeff Edmunds']
       expect(result[field].length).to eq 1
@@ -52,10 +66,16 @@ RSpec.describe 'Title spec:' do
   end
 
   describe 'Related titles from 505t' do
-    let(:fixtures_doc) { File.new('./spec/fixtures/title_related_505t_fixtures.mrc') }
     let(:field) { 'title_related_tsim' }
-    subject(:result) { results.select { |r| r['id'] == ['12741571'] }.first }
+    let(:fields) do
+      { '505' => { 'ind1' => 0, 'ind2' => 0, 'subfields' => [{ 't' => 'US, EU and global competition law development --' },
+                                                             { 't' => 'International organizations and competition law : diverging rationale? --' },
+                                                             { 't' => 'Market governance in China --' }] } }
+    end
+    let(:result) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [fields], 'leader' => leader)) }
+
     it 'returns with trailing -- chomped' do
+      expect(result[field]).not_to eq nil
       expect(result[field]).to(all(not_include(' --')))
     end
   end
