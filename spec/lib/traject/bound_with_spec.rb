@@ -2,7 +2,6 @@
 
 RSpec.describe 'Bound with spec:' do
   let(:leader) { '1234567890' }
-  let(:field) { 'bound_with_ssm' }
 
   before(:all) do
     c = './lib/traject/psulib_config.rb'
@@ -11,11 +10,38 @@ RSpec.describe 'Bound with spec:' do
   end
 
   describe 'Child items bound in' do
-    let(:bound_with_catkey) { { '591' => { "ind1"=>" ","ind2"=>" ","subfields"=>[{'a'=>'The high-caste Hindu woman / With introduction by Rachel L. Bodley'}, {'c'=>'355035'}] } } }
+    let(:bound_with_catkey) do
+      {
+          '591' => {
+              "ind1" => " ",
+              "ind2" => " ",
+              "subfields" => [ {
+                                  'a' => 'The high-caste Hindu woman / With introduction by Rachel L. Bodley'
+                              },
+                              {
+                                  'c' =>'355035'
+                              } ]
+          }
+      }
+    end
+    let(:bound_with_multi) do
+      {
+          '591' => {
+              "ind1" => " ",
+              "ind2" => " ",
+              "subfields" => [ {'a' => 'blah blah blah'} ]
+          }
+      }
+    end
     let(:bound_with_marc) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [bound_with_catkey], 'leader' => leader)) }
-    # let(:bound_with_marc) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [bound_with_catkey])) }
-    it 'show the linked parent item it is bound into' do
-      expect(bound_with_marc[field]).to include('<a href="/catalog/355035">The high-caste Hindu woman / With introduction by Rachel L. Bodley</a>')
+    let(:bound_with_multi_marc) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [bound_with_catkey, bound_with_multi], 'leader' => leader)) }
+
+    it 'shows the parent title' do
+      expect(bound_with_marc['bound_with_title_ssm']).to include 'The high-caste Hindu woman / With introduction by Rachel L. Bodley'
+      expect(bound_with_marc['bound_with_title_ssm']).to include '355035'
+    end
+    it 'shows the binding notes when there are more than one 591' do
+       expect(bound_with_multi_marc['bound_with_notes_ssm']).to include 'blah blah blah'
     end
   end
 end

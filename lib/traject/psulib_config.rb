@@ -274,17 +274,37 @@ to_field 'url_suppl_display_ssm' do |rec, acc|
 end
 
 ## Notes fields
-# Bound with
-# =591  \\$aThe high-caste Hindu woman / With introduction by Rachel L. Bodley$c355035
-to_field 'bound_with_ssm', extract_marc('591ac') do |record, accumulator|
+# Bound with notes
+to_field 'bound_with_notes_ssm' do |record, accumulator|
   if record.fields('591').any?
-    datafield = record.fields('591')[0]
-    subfield_c = datafield.find_all {|subfield| subfield.code == 'c'}
-
-    if subfield_c.any?
-      subfield_a = datafield.find_all {|subfield| subfield.code == 'a'}
-      link = "<a href=\"/catalog/#{subfield_c[0].value}\">#{subfield_a[0].value}</a>"
-      accumulator[0] = link
+    record.each do |field|
+      subfield_codes = field.subfields.collect(&:code)
+      unless subfield_codes.include? 'c'
+        accumulator << field.value
+      end
     end
   end
 end
+
+# Make a linked title to the bound parent
+to_field 'bound_with_title_ssm' do |record, accumulator|
+  if record.fields('591').any?
+    record.each do |field|
+      subfield_codes = field.subfields.collect(&:code)
+
+      # Implied that a is available when c is present
+      if subfield_codes.include? 'c'
+        bound_title = field.subfields.select { |subfield| subfield.code == 'a' }
+                              .collect(&:value)
+        bound_catkey = field.subfields.select { |subfield| subfield.code == 'c' }
+                           .collect(&:value)
+
+        accumulator << {
+            bound_catkey: bound_catkey,
+            bound_title: bound_title
+        }
+      end
+    end
+  end
+end
+
