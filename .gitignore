@@ -16,3 +16,5 @@
 
 # Ignore log files.
 /log
+
+.byebug_history

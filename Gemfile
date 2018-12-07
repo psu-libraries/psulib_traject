@@ -11,5 +11,5 @@ group :development, :test do
   gem 'byebug', platform: :mri
   gem 'rspec'
   gem 'rubocop'
-  gem 'ruby-debug'
+  gem 'ruby-debug', platform: :jruby
 end

@@ -15,7 +15,7 @@ Lint/EmptyWhen:
 # Configuration parameters: CountComments, ExcludedMethods.
 # ExcludedMethods: refine
 Metrics/BlockLength:
-  Max: 44
+  Max: 65
 
 # Offense count: 2
 Style/MixinUsage:
