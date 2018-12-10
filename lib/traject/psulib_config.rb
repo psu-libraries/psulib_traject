@@ -276,35 +276,24 @@ end
 ## Notes fields
 # Bound with notes
 to_field 'bound_with_notes_ssm' do |record, accumulator|
-  if record.fields('591').any?
-    record.each do |field|
-      subfield_codes = field.subfields.collect(&:code)
-      unless subfield_codes.include? 'c'
-        accumulator << field.value
-      end
-    end
+  next unless record['591']
+  bound_with_notes = record.fields('591')
+  bound_with_notes.each do |subfield|
+    next unless !subfield.codes.include? 'c'  
+    accumulator << subfield.value
   end
 end
 
 # Make a linked title to the bound parent
-to_field 'bound_with_title_ssm' do |record, accumulator|
-  if record.fields('591').any?
-    record.each do |field|
-      subfield_codes = field.subfields.collect(&:code)
+to_field 'bound_with_title_struct' do |record, accumulator|
+  next unless record['591']
+  bound_with_title = record.fields('591')
+  bound_with_title.each do |subfield|
+    next unless subfield.codes.include? 'c'
+    # Implied that a is available when c is present
+    bound_title = subfield.subfields.select { |sub| sub.code == 'a' }.collect(&:value)
+    bound_catkey = subfield.subfields.select { |sub| sub.code == 'c' }.collect(&:value)
 
-      # Implied that a is available when c is present
-      if subfield_codes.include? 'c'
-        bound_title = field.subfields.select { |subfield| subfield.code == 'a' }
-                              .collect(&:value)
-        bound_catkey = field.subfields.select { |subfield| subfield.code == 'c' }
-                           .collect(&:value)
-
-        accumulator << {
-            bound_catkey: bound_catkey,
-            bound_title: bound_title
-        }
-      end
-    end
+    accumulator << "{\"boundcatkey\":\"#{bound_catkey.first}\",\"boundtitle\":\"#{bound_title.first}\"}"
   end
 end
-
