@@ -10,9 +10,13 @@ RSpec.describe 'Bound with spec:' do
   end
 
   describe 'Child items bound in' do
-    let(:bound_with_catkey) { { '591' => { 'ind1' => ' ', 'ind2' => ' ', 'subfields' => [{ 'a' => 'The high-caste Hindu woman / With introduction by Rachel L. Bodley' }, { 'c' => '355035' }] } } }
-    let(:bound_with_multi) { { '591' => { 'ind1' => ' ', 'ind2' => ' ', 'subfields' => [{ 'a' => 'blah blah blah' }] } } }
-    let(:bound_with_marc) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [bound_with_catkey], 'leader' => leader)) }
+    let(:bound_with_catkey) { { '591' => { 'ind1' => ' ', 'ind2' => ' ', 'subfields' => [
+                              { 'a' => 'The high-caste Hindu woman / With introduction by Rachel L. Bodley' },
+                              { 'c' => '355035' }] } } }
+    let(:bound_with_multi) { { '591' => { 'ind1' => ' ', 'ind2' => ' ', 'subfields' => [
+                             { 'a' => 'blah blah blah' }] } } }
+    let(:bound_with_marc) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [bound_with_catkey],
+                                                                           'leader' => leader)) }
     let(:bound_with_multi_marc) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [bound_with_catkey, bound_with_multi], 'leader' => leader)) }
 
     it 'shows the parent title' do
