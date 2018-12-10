@@ -277,9 +277,11 @@ end
 # Bound with notes
 to_field 'bound_with_notes_ssm' do |record, accumulator|
   next unless record['591']
+
   bound_with_notes = record.fields('591')
   bound_with_notes.each do |subfield|
-    next unless !subfield.codes.include? 'c'  
+    next if subfield.codes.include? 'c'
+
     accumulator << subfield.value
   end
 end
@@ -287,9 +289,11 @@ end
 # Make a linked title to the bound parent
 to_field 'bound_with_title_struct' do |record, accumulator|
   next unless record['591']
+
   bound_with_title = record.fields('591')
   bound_with_title.each do |subfield|
     next unless subfield.codes.include? 'c'
+
     # Implied that a is available when c is present
     bound_title = subfield.subfields.select { |sub| sub.code == 'a' }.collect(&:value)
     bound_catkey = subfield.subfields.select { |sub| sub.code == 'c' }.collect(&:value)
