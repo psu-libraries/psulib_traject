@@ -293,7 +293,6 @@ to_field 'bound_with_title_struct' do |record, accumulator|
     # Implied that a is available when c is present
     bound_title = subfield.subfields.select { |sub| sub.code == 'a' }.collect(&:value)
     bound_catkey = subfield.subfields.select { |sub| sub.code == 'c' }.collect(&:value)
-
-    accumulator << "{\"boundcatkey\":\"#{bound_catkey.first}\",\"boundtitle\":\"#{bound_title.first}\"}"
+    accumulator << "{\"boundcatkey\": #{bound_catkey.first.to_json}, \"boundtitle\": #{bound_title.first.to_json}}"
   end
 end

@@ -16,7 +16,7 @@ RSpec.describe 'Bound with spec:' do
     let(:bound_with_multi_marc) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [bound_with_catkey, bound_with_multi], 'leader' => leader)) }
 
     it 'shows the parent title' do
-      expect(bound_with_marc['bound_with_title_struct']).to match ["{\"boundcatkey\":\"355035\",\"boundtitle\":\"The high-caste Hindu woman / With introduction by Rachel L. Bodley\"}"]
+      expect(bound_with_marc['bound_with_title_struct']).to match ["{\"boundcatkey\": \"355035\", \"boundtitle\": \"The high-caste Hindu woman / With introduction by Rachel L. Bodley\"}"]
     end
     it 'shows the binding notes when there are more than one 591' do
        expect(bound_with_multi_marc['bound_with_notes_ssm']).to include 'blah blah blah'
