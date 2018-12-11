@@ -67,9 +67,6 @@ to_field 'material_type_display_ssm', extract_marc('300a', trim_punctuation: tru
 # 242 - translation of title by cataloging agency
 # 246 - sub/alternate titles
 # 247 - previous titles
-# 700 - added entry name (not only title-related subfields should be displayed/etc.)
-# 710 - added entry corporate names (same as above)
-# 711 - added entry meeting name (same as above)
 # 740 - uncontrolled/alternate title
 #
 ## Title Search Fields
@@ -87,17 +84,11 @@ to_field 'title_addl_tsim', extract_marc(%W[
   247abcdefgnp
 ].join(':'))
 to_field 'title_added_entry_tsim', extract_marc(%w[
-  700gklmnoprst
-  710fgklmnopqrst
-  711fgklnpst
   730abcdefgklmnopqrst
   740anp
 ].join(':'))
 to_field 'title_related_tsim', extract_marc(%w[
   505t
-  700lktmnoprs
-  710lktmnoprs
-  711lktmnoprs
   730adfgklmnoprst
   740anp
   760st
@@ -147,7 +138,7 @@ each_record do |_record, context|
 end
 to_field 'uniform_title_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai', trim_punctuation: true)
 to_field 'additional_title_display_ssm', extract_marc('210ab:246iabfgnp:247abcdefgnp', trim_punctuation: true)
-to_field 'related_title_display_ssm', extract_marc('700ilktmnoprs3:710ilktmnoprs3:711ilktmnoprs3:730adfgiklmnoprst3:740anp', trim_punctuation: true)
+to_field 'related_title_display_ssm', extract_marc('730adfgiklmnoprst3:740anp', trim_punctuation: true)
 
 ## Title Sort Fields
 to_field 'title_ssort', marc_sortable_title
