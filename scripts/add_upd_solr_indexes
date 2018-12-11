@@ -15,7 +15,7 @@ if [ $total_files_in_load_dir -gt 0 ]
     echo "Date is $date" >> $log_file
 
     cd /opt/psulib_traject
-    bash -lc "bundle exec traject -s processing_thread_pool=7 -s log.file=/var/log/traject/traject.log -s log.error_file=/var/log/traject/traject_error.log -c /opt/psulib_traject/psulib_config.rb $marc_file"
+    bash -lc "bundle exec traject -s processing_thread_pool=7 -s log.file=/var/log/traject/traject.log -s log.error_file=/var/log/traject/traject_error.log -c /opt/psulib_traject/lib/traject/psulib_config.rb $marc_file"
     mv $marc_file /data/symphony_data/adds_updates/done
 fi
 
