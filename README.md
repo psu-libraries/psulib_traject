@@ -45,11 +45,12 @@ $ ruby --version
     
 1. Convert marc records and import into Solr
 
-   You can download [a sample file from Box](https://psu.app.box.com/folder/53004724072).
    ```
-   $ bundle exec traject -c lib/traject/psulib_config.rb /full/path/to/sample_psucat.mrc 
+   $ bundle exec traject -c lib/traject/psulib_config.rb solr/sample_data/sample_psucat.mrc 
    ```
-
+   
+   You can download [other sample files from Box](https://psu.app.box.com/folder/53004724072).
+   
 ### Traject in debug mode
 
 For testing purposes you can run traject with the `--debug-mode` flag to

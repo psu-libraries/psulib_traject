@@ -8,9 +8,6 @@
 *.sublime-*
 .idea
 
-# Ignore sample data.
-/solr/sample_data
-
 # Ignore solr conf.
 /solr/conf
 
