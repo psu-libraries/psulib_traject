@@ -56,8 +56,6 @@ to_field 'isbn_ssim', extract_marc('020a', separator: nil) do |_rec, acc|
   acc.uniq!
 end
 
-to_field 'material_type_display_ssm', extract_marc('300a', trim_punctuation: true)
-
 # Title fields
 #
 # 245 - main title
@@ -223,6 +221,55 @@ to_field 'lc_alpha_facet_sim', extract_marc('050a', first: true) do |_rec, acc|
 end
 
 to_field 'lc_b4cutter_facet_sim', extract_marc('050a', first: true)
+
+# Material Characteristics
+
+## 300 / 340 Physical description / physical medium
+to_field "phys_desc_ssm", extract_marc("300abcefg3:340abcdefhijkmno", :trim_punctuation => true)
+
+## 380 Form of work
+to_field "form_work_ssm", extract_marc("380a", :trim_punctuation => true)
+
+## Work other characteristics
+
+## 310 / 321 Current publication frequency / former publication frequency
+## This version has the dates combined, vs. current and ongoing. However, as former things should have dates attached
+## and will be secondary, it should work for display.
+to_field "frequency_ssm", extract_marc("310ab:321ab")
+
+## 385 Audience
+## TODO: review how well these choices work
+to_field "audience_ssm", extract_marc("385ma")
+
+## A/v and print music works
+
+## 306 Duration
+to_field "duration_ssm", extract_marc("306a")
+
+## 344 Sound characteristics
+to_field "sound_ssm", extract_marc("344abcdefgh")
+
+## 383 Numeric designation of musical work
+to_field "music_numerical_ssm", extract_marc("383abcde")
+
+## 348 Format of notated music
+to_field "music_format_ssm", extract_marc("348a")
+
+## 384  Musical key
+to_field "music_key_ssm", extract_marc("384a")
+
+## 382 Medium of performance
+## TODO: this will need to be parsed to be useful, it may need more delicate indexing. It may just require display
+## parsing.
+to_field "performance_ssm", extract_marc("382abdenprst")
+
+## 346 Video characteristics
+to_field "video_file_ssm", extract_marc("346ab3")
+
+## Digital files
+
+## 347 Digital file characteristics
+to_field "digital_file_ssm", extract_marc("347abcdef3")
 
 # URL fields
 notfulltext = /abstract|description|sample text|table of contents|/i
