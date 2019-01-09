@@ -233,12 +233,9 @@ to_field "form_work_ssm", extract_marc("380a", :trim_punctuation => true)
 ## Work other characteristics
 
 ## 310 / 321 Current publication frequency / former publication frequency
-## This version has the dates combined, vs. current and ongoing. However, as former things should have dates attached
-## and will be secondary, it should work for display.
 to_field "frequency_ssm", extract_marc("310ab:321ab")
 
 ## 385 Audience
-## TODO: review how well these choices work
 to_field "audience_ssm", extract_marc("385ma")
 
 ## A/v and print music works
@@ -259,8 +256,6 @@ to_field "music_format_ssm", extract_marc("348a")
 to_field "music_key_ssm", extract_marc("384a")
 
 ## 382 Medium of performance
-## TODO: this will need to be parsed to be useful, it may need more delicate indexing. It may just require display
-## parsing.
 to_field "performance_ssm", extract_marc("382abdenprst")
 
 ## 346 Video characteristics
