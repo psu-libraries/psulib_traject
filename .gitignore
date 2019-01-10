@@ -8,7 +8,4 @@
 *.sublime-*
 .idea
 
-# Ignore solr conf.
-/solr/conf
-
 .byebug_history
