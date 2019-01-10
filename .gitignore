@@ -9,3 +9,6 @@
 .idea
 
 .byebug_history
+
+# testing output
+coverage
