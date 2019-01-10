@@ -6,7 +6,7 @@ namespace :solr do
   desc 'Updates solr config files from psulib_blacklight'
   task :conf do
     solr_conf_dir = "#{Dir.pwd}/solr/conf"
-    Dir.mkdir(solr_conf_dir) unless File.exists?(solr_conf_dir)
+    Dir.mkdir(solr_conf_dir) unless File.exist?(solr_conf_dir)
     solr_files = ['protwords.txt', 'schema.xml', 'solrconfig.xml',
                   'stopwords.txt', 'stopwords_en.txt', 'synonyms.txt']
 
