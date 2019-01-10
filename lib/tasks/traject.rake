@@ -5,13 +5,13 @@ require 'faraday'
 namespace :solr do
   desc 'Updates solr config files from psulib_blacklight'
   task :conf do
-    solr_dir = File.join(File.dirname(__FILE__), '../../solr')
+    solr_conf_dir = "#{Dir.pwd}/solr/conf"
     solr_files = ['protwords.txt', 'schema.xml', 'solrconfig.xml',
                   'stopwords.txt', 'stopwords_en.txt', 'synonyms.txt']
 
     solr_files.each do |file|
       response = Faraday.get url_for_file("solr/conf/#{file}")
-      File.open(File.join(solr_dir, 'conf', file), 'wb') { |f| f.write(response.body) }
+      File.open("#{solr_conf_dir}/#{file}", 'w+') { |f| f.write(response.body) }
     end
   end
 

@@ -247,19 +247,19 @@ to_field 'duration_ssm', extract_marc('306a')
 to_field 'sound_ssm', extract_marc('344abcdefgh')
 
 ## 383 Numeric designation of musical work
-to_field 'music_numerical_ss', extract_marc('383abcde')
+to_field 'music_numerical_ssm', extract_marc('383abcde')
 
 ## 348 Format of notated music
-to_field 'music_format_ss', extract_marc('348a')
+to_field 'music_format_ssm', extract_marc('348a')
 
 ## 384  Musical key
-to_field 'music_key_ss', extract_marc('384a')
+to_field 'music_key_ssm', extract_marc('384a')
 
 ## 382 Medium of performance
 to_field 'performance_ssm', extract_marc('382abdenprst')
 
 ## 346 Video characteristics
-to_field 'video_file_ss', extract_marc('346ab3')
+to_field 'video_file_ssm', extract_marc('346ab3')
 
 ## Digital files
 

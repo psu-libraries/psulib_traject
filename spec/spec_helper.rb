@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'coveralls'
+Coveralls.wear!
+
 require 'rspec'
 require 'traject'
 is_mri = RUBY_ENGINE == 'mri'
