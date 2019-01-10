@@ -10,7 +10,7 @@ namespace :solr do
 
     solr_files.each do |file|
       response = Faraday.get url_for_file("solr/conf/#{file}")
-      File.open("conf/#{file}", 'w+') { |f| f.write(response.body) }
+      File.open("solr/conf/#{file}", 'w+') { |f| f.write(response.body) }
     end
   end
 
