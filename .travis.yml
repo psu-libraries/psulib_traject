@@ -6,15 +6,13 @@ sudo: false
 before_install:
   - gem update --system
   - gem install bundler
-  
+  - bundle exec rake solr:conf
+  - docker pull solr:7.4.0
+  - docker run -d -p 8983:8983 -v "$(pwd)"/solr/conf:/myconfig solr:7.4.0 solr-create -c blacklight-core -d /myconfig
+  - docker ps -a
+
 cache:
   bundler: true
-
-before_install:
-- bundle exec rake solr:conf
-- docker pull solr:7.4.0
-- docker run -d -p 8983:8983 -v "$(pwd)"/solr/conf:/myconfig solr:7.4.0 solr-create -c blacklight-core -d /myconfig
-- docker ps -a
 
 script:
 - bundle exec rubocop
