@@ -11,7 +11,4 @@
 # Ignore solr conf.
 /solr/conf
 
-# Ignore log files.
-/log
-
 .byebug_history
