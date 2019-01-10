@@ -3,8 +3,10 @@ rvm:
   - jruby-9.2.4.0
 sudo: false
 
-bundler_args: --without development
-
+before_install:
+  - gem update --system
+  - gem install bundler
+  
 cache:
   bundler: true
 
