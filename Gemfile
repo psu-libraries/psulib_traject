@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'coveralls', require: false
 gem 'library_stdnums'
 gem 'marc'
 gem 'rake'
