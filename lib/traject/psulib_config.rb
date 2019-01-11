@@ -7,6 +7,7 @@ is_jruby = RUBY_ENGINE == 'jruby'
 require 'traject/marc4j_reader' if is_jruby
 require 'traject/macros/marc21_semantics'
 require 'traject/macros/marc_format_classifier'
+require_relative './psulib_marc'
 
 extend Traject::Macros::Marc21
 extend Traject::Macros::Marc21Semantics
@@ -162,28 +163,34 @@ to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711ab
 ## Author sorting field
 to_field 'author_ssort', marc_sortable_author
 
-# Subject fields
+# Subject field(s):
 ## Primary subject
-to_field 'subject_tsim', extract_marc(%W[
-  600#{ATOU}
-  610#{ATOU}
-  611#{ATOU}
-  630#{ATOU}
-  650abcde
-  651ae
-  653a:654abcde:655abc
-].join(':'))
+to_field 'subject_tsim', extract_marc('600abcdfklmnopqrtvxyz:610abfklmnoprstvxyz:611abcdefgklnpqstvxyz:630adfgklmnoprstvxyz:647acdg:648a:650abcd:651a:653a:654ab')
 
 ## Additional subject fields
-to_field 'subject_addl_tsim', extract_marc('600vwxyz:610vwxyz:611vwxyz:630vwxyz:650vwxyz:651vwxyz:654vwxyz:655vwxyz')
-to_field 'subject_topic_facet_ssim', extract_marc('600|*0|abcdq:610|*0|ab:611|*0|ab:630|*0|ab:650|*0|a:653|*0|a', trim_punctuation: true) do |record, accumulator, _context|
-  # Include Fast Headings
-  MarcExtractor.new('650|*7|2').collect_matching_lines(record) do |field, _spec, _extractor|
-    if field['2'].to_s.downcase.include? 'fast'
-      fast_subject = Marc21.trim_punctuation field['a']
-      accumulator << fast_subject unless fast_subject.nil?
-    end
-  end
+to_field 'subject_addl_tsim', extract_marc('600vxyz:610vxyz:611vxyz:630vxyz:647vxyz:648vxyz:650vxyz:651vxyz:654vyz')
+
+## Subject display
+hierarchy_fields = '650|*0|abcdvxyz:650|*2|abcdvxyz:650|*1|abcdvxyz:650|*3|abcdvxyz:650|*6|abcdvxyz:650|*7|abcdvxyz:600abcdfklmnopqrtvxyz:610abfklmnoprstvxyz:611abcdefgklnpqstvxyz:630adfgklmnoprstvxyz:647acdgvxyz:648avxyz:651avxyz'
+to_field 'subject_display_ssm' do |record, accumulator|
+  subjects = process_hierarchy(record, hierarchy_fields)
+  accumulator.replace(subjects)
+  accumulator.compact!
+  accumulator.uniq!
+end
+
+# For hierarchical subject display
+to_field 'subject_facet' do |record, accumulator|
+  subjects = process_hierarchy(record, hierarchy_fields)
+  accumulator.replace(subjects)
+  accumulator.compact!
+  accumulator.uniq!
+end
+
+# Subject facet (sidebar)
+to_field 'subject_topic_facet_ssim' do |record, accumulator|
+  subjects = process_subject_topic_facet(record, '650|*0|aa:650|*0|x:650|*1|aa:650|*1|x:651|*0|a:651|*0|x:600abcdtq:610abt:610x:611abt:611x')
+  accumulator.replace(subjects)
   accumulator.compact!
   accumulator.uniq!
 end
