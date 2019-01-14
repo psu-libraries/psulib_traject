@@ -225,7 +225,7 @@ to_field 'lc_b4cutter_facet_sim', extract_marc('050a', first: true)
 # Material Characteristics
 
 ## 300 / 340 Physical description / physical medium
-to_field 'phys_desc_ssm', extract_marc('300abcefg3:340abcdefhijkmno', trim_punctuation: true)
+to_field 'phys_desc_ssm', extract_marc('300abcefg3:340abcdefhijkmno3', trim_punctuation: true)
 
 ## 380 Form of work
 to_field 'form_work_ssm', extract_marc('380a', trim_punctuation: true)
@@ -236,7 +236,7 @@ to_field 'form_work_ssm', extract_marc('380a', trim_punctuation: true)
 to_field 'frequency_ssm', extract_marc('310ab:321ab')
 
 ## 385 Audience
-to_field 'audience_ssm', extract_marc('385ma')
+to_field 'audience_ssm', extract_marc('385ma3')
 
 ## A/v and print music works
 
@@ -244,19 +244,19 @@ to_field 'audience_ssm', extract_marc('385ma')
 to_field 'duration_ssm', extract_marc('306a')
 
 ## 344 Sound characteristics
-to_field 'sound_ssm', extract_marc('344abcdefgh')
+to_field 'sound_ssm', extract_marc('344abcdefgh3')
 
 ## 383 Numeric designation of musical work
 to_field 'music_numerical_ssm', extract_marc('383abcde')
 
 ## 348 Format of notated music
-to_field 'music_format_ssm', extract_marc('348a')
+to_field 'music_format_ssm', extract_marc('348a3')
 
 ## 384  Musical key
-to_field 'music_key_ssm', extract_marc('384a')
+to_field 'music_key_ssm', extract_marc('384a3')
 
 ## 382 Medium of performance
-to_field 'performance_ssm', extract_marc('382abdenprst')
+to_field 'performance_ssm', extract_marc('382abdenprst3')
 
 ## 346 Video characteristics
 to_field 'video_file_ssm', extract_marc('346ab3')
