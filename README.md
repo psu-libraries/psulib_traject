@@ -57,5 +57,5 @@ For testing purposes you can run traject with the `--debug-mode` flag to
 display the output to the console (and not push the data to Solr).
 
 ```
-$ bundle exec traject --debug-mode -c lib/traject/psulib_config.rb /full/path/to/marcfile.mrc
+$ bundle exec traject --debug-mode -c lib/traject/psulib_config.rb solr/sample_data/sample_psucat.mrc
 ```
