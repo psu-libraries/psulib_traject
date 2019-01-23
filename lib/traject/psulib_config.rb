@@ -193,6 +193,27 @@ to_field 'subject_topic_facet_ssim' do |record, accumulator|
   accumulator.uniq!
 end
 
+# Genre Fields
+## Main genre
+to_field 'genre_tsim', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz')
+
+## Genre facet (sidebar)
+to_field 'genre_facet_ssim' do |record, accumulator|
+  genres = process_genre(record, '650|*0|v:655|*0|a:655|*7|a')
+  accumulator.replace(genres)
+  accumulator.uniq!
+end
+
+## Genre display
+to_field 'genre_display_ssm' do |record, accumulator|
+  genres = process_genre(record, '655|*0|abcvxyz:655|*7|abcvxyz')
+  accumulator.replace(genres)
+  accumulator.uniq!
+end
+
+## For genre links
+to_field 'genre_full_facet_ssim', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz', trim_punctuation: true)
+
 # Publication fields
 to_field 'published_display_ssm', extract_marc('260a', trim_punctuation: true, alternate_script: false)
 to_field 'published_vern_display_ssm', extract_marc('260a', trim_punctuation: true, alternate_script: :only)
