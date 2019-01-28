@@ -200,15 +200,13 @@ to_field 'genre_tsim', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz')
 ## Genre facet (sidebar)
 to_field 'genre_facet_ssim' do |record, accumulator|
   genres = process_genre(record, '650|*0|v:655|*0|a:655|*7|a')
-  accumulator.replace(genres)
-  accumulator.uniq!
+  accumulator.replace(genres).uniq!
 end
 
 ## Genre display
 to_field 'genre_display_ssm' do |record, accumulator|
   genres = process_genre(record, '655|*0|abcvxyz:655|*7|abcvxyz')
-  accumulator.replace(genres)
-  accumulator.uniq!
+  accumulator.replace(genres).uniq!
 end
 
 ## For genre links

@@ -66,10 +66,6 @@ RSpec.describe 'From psulib_marc.rb' do
       @genres = process_genre(@sample_marc, '655|*0|abcvxyz:655|*7|abcvxyz')
     end
 
-    it 'trims punctuation' do
-      expect(@genres).to include('Drama')
-    end
-
     it 'limits 655 to fast and lcgft genres' do
       expect(@genres).to include('Fiction films 1900 Germany')
       expect(@genres).to include('Drama')
