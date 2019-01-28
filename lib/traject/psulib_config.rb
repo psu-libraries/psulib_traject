@@ -177,7 +177,7 @@ to_field 'subject_display_ssm' do |record, accumulator|
   accumulator.uniq!
 end
 
-# For hierarchical subject display
+## For hierarchical subject display
 to_field 'subject_facet' do |record, accumulator|
   subjects = process_hierarchy(record, hierarchy_fields)
   accumulator.replace(subjects)
@@ -185,7 +185,7 @@ to_field 'subject_facet' do |record, accumulator|
   accumulator.uniq!
 end
 
-# Subject facet (sidebar)
+## Subject facet (sidebar)
 to_field 'subject_topic_facet_ssim' do |record, accumulator|
   subjects = process_subject_topic_facet(record, '650|*0|aa:650|*0|x:650|*1|aa:650|*1|x:651|*0|a:651|*0|x:600abcdtq:610abt:610x:611abt:611x')
   accumulator.replace(subjects)
@@ -194,9 +194,15 @@ to_field 'subject_topic_facet_ssim' do |record, accumulator|
 end
 
 # Publication fields
-to_field 'published_display_ssm', extract_marc('260a', trim_punctuation: true, alternate_script: false)
-to_field 'published_vern_display_ssm', extract_marc('260a', trim_punctuation: true, alternate_script: :only)
+## Publisher/Manufacturer for search
+to_field 'publisher_manufacturer_tsim', extract_marc('260b:264|*1|b:260f:264|*3|b', trim_punctuation: true)
 to_field 'pub_date_ssim', marc_publication_date
+
+## Publication fields for display
+to_field 'publication_display_ssm', extract_marc('260abcefg3:264|*1|abc3') # display in search results
+to_field 'overall_imprint_display_ssm', extract_marc('260abcefg3:264|*0|abc3:264|*1|abc3:264|*2|abc3:264|*3|abc3') # display on single item page
+to_field 'copyright_display_ssm', extract_marc('264|*4|c')
+to_field 'edition_display_ssm', extract_marc('250ab3')
 
 # Series fields
 #
