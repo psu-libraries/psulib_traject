@@ -54,7 +54,7 @@ def process_publication_date(record, options = {})
 
   if field008 && field008.length >= 11
     date_type = field008.slice(6)
-    date1_str = field008.slice(7,4)
+    date1_str = field008.slice(7, 4)
     date2_str = field008.slice(11, 4) if field008.length > 15
 
     # for date_type q=questionable, we have a range.
@@ -63,9 +63,7 @@ def process_publication_date(record, options = {})
       date1 = date1_str.sub('u', '0').to_i
       date2 = date2_str.sub('u', '9').to_i
       # do we have a range we can use?
-      if (date2 > date1) && ((date2 - date1) <= estimate_tolerance)
-        found_date = (date2 + date1) / 2
-      end
+      found_date = (date2 + date1) / 2 if (date2 > date1) && ((date2 - date1) <= estimate_tolerance)
     end
     # didn't find a date that way, and anything OTHER than date_type
     # n=unknown, q=questionable, try single date -- for some date types,
@@ -73,20 +71,18 @@ def process_publication_date(record, options = {})
     # the FIRST date then, the earliest. That's just what we're doing.
     if found_date.nil? && date_type != 'n' && date_type != 'q'
       # in date_type 'r', second date is original publication date, use that I think?
-      date_str = ((date_type == 'r' || date_type == 'p') && date2_str.to_i != 0) ? date2_str : date1_str
+      date_str = (date_type == 'r' || date_type == 'p') && date2_str.to_i != 0 ? date2_str : date1_str
       # Deal with stupid 'u's, which end up meaning a range too,
       # find midpoint and make sure our tolerance is okay.
       ucount = 0
-      while (!date_str.nil?) && (i = date_str.index('u'))
+      while !date_str.nil? && (i = date_str.index('u'))
         ucount += 1
         date_str[i] = '0'
       end
       date = date_str.to_i
       if ucount > 0 && date != 0
         delta = 10**ucount # 10^ucount, expontent
-        if delta <= estimate_tolerance
-          found_date = date + (delta / 2)
-        end
+        found_date = date + (delta / 2) if delta <= estimate_tolerance
       elsif date != 0
         found_date = date
       end
