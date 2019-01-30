@@ -12,3 +12,7 @@
 
 # testing output
 coverage
+
+# ignore sample data except sample_psucat.mrc
+solr/sample_data/*
+!solr/sample_data/sample_psucat.mrc
