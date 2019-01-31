@@ -46,7 +46,7 @@ to_field 'all_text_timv', extract_all_marc_values do |_r, acc|
   acc.replace [acc.join(' ')] # turn it into a single string
 end
 
-to_field 'language_facet_ssim', marc_languages('008[35-37]:041a:041d:')
+to_field 'language_facet_ssim', marc_languages('008[35-37]')
 to_field 'format', marc_formats
 
 to_field 'isbn_ssim', extract_marc('020a', separator: nil) do |_rec, acc|
@@ -189,6 +189,25 @@ to_field 'subject_topic_facet_ssim' do |record, accumulator|
   accumulator.replace(subjects).compact!
   accumulator.uniq!
 end
+
+# Genre Fields
+## Main genre
+to_field 'genre_tsim', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz')
+
+## Genre facet (sidebar)
+to_field 'genre_facet_ssim' do |record, accumulator|
+  genres = process_genre(record, '650|*0|v:655|*0|a:655|*7|a')
+  accumulator.replace(genres).uniq!
+end
+
+## Genre display
+to_field 'genre_display_ssm' do |record, accumulator|
+  genres = process_genre(record, '655|*0|abcvxyz:655|*7|abcvxyz')
+  accumulator.replace(genres).uniq!
+end
+
+## For genre links
+to_field 'genre_full_facet_ssim', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz', trim_punctuation: true)
 
 # Publication fields
 ## Publisher/Manufacturer for search

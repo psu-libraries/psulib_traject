@@ -43,6 +43,22 @@ def process_subject_topic_facet(record, fields)
   subjects.flatten
 end
 
+# for genre facet and display
+# limit to subfield $2 vocabularies for 655|*7 genres
+def process_genre(record, fields)
+  genres = []
+  vocabulary = %w[lcgft fast]
+  Traject::MarcExtractor.cached(fields).collect_matching_lines(record) do |field, spec, extractor|
+    genre = extractor.collect_subfields(field, spec).first
+    include_genre = true
+    unless genre.nil?
+      include_genre = vocabulary.include?(field['2'].to_s.downcase) if (field.tag == '655') && (field.indicator2 == '7')
+      genres << Traject::Macros::Marc21.trim_punctuation(genre) if include_genre
+    end
+  end
+  genres
+end
+
 ESTIMATE_TOLERANCE = 15
 MIN_YEAR = 500
 MAX_YEAR = Time.new.year + 6

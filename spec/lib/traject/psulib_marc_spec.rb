@@ -55,7 +55,23 @@ RSpec.describe 'From psulib_marc.rb' do
       expect(@subjects).to include("don't ignore")
     end
   end
+  
+  describe 'process_genres function' do
+    before(:all) do
+      @g650 = { '650' => { 'ind1' => '', 'ind2' => '0', 'subfields' => [{ 'v' => 'Maps' }, { 'z' => 'Tippah County' }] } }
+      @g655_fast = { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Fiction films' }, { 'b' => '1900' }, { '2' => 'fast' }, { 'z' => 'Germany' }] } }
+      @g655_lcgft = { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Drama.' }, { '2' => 'lcgft' }] } }
+      @g655_aat = { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Novels' }, { '2' => 'aat' }] } }
+      @sample_marc = MARC::Record.new_from_hash('fields' => [@g650, @g655_fast, @g655_lcgft, @g655_aat])
+      @genres = process_genre(@sample_marc, '655|*0|abcvxyz:655|*7|abcvxyz')
+    end
 
+    it 'limits 655 to fast and lcgft genres' do
+      expect(@genres).to include('Fiction films 1900 Germany')
+      expect(@genres).to include('Drama')
+    end
+  end
+  
   describe 'process_publication_date' do
     let(:empty_record) do
       rec = MARC::Record.new
