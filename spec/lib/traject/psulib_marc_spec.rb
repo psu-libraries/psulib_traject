@@ -143,5 +143,30 @@ RSpec.describe 'From psulib_marc.rb' do
       # Date should be date1 + date2 / 2 = (1910 + 1919) / 2 = 1914
       expect(process_publication_date(@record)).to eq 1914
     end
+
+    it "works correctly with date type 'q', it should resort to 260" do
+      @record = MARC::Reader.new(File.join(fixture_path, 'date_008.marc')).to_a.first
+      val = @record['008'].value
+      val[6] = 'q'
+      val[7..10] = '191u'
+      val[11..14] = '190u'
+      @record['008'].value = val
+      puts @record
+
+      # date2 should not be smaller than date1, so check_elsewhere
+      expect(process_publication_date(@record)).to eq 2002
+    end
+
+    it "works correctly with date type 'q', it should not find a date" do
+      @record = MARC::Reader.new(File.join(fixture_path, 'date_008.marc')).to_a.first
+      val = @record['008'].value
+      val[6] = 'q'
+      val[7..10] = '19uu'
+      val[11..14] = '19uu'
+      @record['008'].value = val
+
+      expect(process_publication_date(@record)).to be_nil
+      # expect(Traject::Macros::Marc21Semantics.publication_date(@record)).to be_nil
+    end
   end
 end
