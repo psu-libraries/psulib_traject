@@ -122,6 +122,16 @@ RSpec.describe 'From psulib_marc.rb' do
       expect(process_publication_date(@record)).to eq 1957
     end
 
+    it "works correctly with date type 'n', it should resort to 264" do
+      @record = MARC::Reader.new(File.join(fixture_path, 'date_008.marc')).to_a.first
+      val = @record['008'].value
+      val[6] = 'n'
+      @record['008'].value = val
+      @record.append(MARC::DataField.new('264', '', '1', %w[c 1981]))
+
+      expect(process_publication_date(@record)).to eq 1981
+    end
+
     it "works correctly with date type 'q'" do
       @record = MARC::Reader.new(File.join(fixture_path, 'date_008.marc')).to_a.first
       val = @record['008'].value
