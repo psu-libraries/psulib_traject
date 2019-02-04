@@ -74,7 +74,7 @@ def process_publication_date(record)
   marc_date_processor = MarcPubDateProcessor.new(field008)
   pub_date = marc_date_processor.find_date
 
-  if marc_date_processor.find_date.nil?
+  if pub_date.nil?
     # Nothing from 008, try 264 and 260
     field264c = Traject::MarcExtractor.cached('264|*1|c', separator: nil).extract(record).first
     field260c = Traject::MarcExtractor.cached('260c', separator: nil).extract(record).first
@@ -107,7 +107,7 @@ class MarcPubDateProcessor
 
   # Based on the date_type, return the proper value.
   def find_date
-    return nil if @date_type.nil?
+    return nil if @date_type.nil? || @date_type == 'n'
 
     case @date_type
     when 'p', 'r'
