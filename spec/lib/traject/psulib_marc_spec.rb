@@ -76,7 +76,6 @@ RSpec.describe 'From psulib_marc.rb' do
     let(:empty_record) do
       rec = MARC::Record.new
       rec.append(MARC::ControlField.new('001', '000000000'))
-      rec
     end
 
     let(:fixture_path) { './spec/fixtures' }
@@ -87,6 +86,8 @@ RSpec.describe 'From psulib_marc.rb' do
 
     it 'pulls out 008 date_type s' do
       @record = MARC::Reader.new(File.join(fixture_path, 'date_008.marc')).to_a.first
+      # require 'byebug'
+      # byebug
       expect(process_publication_date(@record)).to eq 2002
     end
 
