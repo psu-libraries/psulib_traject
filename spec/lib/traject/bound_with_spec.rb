@@ -13,7 +13,9 @@ RSpec.describe 'Bound with spec:' do
     let(:bound_with_catkey) do
       { '591' => { 'ind1' => ' ', 'ind2' => ' ', 'subfields' => [
         { 'a' => 'The high-caste Hindu woman / With introduction by Rachel L. Bodley' },
-        { 'c' => '355035' }
+        { 'c' => '355035' },
+        { 't' => 'MICROFORM' },
+        { 'n' => 'AY67.N5W7 1922-24' }
       ] } }
     end
     let(:bound_with_multi) do
@@ -28,7 +30,9 @@ RSpec.describe 'Bound with spec:' do
     let(:bound_with_multi_marc) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [bound_with_catkey, bound_with_multi], 'leader' => leader)) }
 
     it 'shows the parent title' do
-      expect(bound_with_marc['bound_with_title_struct']).to match ['{"catkey": "355035", "linktext": "The high-caste Hindu woman / With introduction by Rachel L. Bodley"}']
+      expect(bound_with_marc['bound_with_title_struct']).to match ['{"catkey": "355035", "linktext": '\
+        '"The high-caste Hindu woman / With introduction by Rachel L. Bodley", "format": '\
+        '"Microfilm, Microfiche, etc.", "callnumber": "AY67.N5W7 1922-24"}']
     end
     it 'shows the binding notes when there are more than one 591' do
       expect(bound_with_multi_marc['bound_with_notes_ssm']).to include 'blah blah blah'
