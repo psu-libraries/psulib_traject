@@ -271,19 +271,20 @@ to_field 'frequency_ssm', extract_marc('310ab:321ab')
 to_field 'audience_ssm' do |record, accumulator|
   next unless record['385']
 
-  audience = record.fields('385')
-  qualifier = ''
-  audience_value = ''
-  audience.each do |subfields|
-    subfields.each do |subfield|
+  audience_fields = record.fields('385')
+  audience_fields.each do |field|
+    qualifier = ''
+    audience_value = ''
+
+    field.each do |subfield|
       case subfield.code
       when 'm'
-        qualifier = subfield.value
-      when 'a', '3'
+        qualifier = "#{subfield.value}: "
+      when 'a', '3' # TODO: find a record with a subfield 3
         audience_value = subfield.value
       end
     end
-    accumulator << "#{qualifier}: #{audience_value}"
+    accumulator << qualifier + audience_value
   end
 end
 
