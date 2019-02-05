@@ -126,11 +126,13 @@ class MarcPubDateProcessor
   # For when we are dealing with ranges.
   def resolve_range
     # Make unknown digits at the beginning or end of range
-    date1 = @date1_str.sub('u', '0').to_i
-    date2 = @date2_str.sub('u', '9').to_i
+    date1 = @date1_str.tr('u', '0').to_i
+    date2 = @date2_str.tr('u', '9').to_i
+
     # Do we have a range we can use?
-    is_range = (date2 > date1) && ((date2 - date1) <= ESTIMATE_TOLERANCE)
-    (date2 + date1) / 2 if is_range
+    return nil unless (date2 > date1) && ((date2 - date1) <= ESTIMATE_TOLERANCE)
+
+    (date2 + date1) / 2
   end
 
   # Resolve single date u's means range, find midpoint and check tolerance
