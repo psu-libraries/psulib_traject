@@ -172,24 +172,21 @@ to_field 'subject_addl_tsim', extract_marc('600vxyz:610vxyz:611vxyz:630vxyz:647v
 hierarchy_fields = '650|*0|abcdvxyz:650|*2|abcdvxyz:650|*1|abcdvxyz:650|*3|abcdvxyz:650|*6|abcdvxyz:650|*7|abcdvxyz:600abcdfklmnopqrtvxyz:610abfklmnoprstvxyz:611abcdefgklnpqstvxyz:630adfgklmnoprstvxyz:647acdgvxyz:648avxyz:651avxyz'
 to_field 'subject_display_ssm' do |record, accumulator|
   subjects = process_hierarchy(record, hierarchy_fields)
-  accumulator.replace(subjects)
-  accumulator.compact!
+  accumulator.replace(subjects).compact!
   accumulator.uniq!
 end
 
 ## For hierarchical subject display
 to_field 'subject_facet' do |record, accumulator|
   subjects = process_hierarchy(record, hierarchy_fields)
-  accumulator.replace(subjects)
-  accumulator.compact!
+  accumulator.replace(subjects).compact!
   accumulator.uniq!
 end
 
 ## Subject facet (sidebar)
 to_field 'subject_topic_facet_ssim' do |record, accumulator|
   subjects = process_subject_topic_facet(record, '650|*0|aa:650|*0|x:650|*1|aa:650|*1|x:651|*0|a:651|*0|x:600abcdtq:610abt:610x:611abt:611x')
-  accumulator.replace(subjects)
-  accumulator.compact!
+  accumulator.replace(subjects).compact!
   accumulator.uniq!
 end
 
@@ -215,7 +212,12 @@ to_field 'genre_full_facet_ssim', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|a
 # Publication fields
 ## Publisher/Manufacturer for search
 to_field 'publisher_manufacturer_tsim', extract_marc('260b:264|*1|b:260f:264|*3|b', trim_punctuation: true)
-to_field 'pub_date_ssim', marc_publication_date
+
+## Publication year facet (sidebar)
+to_field 'pub_date_ssim' do |record, accumulator|
+  publication_date = process_publication_date record
+  accumulator << publication_date if publication_date
+end
 
 ## Publication fields for display
 to_field 'publication_display_ssm', extract_marc('260abcefg3:264|*1|abc3') # display in search results
