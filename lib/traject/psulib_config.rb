@@ -270,7 +270,25 @@ to_field 'form_work_ssm', extract_marc('380a', trim_punctuation: true)
 to_field 'frequency_ssm', extract_marc('310ab:321ab')
 
 ## 385 Audience
-to_field 'audience_ssm', extract_marc('385ma3')
+to_field 'audience_ssm' do |record, accumulator|
+  next unless record['385']
+
+  audience_fields = record.fields('385')
+  audience_fields.each do |field|
+    qualifier = ''
+    audience_value = ''
+
+    field.each do |subfield|
+      case subfield.code
+      when 'm'
+        qualifier = "#{subfield.value}: "
+      when 'a', '3' # TODO: find a record with a subfield 3
+        audience_value = subfield.value
+      end
+    end
+    accumulator << qualifier + audience_value
+  end
+end
 
 ## A/v and print music works
 
