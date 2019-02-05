@@ -353,17 +353,19 @@ to_field 'bound_with_notes_ssm' do |record, accumulator|
   end
 end
 
-# Make a linked title to the bound parent
+# Make a linked title with details to the bound parent
 to_field 'bound_with_title_struct' do |record, accumulator|
   next unless record['591']
 
-  bound_with_title = record.fields('591')
-  bound_with_title.each do |subfield|
-    next unless subfield.codes.include? 'c'
+  bound_with_fields = record.fields('591')
+  bound_with_fields.each do |field|
+    next unless field.codes.include? 'c'
 
     # Implied that a is available when c is present
-    bound_title = subfield.subfields.select { |sub| sub.code == 'a' }.collect(&:value)
-    bound_catkey = subfield.subfields.select { |sub| sub.code == 'c' }.collect(&:value)
-    accumulator << "{\"catkey\": #{bound_catkey.first.to_json}, \"linktext\": #{bound_title.first.to_json}}"
+    bound_title = field.subfields.select { |sub| sub.code == 'a' }.collect(&:value)
+    bound_catkey = field.subfields.select { |sub| sub.code == 'c' }.collect(&:value)
+    bound_format = field.subfields.select { |sub| sub.code == 't' }.collect(&:value)
+    bound_callnumber = field.subfields.select { |sub| sub.code == 'n' }.collect(&:value)
+    accumulator << "{\"catkey\": #{bound_catkey.first.to_json}, \"linktext\": #{bound_title.first.to_json}, \"format\": #{bound_format.first.to_json}, \"callnumber\": #{bound_callnumber.first.to_json}}"
   end
 end
