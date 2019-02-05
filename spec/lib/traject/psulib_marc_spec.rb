@@ -155,9 +155,9 @@ RSpec.describe 'From psulib_marc.rb' do
       expect(process_publication_date(@record)).to eq 2002
     end
 
-    it "works correctly with date type 'q', it should not find a dat when the difference between date1 and date2 is "\
-       'bigger than the ESTIMATE_TOLERANCE' do
-      @record = MARC::Reader.new(File.join(fixture_path, 'date_008.marc')).to_a.first
+    it "works correctly with date type 'q', it should not find a date when the difference between date1 and date2 is "\
+       'bigger than the ESTIMATE_TOLERANCE and no 264 or 260 exists' do
+      @record = MARC::Reader.new(File.join(fixture_path, 'date_008_only.mrc')).to_a.first
       val = @record['008'].value
       val[6] = 'q'
       val[7..10] = '19uu'
