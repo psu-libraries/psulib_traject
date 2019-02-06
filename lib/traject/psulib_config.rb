@@ -361,11 +361,9 @@ end
 ## Notes fields
 # Bound with notes
 to_field 'bound_with_struct' do |record, accumulator|
-  next unless record['591']
-
   bound_in_format_map = Traject::TranslationMap.new('bound_in')
-  bound_with_fields = record.fields('591')
-  bound_with_fields.each do |field|
+
+  record.fields('591').each do |field|
     bound_with_arr = field.map do |subfield|
       case subfield.code
       when 'a'
@@ -378,6 +376,7 @@ to_field 'bound_with_struct' do |record, accumulator|
         { bound_callnumber: subfield.value }
       end
     end
-    accumulator << bound_with_arr.inject(:merge).to_json
+
+    accumulator << bound_with_arr.compact.inject(:merge).to_json
   end
 end
