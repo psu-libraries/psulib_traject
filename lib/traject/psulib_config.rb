@@ -342,33 +342,24 @@ end
 
 ## Notes fields
 # Bound with notes
-to_field 'bound_with_notes_ssm' do |record, accumulator|
-  next unless record['591']
-
-  bound_with_notes = record.fields('591')
-  bound_with_notes.each do |subfield|
-    next if subfield.codes.include? 'c'
-
-    accumulator << subfield.value
-  end
-end
-
-# Make a linked title with details to the bound parent
-to_field 'bound_with_title_struct' do |record, accumulator|
+to_field 'bound_with_struct' do |record, accumulator|
   next unless record['591']
 
   bound_in_format_map = Traject::TranslationMap.new('bound_in')
-
   bound_with_fields = record.fields('591')
   bound_with_fields.each do |field|
-    next unless field.codes.include? 'c'
-
-    # Implied that a is available when c is present
-    bound_title = field.subfields.select { |sub| sub.code == 'a' }.collect(&:value)
-    bound_catkey = field.subfields.select { |sub| sub.code == 'c' }.collect(&:value)
-    bound_format = field.subfields.select { |sub| sub.code == 't' }.collect(&:value)
-    bound_format_human = bound_in_format_map.translate_array(bound_format)
-    bound_callnumber = field.subfields.select { |sub| sub.code == 'n' }.collect(&:value)
-    accumulator << "{\"catkey\": #{bound_catkey.first.to_json}, \"linktext\": #{bound_title.first.to_json}, \"format\": #{bound_format_human.first.to_json}, \"callnumber\": #{bound_callnumber.first.to_json}}"
+    bound_with_arr = field.map do |subfield|
+      case subfield.code
+      when 'a'
+        { bound_title: subfield.value }
+      when 'c'
+        { bound_catkey: subfield.value }
+      when 't'
+        { bound_format: bound_in_format_map.translate_array([subfield.value])[0] }
+      when 'n'
+        { bound_callnumber: subfield.value }
+      end
+    end
+    accumulator << bound_with_arr.inject(:merge).to_json
   end
 end
