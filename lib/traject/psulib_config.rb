@@ -406,6 +406,7 @@ to_field 'file_data_type_ssm', extract_marc('516a')
 to_field 'date_place_event_note_ssm', extract_marc('518adop3')
 
 # 520 - Abstract
+to_field 'abstract_ssim', extract_marc('520ab')
 
 # 521 - Audience
 to_field 'audience_notes_ssm', extract_marc('521| *|3ab:521|8*|3ab:521|3*|3ab:521|4*|3ab')
