@@ -408,7 +408,7 @@ to_field 'date_place_event_note_ssm', extract_marc('518adop3')
 # 520 - Abstract
 
 # 521 - Audience
-to_field 'audience_ssm', extract_marc('521| *|3ab:521|8*|3ab:521|3*|3ab:521|4*|3ab')
+to_field 'audience_notes_ssm', extract_marc('521| *|3ab:521|8*|3ab:521|3*|3ab:521|4*|3ab')
 to_field 'reading_grade_ssm', extract_marc('521|0*|3ab')
 to_field 'interest_age_ssm', extract_marc('521|1*|3ab')
 to_field 'interest_grade_ssm', extract_marc('521|2*|3ab')
