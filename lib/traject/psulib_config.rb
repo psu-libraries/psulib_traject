@@ -7,6 +7,7 @@ is_jruby = RUBY_ENGINE == 'jruby'
 require 'traject/marc4j_reader' if is_jruby
 require 'traject/macros/marc21_semantics'
 require 'traject/macros/marc_format_classifier'
+require_relative './readers/marc_combining_reader'
 require_relative './psulib_marc'
 
 extend Traject::Macros::Marc21
@@ -26,9 +27,9 @@ settings do
   provide 'log.file', 'log/traject.log'
   provide 'log.error_file', 'log/traject_error.log'
   provide 'solr_writer.commit_on_close', 'true'
+  provide 'reader_class_name', 'Traject::MarcCombiningReader'
 
   if is_jruby
-    provide 'reader_class_name', 'Traject::Marc4JReader'
     provide 'marc4j_reader.permissive', true
     provide 'marc4j_reader.source_encoding', 'UTF-8'
     # defaults to 1 less than the number of processors detected on your machine
