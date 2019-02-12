@@ -360,13 +360,148 @@ to_field 'url_suppl_display_ssm' do |rec, acc|
 end
 
 ## Notes fields
+#
+# 500 - Note
+to_field 'general_note_ssm', extract_marc('5003a:5903a')
+
+# 501 - "With"
+to_field 'with_note_ssm', extract_marc('501a')
+
+# 502 - Dissertation Note
+to_field 'dissertation_note_ssm', extract_marc('502abcdgo')
+
+# 504 - Bibliography Note
+to_field 'bibliography_note_ssm', extract_marc('504ab')
+
+# 505 - Table of Contents
+to_field 'toc_ssim', extract_marc('505agrt')
+
+# 506 - Restrictions on Access
+to_field 'restrictions_access_note_ssm', extract_marc('506abcdefu')
+
+# 507 - scale note for graphic material
+to_field 'scale_graphic_material_note_ssm', extract_marc('507ab')
+
+# 508 - Creation/Production Credits Note
+to_field 'creation_production_credits_ssm', extract_marc('508a')
+
+# 510 - Citation/References Note
+to_field 'citation_references_note_ssm', extract_marc('510| *|3abcux')
+to_field 'indexed_by_note_ssm', extract_marc('510|0*|3abcux:510|1*|3abcux')
+to_field 'selectively_indexed_by_note_ssm', extract_marc('510|2*|3abcux')
+to_field 'references_note_ssm', extract_marc('510|3*|3abcux:510|4*|3abcux')
+
+# 511 - Participant/Performer Note
+to_field 'participant_performer_ssm', extract_marc('511a')
+
+# 513 - Type of Report and Period Covered Note
+to_field 'type_report_period_note_ssm', extract_marc('513ab')
+
+# 515 - Special Numbering
+to_field 'special_numbering_ssm', extract_marc('515a')
+
+# 516 - Type of File/Data
+to_field 'file_data_type_ssm', extract_marc('516a')
+
+# 518 - Data/Place of Event
+to_field 'date_place_event_note_ssm', extract_marc('518adop3')
+
+# 520 - Notes Summary
+to_field 'notes_summary_ssim', extract_marc('520ab')
+
+# 521 - Audience
+to_field 'audience_notes_ssm', extract_marc('521| *|3ab:521|8*|3ab:521|3*|3ab:521|4*|3ab')
+to_field 'reading_grade_ssm', extract_marc('521|0*|3ab')
+to_field 'interest_age_ssm', extract_marc('521|1*|3ab')
+to_field 'interest_grade_ssm', extract_marc('521|2*|3ab')
+
+# 522 - Geographic Coverage
+to_field 'geographic_coverage_ssm', extract_marc('522a')
+
+# 524 - Preferred Citation
+to_field 'preferred_citation_ssm', extract_marc('5243a')
+
+# 525 - Supplement Note
+to_field 'supplement_ssm', extract_marc('525a')
+
+# 530 - Other Forms
+to_field 'other_forms_ssm', extract_marc('530abc3')
+
+# 533 - Reproduction Note
+to_field 'reproduction_note_ssm', extract_marc('533abcdefmn3')
+
+# 534 - Original Version
+to_field 'original_version_note_ssm', extract_marc('534pabcefklmnotxz3')
+
+# 535 - location of original or duplicates (indicators indicate which)
+to_field 'originals_loc_ssm', extract_marc('535|1*|3abcdg')
+to_field 'dup_loc_ssm', extract_marc('535|2*|3abcdg')
+
+# 536 - Funding Information
+to_field 'funding_information_ssm', extract_marc('536abcdefgh')
+
+# 538 - Technical Details
+to_field 'technical_details_ssm', extract_marc('538aiu3')
+
+# 540 - Terms of Use and Reproduction
+to_field 'terms_use_reproduction_ssm', extract_marc('540abcdu3')
+
+# 541 - Source of Acquisition
+to_field 'source_aquisition_ssm', extract_marc('541| *|abcdefhn3:541|1*|abcdefhn3')
+
+# 542 - Copyright Note
+to_field 'copyright_status_ssm', extract_marc('542| *|abcdefghijklmnopqrsu3:542|1*|abcdefghijklmnopqrsu3')
+
+# 544 - Associated Materials
+to_field 'associated_materials_ssm', extract_marc('544|0*|abcden3')
+to_field 'related_materials_ssm', extract_marc('544|1*|abcden3:544| *|abcden3')
+
+# 545 - Biographical/Historical Note
+to_field 'administrative_history_note_ssm', extract_marc('545| *|abu:545|1*|abu')
+to_field 'biographical_sketch_note_ssm', extract_marc('545|0*|abu')
+
+# 546 - Language Note
+to_field 'language_note_ssm', extract_marc('546ab3')
+
+# 547 - Title Varies
+to_field 'former_title_ssm', extract_marc('547a')
+
+# 550 - Issuing Body
+to_field 'issuing_ssm', extract_marc('550a')
+
+# 555 - index/finding aid note (indicators vary)
+to_field 'index_note_ssm', extract_marc('555| *|abcd3:555|8*|abcd3e')
+to_field 'finding_aid_note_ssm', extract_marc('555|0*|abcd3')
+
+# 556 - Documentation Information
+to_field 'documentation_info_note_ssm', extract_marc('556az')
+
+# 561 - Provenance
+to_field 'provenance_note_ssm', extract_marc('561| *|au3:561|1*|au3')
+
+# 562 - Version/Copy ID
+to_field 'version_copy_id_note_ssm', extract_marc('562abcde3')
+
+# 567 - Methodology Note
+to_field 'methodology_ssm', extract_marc('567ab')
+
+# 580 - Complexity Note
+to_field 'complexity_ssm', extract_marc('580a')
+
+# 583 - Action Note
+to_field 'action_note_ssm', extract_marc('583| *|abcdefhijklnouz3:583|1*|abcdefhijklnouz3')
+
+# 585 - Exhibitions
+to_field 'exhibitions_ssm', extract_marc('585a3')
+
+# 586 - Awards
+to_field 'awards_ssm', extract_marc('586a3')
+
 # Bound with notes
 to_field 'bound_with_struct' do |record, accumulator|
-  next unless record['591']
-
   bound_in_format_map = Traject::TranslationMap.new('bound_in')
-  bound_with_fields = record.fields('591')
-  bound_with_fields.each do |field|
+
+  record.fields('591').each do |field|
     bound_with_arr = field.map do |subfield|
       case subfield.code
       when 'a'
@@ -379,6 +514,7 @@ to_field 'bound_with_struct' do |record, accumulator|
         { bound_callnumber: subfield.value }
       end
     end
-    accumulator << bound_with_arr.inject(:merge).to_json
+
+    accumulator << bound_with_arr.compact.inject(:merge).to_json
   end
 end
