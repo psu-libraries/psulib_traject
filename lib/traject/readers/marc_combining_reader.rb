@@ -76,6 +76,7 @@ module Traject
     end
   end
 
+  # Combining Enumurable
   class CombiningEnumerable
     def initialize(left, right)
       @left = left
