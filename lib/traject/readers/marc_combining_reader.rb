@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Traject
   # In the data dumps from Sirsi if a record with all of its holdings
   # information attached would be greater that max size, the record is written
