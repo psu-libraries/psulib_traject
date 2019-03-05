@@ -59,7 +59,7 @@ to_field 'isbn_sim', extract_marc('020az', separator: nil) do |_record, accumula
   accumulator.flatten!
   accumulator.uniq!
 end
-to_field 'isbn_ssm', extract_marc('020acqz', separator: nil)
+to_field 'isbn_ssm', extract_marc('020aqz', separator: nil, trim_punctuation: true)
 
 ## ISSN
 to_field 'issn_sim', extract_marc('022a:022l:022m:022y:022z', separator: nil) do |_record, accumulator|
