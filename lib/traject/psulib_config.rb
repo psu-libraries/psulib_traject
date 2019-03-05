@@ -346,7 +346,7 @@ to_field('url_fulltext_display_ssm') do |rec, acc|
       # do nothing
     else
       z3 = [f['z'], f['3']].join(' ')
-      unless notfulltext.match(z3)
+      unless notfulltext.match?(z3)
         acc << f['u'] unless f['u'].nil?
       end
     end
@@ -365,7 +365,7 @@ to_field 'url_suppl_display_ssm' do |rec, acc|
       # do nothing
     else
       z3 = [f['z'], f['3']].join(' ')
-      if notfulltext.match(z3)
+      if notfulltext.match?(z3)
         acc << f['u'] unless f['u'].nil?
       end
     end
