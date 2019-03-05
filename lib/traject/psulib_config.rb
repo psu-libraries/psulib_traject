@@ -55,7 +55,9 @@ to_field 'id', extract_marc('001', first: true)
 
 ## ISBN
 to_field 'isbn_sim', extract_marc('020az', separator: nil) do |_record, accumulator|
+  original = accumulator.dup
   accumulator.map! { |x| StdNum::ISBN.allNormalizedValues(x) }
+  accumulator << original
   accumulator.flatten!
   accumulator.uniq!
 end
