@@ -39,8 +39,6 @@ end
 
 logger.info RUBY_DESCRIPTION
 
-to_field 'id', extract_marc('001', first: true)
-
 to_field 'marc_display_ss', serialized_marc(format: 'xml', allow_oversized: true)
 
 to_field 'all_text_timv', extract_all_marc_values do |_r, acc|
@@ -50,13 +48,28 @@ end
 to_field 'language_facet_ssim', marc_languages('008[35-37]')
 to_field 'format', marc_formats
 
-to_field 'isbn_ssim', extract_marc('020a', separator: nil) do |_rec, acc|
-  orig = acc.dup
-  acc.map! { |x| StdNum::ISBN.allNormalizedValues(x) }
-  acc << orig
-  acc.flatten!
-  acc.uniq!
+# Identifiers
+#
+## Catkey
+to_field 'id', extract_marc('001', first: true)
+
+## ISBN
+to_field 'isbn_sim', extract_marc('020az', separator: nil) do |_record, accumulator|
+  accumulator.map! { |x| StdNum::ISBN.allNormalizedValues(x) }
+  accumulator.flatten!
+  accumulator.uniq!
 end
+to_field 'isbn_ssm', extract_marc('020acqz', separator: nil)
+
+## ISSN
+to_field 'issn_sim', extract_marc('022a:022l:022m:022y:022z', separator: nil) do |_record, accumulator|
+  original = accumulator.dup
+  accumulator.map! { |x| StdNum::ISSN.normalize(x) }
+  accumulator << original
+  accumulator.flatten!
+  accumulator.uniq!
+end
+to_field 'issn_ssm', extract_marc('022a', separator: nil)
 
 # Title fields
 #
