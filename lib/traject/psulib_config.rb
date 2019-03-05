@@ -6,7 +6,6 @@ require 'bundler/setup'
 require 'library_stdnums'
 require 'traject'
 is_jruby = RUBY_ENGINE == 'jruby'
-# require 'traject/marc4j_reader' if is_jruby
 require 'traject/macros/marc21_semantics'
 require 'traject/macros/marc_format_classifier'
 require 'marc_pub_date_processor'
@@ -16,7 +15,6 @@ require 'traject/psulib_marc'
 
 extend Traject::Macros::Marc21
 extend Traject::Macros::Marc21Semantics
-# extend Traject::Macros::MarcFormats
 
 Marc21 = Traject::Macros::Marc21
 MarcExtractor = Traject::MarcExtractor
@@ -75,7 +73,7 @@ end
 to_field 'issn_ssm', extract_marc('022a', separator: nil)
 
 # Title fields
-
+#
 ## Title Search Fields
 to_field 'title_tsim', extract_marc('245a')
 to_field 'title_245ab_tsim', extract_marc('245ab', trim_punctuation: true)
@@ -151,7 +149,7 @@ to_field 'related_title_display_ssm', extract_marc('730adfgiklmnoprst3:740anp', 
 to_field 'title_ssort', marc_sortable_title
 
 # Author fields
-
+#
 ## Primary author
 to_field 'author_tsim', extract_marc('100aqbcdk:110abcdfgkln:111abcdfgklnpq')
 
@@ -178,7 +176,7 @@ to_field 'format' do |record, accumulator|
 end
 
 # Publication fields
-
+#
 ## Publisher/Manufacturer for search
 to_field 'publisher_manufacturer_tsim', extract_marc('260b:264|*1|b:260f:264|*3|b', trim_punctuation: true)
 
@@ -278,7 +276,7 @@ end
 to_field 'lc_b4cutter_facet_sim', extract_marc('050a', first: true)
 
 # Material Characteristics
-
+#
 ## 300 / 340 Physical description / physical medium
 to_field 'phys_desc_ssm', extract_marc('300abcefg3:340abcdefhijkmno3', trim_punctuation: true)
 
