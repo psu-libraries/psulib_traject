@@ -7,6 +7,8 @@ SEPARATOR = '—'.freeze
 # Split with em dash along v,x,y,z
 # Optional vocabulary argument for whitelisting subfield $2 vocabularies
 def process_hierarchy(record, fields, vocabulary = [])
+  return nil unless record.is_a? MARC::Record
+  
   subjects = []
   split_on_subfield = %w[v x y z]
   Traject::MarcExtractor.cached(fields).collect_matching_lines(record) do |field, spec, extractor|
@@ -30,6 +32,8 @@ end
 #
 # Split with em dash along v,x,y,z
 def process_subject_topic_facet(record, fields)
+  return nil unless record.is_a? MARC::Record
+
   subjects = []
   split_on_subfield = %w[v x y z]
   Traject::MarcExtractor.cached(fields).collect_matching_lines(record) do |field, spec, extractor|
@@ -49,6 +53,8 @@ end
 #
 # limit to subfield $2 vocabularies for 655|*7 genres
 def process_genre(record, fields)
+  return nil unless record.is_a? MARC::Record
+
   genres = []
   vocabulary = %w[lcgft fast]
   Traject::MarcExtractor.cached(fields).collect_matching_lines(record) do |field, spec, extractor|
