@@ -8,7 +8,7 @@ SEPARATOR = '—'.freeze
 # Optional vocabulary argument for whitelisting subfield $2 vocabularies
 def process_hierarchy(record, fields, vocabulary = [])
   return nil unless record.is_a? MARC::Record
-  
+
   subjects = []
   split_on_subfield = %w[v x y z]
   Traject::MarcExtractor.cached(fields).collect_matching_lines(record) do |field, spec, extractor|
@@ -25,6 +25,7 @@ def process_hierarchy(record, fields, vocabulary = [])
       subjects << subject if include_subject
     end
   end
+
   subjects
 end
 
@@ -46,6 +47,7 @@ def process_subject_topic_facet(record, fields)
       subjects << subject.map { |s| Traject::Macros::Marc21.trim_punctuation(s) }
     end
   end
+
   subjects.flatten
 end
 
@@ -98,6 +100,5 @@ end
 def process_formats(record)
   return nil unless record.is_a? MARC::Record
 
-  marc_format_processor = MarcFormatProcessor.new(record)
-  marc_format_processor.formats
+  MarcFormatProcessor.new(record).formats
 end
