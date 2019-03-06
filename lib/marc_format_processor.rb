@@ -61,11 +61,6 @@ class MarcFormatProcessor
     'Video' if record['008'] && %w[m v].include?(record['008'].value[33])
   end
 
-  # Check 008 byte 33 for video
-  def archive?
-    record['008'] && %w[m v].include?(record['008'].value[33])
-  end
-
   # Check 007 formats, a record may have multiple 007s
   def resolve_007
     formats = []
