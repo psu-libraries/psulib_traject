@@ -174,6 +174,11 @@ RSpec.describe 'From psulib_marc.rb' do
       expect(process_formats(@empty_record)).to eq 'Other'
     end
 
+    it 'correctly sets formats when record has no 008' do
+      @record = MARC::Reader.new(File.join(fixture_path, 'format_no_008.mrc')).to_a.first
+      expect(process_formats(@record)).to eq 'Book'
+    end
+
     it 'correctly sets format for multiple 949s' do
       @record = MARC::Reader.new(File.join(fixture_path, 'format_949t_juvenile_book.mrc')).to_a.first
       expect(process_formats(@record)).to include 'Instructional Material'
