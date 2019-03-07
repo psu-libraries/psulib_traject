@@ -48,7 +48,7 @@ class MarcFormatProcessor
     format = 'Book' if %w[a d m].include? record.leader[7]
     format = 'Journal/Periodical' if %w[b s].include? record.leader[7]
     format = 'Archives/Manuscripts' if record.leader[7] == 'c'
-    if record.leader[7] == 'm' && record['008'].value[24..27].include?('m')
+    if record.leader[7] == 'm' && record['008'] && record['008'].value[24..27].include?('m')
       # If decided that it is a Thesis/Dissertation, it is NOT a Book
       format = 'Thesis/Dissertation'
     end
