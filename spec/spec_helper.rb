@@ -6,6 +6,9 @@ Coveralls.wear!
 require 'rspec'
 require 'traject'
 require_relative '../lib/traject/readers/marc_combining_reader'
+require_relative '../lib/marc_pub_date_processor'
+require_relative '../lib/marc_format_processor'
+
 is_mri = RUBY_ENGINE == 'mri'
 require 'byebug' if is_mri
 

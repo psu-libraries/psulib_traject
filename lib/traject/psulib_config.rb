@@ -1,18 +1,19 @@
+# frozen_string_literal: true
+
 $LOAD_PATH << File.expand_path('../', __dir__)
 
 require 'bundler/setup'
 require 'library_stdnums'
 require 'traject'
 is_jruby = RUBY_ENGINE == 'jruby'
-require 'traject/marc4j_reader' if is_jruby
 require 'traject/macros/marc21_semantics'
-require 'traject/macros/marc_format_classifier'
-require_relative './readers/marc_combining_reader'
-require_relative './psulib_marc'
+require 'marc_pub_date_processor'
+require 'marc_format_processor'
+require 'traject/readers/marc_combining_reader'
+require 'traject/psulib_marc'
 
 extend Traject::Macros::Marc21
 extend Traject::Macros::Marc21Semantics
-extend Traject::Macros::MarcFormats
 
 Marc21 = Traject::Macros::Marc21
 MarcExtractor = Traject::MarcExtractor
@@ -45,9 +46,6 @@ to_field 'all_text_timv', extract_all_marc_values do |_r, acc|
   acc.replace [acc.join(' ')] # turn it into a single string
 end
 
-to_field 'language_facet_ssim', marc_languages('008[35-37]')
-to_field 'format', marc_formats
-
 # Identifiers
 #
 ## Catkey
@@ -74,15 +72,6 @@ end
 to_field 'issn_ssm', extract_marc('022a', separator: nil)
 
 # Title fields
-#
-# 245 - main title
-# 130 / 240 / 730 - uniform title (a standardized form of the title with different intensities)
-# 210 - abbreviated title
-# 222 - key title
-# 242 - translation of title by cataloging agency
-# 246 - sub/alternate titles
-# 247 - previous titles
-# 740 - uncontrolled/alternate title
 #
 ## Title Search Fields
 to_field 'title_tsim', extract_marc('245a')
@@ -159,6 +148,7 @@ to_field 'related_title_display_ssm', extract_marc('730adfgiklmnoprst3:740anp', 
 to_field 'title_ssort', marc_sortable_title
 
 # Author fields
+#
 ## Primary author
 to_field 'author_tsim', extract_marc('100aqbcdk:110abcdfgkln:111abcdfgklnpq')
 
@@ -177,7 +167,34 @@ to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711ab
 ## Author sorting field
 to_field 'author_ssort', marc_sortable_author
 
-# Subject field(s):
+# Formats and Resources
+to_field 'format' do |record, accumulator|
+  formats = process_formats(record)
+  accumulator << formats
+  accumulator.uniq!
+end
+
+# Publication fields
+#
+## Publisher/Manufacturer for search
+to_field 'publisher_manufacturer_tsim', extract_marc('260b:264|*1|b:260f:264|*3|b', trim_punctuation: true)
+
+## Publication year facet (sidebar)
+to_field 'pub_date_ssim' do |record, accumulator|
+  publication_date = process_publication_date record
+  accumulator << publication_date if publication_date
+end
+
+## Publication fields for display
+to_field 'publication_display_ssm', extract_marc('260abcefg3:264|*1|abc3') # display in search results
+to_field 'overall_imprint_display_ssm', extract_marc('260abcefg3:264|*0|abc3:264|*1|abc3:264|*2|abc3:264|*3|abc3') # display on single item page
+to_field 'copyright_display_ssm', extract_marc('264|*4|c')
+to_field 'edition_display_ssm', extract_marc('250ab3')
+
+to_field 'language_facet_ssim', marc_languages('008[35-37]')
+
+# Subject fields
+#
 ## Primary subject
 to_field 'subject_tsim', extract_marc('600abcdfklmnopqrtvxyz:610abfklmnoprstvxyz:611abcdefgklnpqstvxyz:630adfgklmnoprstvxyz:647acdg:648a:650abcd:651a:653a:654ab')
 
@@ -207,6 +224,7 @@ to_field 'subject_topic_facet_ssim' do |record, accumulator|
 end
 
 # Genre Fields
+#
 ## Main genre
 to_field 'genre_tsim', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz')
 
@@ -224,22 +242,6 @@ end
 
 ## For genre links
 to_field 'genre_full_facet_ssim', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz', trim_punctuation: true)
-
-# Publication fields
-## Publisher/Manufacturer for search
-to_field 'publisher_manufacturer_tsim', extract_marc('260b:264|*1|b:260f:264|*3|b', trim_punctuation: true)
-
-## Publication year facet (sidebar)
-to_field 'pub_date_ssim' do |record, accumulator|
-  publication_date = process_publication_date record
-  accumulator << publication_date if publication_date
-end
-
-## Publication fields for display
-to_field 'publication_display_ssm', extract_marc('260abcefg3:264|*1|abc3') # display in search results
-to_field 'overall_imprint_display_ssm', extract_marc('260abcefg3:264|*0|abc3:264|*1|abc3:264|*2|abc3:264|*3|abc3') # display on single item page
-to_field 'copyright_display_ssm', extract_marc('264|*4|c')
-to_field 'edition_display_ssm', extract_marc('250ab3')
 
 # Series fields
 #
@@ -273,7 +275,7 @@ end
 to_field 'lc_b4cutter_facet_sim', extract_marc('050a', first: true)
 
 # Material Characteristics
-
+#
 ## 300 / 340 Physical description / physical medium
 to_field 'phys_desc_ssm', extract_marc('300abcefg3:340abcdefhijkmno3', trim_punctuation: true)
 
