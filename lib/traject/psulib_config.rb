@@ -444,6 +444,9 @@ to_field 'supplement_ssm', extract_marc('525a')
 # 530 - Other Forms
 to_field 'other_forms_ssm', extract_marc('530abc3')
 
+# 532 - Dates of Publication and/or Sequential Designation
+to_field 'dates_of_pub_ssim', extract_marc('362a')
+
 # 533 - Reproduction Note
 to_field 'reproduction_note_ssm', extract_marc('533abcdefmn3')
 
