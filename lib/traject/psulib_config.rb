@@ -317,7 +317,27 @@ to_field 'duration_ssm', extract_marc('306a')
 to_field 'sound_ssm', extract_marc('344abcdefgh3')
 
 ## 383 Numeric designation of musical work
-to_field 'music_numerical_ssm', extract_marc('383abcde')
+to_field 'music_numerical_ssm' do |record, accumulator|
+  semi_colon_set = []
+  no_semi_colon_set = []
+
+  record.fields('383').each do |field|
+    field.map do |subfield|
+      next if subfield.value.empty?
+
+      case subfield.code
+      when 'a', 'b', 'c', 'd'
+        semi_colon_set << subfield.value
+      when 'e'
+        no_semi_colon_set << subfield.value
+      end
+    end
+
+    accumulator << semi_colon_set.join('; ')
+    accumulator.concat no_semi_colon_set
+    accumulator.reject!(&:empty?)
+  end
+end
 
 ## 348 Format of notated music
 to_field 'music_format_ssm', extract_marc('348a3')
