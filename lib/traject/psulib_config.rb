@@ -357,7 +357,7 @@ to_field 'video_file_ssm', extract_marc('346ab3')
 to_field 'digital_file_ssm', extract_marc('347abcdef3')
 
 # URL fields
-notfulltext = /abstract|description|sample text|table of contents|/i
+notfulltext = /addendum|appendices|appendix|appendixes|cover|excerpt|executive summary|index/i
 
 to_field('url_fulltext_display_ssm') do |rec, acc|
   rec.fields('856').each do |f|
