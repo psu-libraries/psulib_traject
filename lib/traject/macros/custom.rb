@@ -23,7 +23,7 @@ module Traject
           link_data.map! { |link| link_ary_maker url: link }
           next unless link_data.any?
 
-          accumulator << link_data.inject(:merge).to_json
+          accumulator << Hash[*link_data].to_json
         end
       end
 
