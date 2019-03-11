@@ -18,7 +18,7 @@ extend Traject::Macros::Marc21Semantics
 Marc21 = Traject::Macros::Marc21
 MarcExtractor = Traject::MarcExtractor
 
-require "traject/macros/custom"
+require 'traject/macros/custom'
 extend Traject::Macros::Custom
 
 ATOZ = ('a'..'z').to_a.join('')
@@ -365,7 +365,6 @@ to_field 'digital_file_ssm', extract_marc('347abcdef3')
 # indicator.
 to_field 'full_links_struct', extract_link_data
 to_field 'suppl_links_struct', extract_link_data(link_type: 'suppl')
-
 
 ## Notes fields
 #

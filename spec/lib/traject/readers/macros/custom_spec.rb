@@ -12,7 +12,6 @@ RSpec.describe 'Macros spec:' do
   end
   let(:result) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856], 'leader' => leader)) }
 
-
   before(:all) do
     c = './lib/traject/psulib_config.rb'
     @indexer = Traject::Indexer.new
