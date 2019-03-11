@@ -19,11 +19,13 @@ module Traject
             elsif suppl_link?(link_type, f.indicator2, url_label)
               collect_subfield_values(field: f, code: 'u')
             end
-          end.flatten
+          end.flatten.compact
+
+          link_data.map! { |link| link_ary_maker url: link }.compact!
 
           next unless link_data.any?
 
-          accumulator << link_data.map { |link| link_ary_maker url: link }.inject(:merge).to_json
+          accumulator << link_data.inject(:merge).to_json
         end
       end
 
@@ -44,9 +46,12 @@ module Traject
         [sfz, sf3].join(' ')
       end
 
-      # Make a JSON object for link creation.
+      # Make a JSON object for link creation. Only taking http/s URLs.
       def link_ary_maker(url:)
-        domain = String.new(url.match(%r{https*://([\w*|\.*]*)})[1])
+        url_match = url.match(%r{https*://([\w*|\.*]*)})
+        return nil if url_match.nil?
+
+        domain = url_match[1]
         { text: domain, url: url }
       end
 

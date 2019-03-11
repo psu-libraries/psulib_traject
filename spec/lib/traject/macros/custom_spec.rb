@@ -30,6 +30,19 @@ RSpec.describe 'Macros spec:' do
     end
   end
 
+  describe 'A record with an indicator 2 of 2 and magic word is not in one of the label subfields' do
+    let(:field) { 'suppl_links_struct' }
+    let(:url_856_4) do
+      { '856' => { 'ind1' => '0', 'ind2' => '2', 'subfields' => [{ 'u' => 'ftp://ppftpuser:welcome@ftp01.penguingroup.com/BooksellersandMedia/Covers/2008_2009_New_Covers/9780525953951.jpg' },
+                                                                 { '3' => 'Cover image' }] } }
+    end
+    let(:result_4) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_4], 'leader' => leader)) }
+
+    it 'doesn\t produce any URL' do
+      expect(result_4[field]).to be_nil
+    end
+  end
+
   describe 'A record without a magic word in one of the label subfields' do
     let(:url_856_2) do
       { '856' => { 'ind1' => '0', 'ind2' => '0', 'subfields' => [{ 'u' => 'https://scholarsphere.psu.edu/files/02870v85d' },
