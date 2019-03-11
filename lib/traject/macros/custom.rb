@@ -24,7 +24,7 @@ module Traject
           end.flatten
 
           next unless link_data.any?
-          accumulator << link_data.map {|link| link_ary_maker url: link }.to_json
+          accumulator << link_data.map {|link| link_ary_maker url: link }.inject(:merge).to_json
         end
       end
 
