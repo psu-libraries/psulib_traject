@@ -18,6 +18,9 @@ extend Traject::Macros::Marc21Semantics
 Marc21 = Traject::Macros::Marc21
 MarcExtractor = Traject::MarcExtractor
 
+require "traject/macros/custom"
+extend Traject::Macros::Custom
+
 ATOZ = ('a'..'z').to_a.join('')
 ATOU = ('a'..'u').to_a.join('')
 
@@ -357,44 +360,12 @@ to_field 'video_file_ssm', extract_marc('346ab3')
 to_field 'digital_file_ssm', extract_marc('347abcdef3')
 
 # URL fields
-notfulltext = /addendum|appendices|appendix|appendixes|cover|excerpt|executive summary|index/i
 
-to_field('url_fulltext_display_ssm') do |rec, acc|
-  rec.fields('856').each do |f|
-    case f.indicator2
-    when '0'
-      f.find_all { |sf| sf.code == 'u' }.each do |url|
-        acc << url.value
-      end
-    when '2'
-      # do nothing
-    else
-      z3 = [f['z'], f['3']].join(' ')
-      unless notfulltext.match?(z3)
-        acc << f['u'] unless f['u'].nil?
-      end
-    end
-  end
-end
+# Unless subfield z and 3 (Public note and Materials specified) tell us this isn't a fulltext URL OR if 0 is the second
+# indicator.
+to_field 'full_links_struct', extract_link_data
+to_field 'suppl_links_struct', extract_link_data(link_type: 'suppl')
 
-# Very similar to url_fulltext_display_ssm. Should DRY up.
-to_field 'url_suppl_display_ssm' do |rec, acc|
-  rec.fields('856').each do |f|
-    case f.indicator2
-    when '2'
-      f.find_all { |sf| sf.code == 'u' }.each do |url|
-        acc << url.value
-      end
-    when '0'
-      # do nothing
-    else
-      z3 = [f['z'], f['3']].join(' ')
-      if notfulltext.match?(z3)
-        acc << f['u'] unless f['u'].nil?
-      end
-    end
-  end
-end
 
 ## Notes fields
 #
