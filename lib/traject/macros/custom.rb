@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# A set of custom traject macros (extractors and normalizers)
 module Traject
   module Macros
+    # A set of custom traject macros (extractors and normalizers)
     module Custom
       NOT_FULLTEXT = /addendum|appendices|appendix|appendixes|cover|excerpt|executive summary|index/i.freeze
 
@@ -14,11 +14,9 @@ module Traject
           link_data = record.fields('856').map do |f|
             url_label = url_label(f['z'], f['3'])
 
-            if f.indicator2 == '0' || NOT_FULLTEXT.!~(url_label) # Fulltext here
-              return unless link_type == 'full'
-
+            if fulltext_link?(link_type, f.indicator2, url_label)
               collect_subfield_values(field: f, code: 'u')
-            elsif f.indicator2 == '2' || NOT_FULLTEXT.~(url_label) # Supplemental here
+            elsif suppl_link?(link_type, f.indicator2, url_label)
               collect_subfield_values(field: f, code: 'u')
             end
           end.flatten
@@ -27,6 +25,18 @@ module Traject
 
           accumulator << link_data.map { |link| link_ary_maker url: link }.inject(:merge).to_json
         end
+      end
+
+      def fulltext_link?(link_type, ind2, url_label)
+        (link_type == 'full' &&
+            (ind2 == '0' || !NOT_FULLTEXT.match?(url_label))
+        )
+      end
+
+      def suppl_link?(link_type, ind2, url_label)
+        (link_type == 'suppl' &&
+            (ind2 == '2' && NOT_FULLTEXT.match?(url_label))
+        )
       end
 
       # The label information present in the catalog.
