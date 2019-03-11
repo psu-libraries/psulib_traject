@@ -20,9 +20,7 @@ module Traject
               collect_subfield_values(field: f, code: 'u')
             end
           end.flatten.compact
-
-          link_data.map! { |link| link_ary_maker url: link }.compact!
-
+          link_data.map! { |link| link_ary_maker url: link }
           next unless link_data.any?
 
           accumulator << link_data.inject(:merge).to_json
