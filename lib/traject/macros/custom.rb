@@ -24,14 +24,13 @@ module Traject
               collect_subfield_values(field: f, code: 'u')
             end
           end.flatten.compact
-          link_data.map! { |link| link_ary_maker url: link }
-          next unless link_data.any?
 
           link_data.map do |link|
             url_match = link.match(%r{https*://([\w*|\.*]*)})
             return nil if url_match.nil?
+
             domain = url_match[1]
-            accumulator << {text: domain, url: link}.to_json
+            accumulator << { text: domain, url: link }.to_json
           end
         end
       end
