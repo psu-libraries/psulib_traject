@@ -68,23 +68,21 @@ RSpec.describe 'Macros spec:' do
     end
   end
 
-  describe 'A record with a lot of stuff' do
+  describe 'A record with multiple 856s, one with ind2 of 1 and other with ind2 2, neither of which have no-fulltext indicator word in a label subfield' do
     let(:url_856_5) do
-     [
-          { '856' => { 'ind1' => '0', 'ind2' => '1', 'subfields' => [{ 'u' => 'http://calldp.leavenworth.army.mil/scripts/cqcgi.exe/@ss_prod.env?CQ_SAVE[CGI]=/scripts/cqcgi.exe/@ss_prod.env&CQ_MAIN=YES&CQ_LOGIN=YES&CQDC=Tue%20Jun%2017%202008%2015%3A29%3A03%20GMT-0400%20%28Eastern%20Daylight%20Time%29&CQ_SAVE[GIFs]=/rware/gif8&CQ_USER_NAME=96063898&CQ_PASSWORD=xxx&CQ_SAVE[CPU]=Intel&CQ_SAVE[Browser]=W3C&CQ_SAVE[BrowserVersion]=nav6up&CQ_SAVE[Base]=calldp.leavenworth.army.mil&CQ_SAVE[Home]=http%3A//calldp.leavenworth.army.mil/call_pub.html' },
-                                                                 { 'z' => 'URL does not work, Feb. 3, 2016.' }]}},
-          { '856' => { 'ind1' => '0', 'ind2' => '1', 'subfields' => [{ 'u' => 'http://purl.access.gpo.gov/GPO/LPS1465' }]}},
-          { '856' => { 'ind1' => '0', 'ind2' => '1', 'subfields' => [{ 'u' => 'http://usacac.army.mil/CAC2/MilitaryReview/mrpast2.asp' }]}},
-          { '856' => { 'ind1' => '4', 'ind2' => '2', 'subfields' => [{ 'u' => 'http://calldp.leavenworth.army.mil/' }, { 'z' => 'Gateway to archives.' }, { 'z' => 'URL does not work, Feb. 3, 2016.' }]}},
-          { '856' => { 'ind1' => '4', 'ind2' => '2', 'subfields' => [{ 'u' => 'http://cgsc.cdmhost.com/cdm4/browse.php?CISOROOT=%2Fp124201coll1' }, { 'z' => 'Combined Arms Research Library Digital' }]}}
-    ]
+      [
+        { '856' => { 'ind1' => '0', 'ind2' => '1', 'subfields' => [{ 'u' => 'http://usacac.army.mil/CAC2/MilitaryReview/mrpast2.asp' }] } },
+        { '856' => { 'ind1' => '4', 'ind2' => '2', 'subfields' => [{ 'u' => 'http://calldp.leavenworth.army.mil/' },
+                                                                   { 'z' => 'Gateway to archives.' },
+                                                                   { 'z' => 'URL does not work, Feb. 3, 2016.' }] } }
+      ]
     end
     let(:result_5) { @indexer.map_record(MARC::Record.new_from_hash('fields' => url_856_5, 'leader' => leader)) }
 
-    it 'produces many things' do
-      expect(result_5['full_links_struct']).to match ['{"text":"usacac.army.mil","url":"http://usacac.army.mil/CAC2/MilitaryReview/mrpast2.asp"}']
-      expect(result_5['partial_links_struct']).to match ['{"text":"calldp.leavenworth.army.mil","url":"http://calldp.leavenworth.army.mil/scripts/cqcgi.exe/@ss_prod.env?CQ_SAVE[CGI]=/scripts/cqcgi.exe/@ss_prod.env&CQ_MAIN=YES&CQ_LOGIN=YES&CQDC=Tue%20Jun%2017%202008%2015%3A29%3A03%20GMT-0400%20%28Eastern%20Daylight%20Time%29&CQ_SAVE[GIFs]=/rware/gif8&CQ_USER_NAME=96063898&CQ_PASSWORD=xxx&CQ_SAVE[CPU]=Intel&CQ_SAVE[Browser]=W3C&CQ_SAVE[BrowserVersion]=nav6up&CQ_SAVE[Base]=calldp.leavenworth.army.mil&CQ_SAVE[Home]=http%3A//calldp.leavenworth.army.mil/call_pub.html"}','{"text":"purl.access.gpo.gov","url":"http://purl.access.gpo.gov/GPO/LPS1465"}','{"text":"usacac.army.mil","url":"http://usacac.army.mil/CAC2/MilitaryReview/mrpast2.asp"}']
-      # expect(result_5['suppl_links_struct']).to be_nil
+    it 'produces 2 fulltext links and 1 partial link' do
+      expect(result_5['full_links_struct']).to match ['{"text":"usacac.army.mil","url":"http://usacac.army.mil/CAC2/MilitaryReview/mrpast2.asp"}',
+                                                      '{"text":"calldp.leavenworth.army.mil","url":"http://calldp.leavenworth.army.mil/"}']
+      expect(result_5['partial_links_struct']).to match ['{"text":"usacac.army.mil","url":"http://usacac.army.mil/CAC2/MilitaryReview/mrpast2.asp"}']
     end
   end
 end
