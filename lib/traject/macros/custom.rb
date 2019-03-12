@@ -27,7 +27,7 @@ module Traject
 
           link_data.map do |link|
             url_match = link.match(%r{https*://([\w*|\.*]*)})
-            return nil if url_match.nil?
+            break nil if url_match.nil?
 
             domain = url_match[1]
             accumulator << { text: domain, url: link }.to_json
