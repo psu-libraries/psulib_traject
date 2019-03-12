@@ -30,6 +30,17 @@ RSpec.describe 'Macros spec:' do
     end
   end
 
+  describe 'A record with a fulltext link to Summon' do
+    let(:url_856_6) do
+      { '856' => { 'ind1' => '0', 'ind2' => '1', 'subfields' => [{ 'u' => 'http://sk8es4mc2l.search.serialssolutions.com/?sid=sersol&SS_jc=TC0001341523&title=11th%20Working%20Conference%20on%20Mining%20Software%20Repositories%20%3A%20proceedings%20%3A%20May%2031%20-%20June%201%2C%202014%2C%20Hyderabad%2C%20India'}]}}
+    end
+    let(:result_6) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_6], 'leader' => leader)) }
+
+    it 'produces a fulltext link with text that drop summon\'s sub-domains' do
+      expect(result_6[field]).to match ['{"text":"serialssolutions.com","url":"http://sk8es4mc2l.search.serialssolutions.com/?sid=sersol&SS_jc=TC0001341523&title=11th%20Working%20Conference%20on%20Mining%20Software%20Repositories%20%3A%20proceedings%20%3A%20May%2031%20-%20June%201%2C%202014%2C%20Hyderabad%2C%20India"}']
+    end
+  end
+
   describe 'A record without a magic word in one of the label subfields' do
     let(:url_856_2) do
       { '856' => { 'ind1' => '0', 'ind2' => '0', 'subfields' => [{ 'u' => 'https://scholarsphere.psu.edu/files/02870v85d' },
