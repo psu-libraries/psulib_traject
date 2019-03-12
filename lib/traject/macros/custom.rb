@@ -29,7 +29,7 @@ module Traject
             url_match = link.match(%r{https*://([\w*|\.*]*)})
             break nil if url_match.nil?
 
-            domain = url_match[1]
+            domain = serial_solutions_link?(url_match[1]) ? 'serialssolutions.com' : url_match[1]
             accumulator << { text: domain, url: link }.to_json
           end
         end
@@ -49,6 +49,10 @@ module Traject
 
       def partial_link?(link_type, ind2)
         (link_type == 'partial' && ind2 == '1')
+      end
+
+      def serial_solutions_link?(link)
+        (link == 'sk8es4mc2l.search.serialssolutions.com')
       end
 
       # The label information present in the catalog.
