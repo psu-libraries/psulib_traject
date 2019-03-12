@@ -27,7 +27,12 @@ module Traject
           link_data.map! { |link| link_ary_maker url: link }
           next unless link_data.any?
 
-          accumulator << Hash[*link_data].to_json
+          link_data.map do |link|
+            url_match = link.match(%r{https*://([\w*|\.*]*)})
+            return nil if url_match.nil?
+            domain = url_match[1]
+            accumulator << {text: domain, url: link}.to_json
+          end
         end
       end
 
