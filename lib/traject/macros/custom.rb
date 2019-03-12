@@ -12,7 +12,9 @@ module Traject
           return unless record.fields('856').any?
 
           link_data = record.fields('856').map do |f|
-            url_label = url_label(f['z'], f['3'])
+            sfz = collect_subfield_values(field: f, code: 'z').join ' '
+            sf3 = collect_subfield_values(field: f, code: '3').join ' '
+            url_label = url_label(sfz, sf3)
 
             if fulltext_link?(link_type, f.indicator2, url_label)
               collect_subfield_values(field: f, code: 'u')
