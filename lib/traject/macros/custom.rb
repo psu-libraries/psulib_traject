@@ -18,6 +18,8 @@ module Traject
 
             if fulltext_link?(link_type, f.indicator2, url_label)
               collect_subfield_values(field: f, code: 'u')
+            elsif partial_link?(link_type, f.indicator2)
+              collect_subfield_values(field: f, code: 'u')
             elsif suppl_link?(link_type, f.indicator2, url_label)
               collect_subfield_values(field: f, code: 'u')
             end
@@ -39,6 +41,10 @@ module Traject
         (link_type == 'suppl' &&
             (ind2 == '2' && NOT_FULLTEXT.match?(url_label))
         )
+      end
+
+      def partial_link?(link_type, ind2)
+        (link_type == 'partial' && ind2 == '1')
       end
 
       # The label information present in the catalog.

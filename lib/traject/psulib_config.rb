@@ -364,6 +364,7 @@ to_field 'digital_file_ssm', extract_marc('347abcdef3')
 # Unless subfield z and 3 (Public note and Materials specified) tell us this isn't a fulltext URL OR if 0 is the second
 # indicator.
 to_field 'full_links_struct', extract_link_data
+to_field 'partial_links_struct', extract_link_data(link_type: 'partial')
 to_field 'suppl_links_struct', extract_link_data(link_type: 'suppl')
 
 ## Notes fields
