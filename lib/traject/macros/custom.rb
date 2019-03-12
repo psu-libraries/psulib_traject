@@ -57,15 +57,6 @@ module Traject
         [sfz, sf3].join(' ')
       end
 
-      # Make a JSON object for link creation. Only taking http/s URLs.
-      def link_ary_maker(url:)
-        url_match = url.match(%r{https*://([\w*|\.*]*)})
-        return nil if url_match.nil?
-
-        domain = url_match[1]
-        { text: domain, url: url }
-      end
-
       # Extract subfield values.
       def collect_subfield_values(field:, code:)
         field.subfields.select { |sf| sf.code == code }.collect(&:value)
