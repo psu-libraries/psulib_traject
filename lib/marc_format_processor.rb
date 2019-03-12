@@ -10,6 +10,8 @@ class MarcFormatProcessor
     resolve_formats
     resolve_overrides
     resolve_other
+
+    @formats = Array(@formats) unless @formats.is_a? Array
   end
 
   # Check 949t, leader6 and 007 formats
@@ -71,7 +73,7 @@ class MarcFormatProcessor
       formats << format unless format.nil?
     end
 
-    formats
+    formats.uniq
   end
 
   # Check 949t formats, a record may have multiple 949s with different 949ts
@@ -85,7 +87,7 @@ class MarcFormatProcessor
       formats << format unless format.nil?
     end
 
-    formats
+    formats.uniq
   end
 
   # Check other possible formats and prefer over 949t, leader6 and 007 formats
