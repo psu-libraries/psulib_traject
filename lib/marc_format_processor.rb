@@ -6,6 +6,11 @@ class MarcFormatProcessor
   attr_reader :record, :formats
 
   def initialize(marc_record)
+    # Initialize translation maps required
+    @formats_949t_map = Traject::TranslationMap.new('formats_949t')
+    @formats_leader6_map = Traject::TranslationMap.new('formats_leader6')
+    @formats_007_map = Traject::TranslationMap.new('formats_007')
+
     @record = marc_record
     resolve_formats
     resolve_overrides
@@ -29,8 +34,7 @@ class MarcFormatProcessor
 
   # Check leader byte 6 and byte 7
   def resolve_leader
-    formats_leader6_map = Traject::TranslationMap.new('formats_leader6')
-    format = formats_leader6_map.translate_array([record.leader[6]])[0]
+    format = @formats_leader6_map.translate_array([record.leader[6]])[0]
 
     case record.leader[6]
     when 'a'
@@ -66,10 +70,9 @@ class MarcFormatProcessor
   # Check 007 formats, a record may have multiple 007s
   def resolve_007
     formats = []
-    formats_007_map = Traject::TranslationMap.new('formats_007')
 
     Traject::MarcExtractor.cached('007').collect_matching_lines(record) do |field, _spec, _extractor|
-      format = formats_007_map.translate_array([field.value[0]])[0]
+      format = @formats_007_map.translate_array([field.value[0]])[0]
       formats << format unless format.nil?
     end
 
@@ -79,11 +82,10 @@ class MarcFormatProcessor
   # Check 949t formats, a record may have multiple 949s with different 949ts
   def resolve_949t
     formats = []
-    formats_949t_map = Traject::TranslationMap.new('formats_949t')
 
     Traject::MarcExtractor.cached('949t').collect_matching_lines(record) do |field, spec, extractor|
       field_949t = extractor.collect_subfields(field, spec).first
-      format = formats_949t_map.translate_array([field_949t])[0]
+      format = @formats_949t_map.translate_array([field_949t])[0]
       formats << format unless format.nil?
     end
 
