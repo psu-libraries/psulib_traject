@@ -117,7 +117,7 @@ RSpec.describe 'Macros spec:' do
 
   describe 'A record with a fulltext link to Summon' do
     let(:url_856_6) do
-      { '856' => { 'ind1' => '0', 'ind2' => '1', 'subfields' => [{ 'u' => 'http://sk8es4mc2l.search.serialssolutions.c'\
+      { '856' => { 'ind1' => '0', 'ind2' => '1', 'subfields' => [{ 'u' => 'http://SK8ES4MC2L.search.serialssolutions.c'\
                             'om/?sid=sersol&SS_jc=TC0001341523&title=11th%20Working%20Conference%20on%20Mining%20Softw'\
                             'are%20Repositories%20%3A%20proceedings%20%3A%20May%2031%20-%20June%201%2C%202014%2C%20Hyd'\
                             'erabad%2C%20India' }] } }
@@ -125,7 +125,7 @@ RSpec.describe 'Macros spec:' do
     let(:result_6) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_6], 'leader' => leader)) }
 
     it 'produces a fulltext link with text that drop summon\'s sub-domains' do
-      expect(result_6['full_links_struct']).to match ['{"text":"serialssolutions.com","url":"http://sk8es4mc2l.search.'\
+      expect(result_6['full_links_struct']).to match ['{"text":"serialssolutions.com","url":"http://SK8ES4MC2L.search.'\
                                         'serialssolutions.com/?sid=sersol&SS_jc=TC0001341523&title=11th%20Working%20Co'\
                                         'nference%20on%20Mining%20Software%20Repositories%20%3A%20proceedings%20%3A%20'\
                                         'May%2031%20-%20June%201%2C%202014%2C%20Hyderabad%2C%20India"}']

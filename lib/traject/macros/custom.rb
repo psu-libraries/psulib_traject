@@ -59,7 +59,7 @@ module Traject
       end
 
       def serial_solutions_link?(link)
-        (link == 'sk8es4mc2l.search.serialssolutions.com')
+        (link.downcase == 'sk8es4mc2l.search.serialssolutions.com')
       end
 
       # The label information present in the catalog.
