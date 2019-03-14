@@ -64,7 +64,7 @@ RSpec.describe 'Macros spec:' do
     end
     let(:result_3a) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_3a], 'leader' => leader)) }
 
-    it 'produces a supplemental link' do
+    it 'produces a fulltext link' do
       expect(result_3a['full_links_struct']).to match ['{"text":"library.columbia.edu","url":"http://library.columbia.'\
                                                        'edu/content/libraryweb/indiv/ccoh/our_work/how_to_use_the_arch'\
                                                        'ives.html"}']
