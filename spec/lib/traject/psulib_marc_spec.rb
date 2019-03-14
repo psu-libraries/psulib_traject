@@ -171,83 +171,81 @@ RSpec.describe 'From psulib_marc.rb' do
     it 'works with empty record, returns format as Other' do
       @empty_record = MARC::Record.new
       @empty_record.append(MARC::ControlField.new('001', '000000000'))
-      expect(process_formats(@empty_record)).to eq 'Other'
+      expect(process_formats(@empty_record)).to contain_exactly 'Other'
     end
 
     it 'correctly sets formats when record has no 008' do
       @record = MARC::Reader.new(File.join(fixture_path, 'format_no_008.mrc')).to_a.first
-      expect(process_formats(@record)).to eq 'Book'
+      expect(process_formats(@record)).to contain_exactly 'Book'
     end
 
     it 'correctly sets format for multiple 949s' do
       @record = MARC::Reader.new(File.join(fixture_path, 'format_949t_juvenile_book.mrc')).to_a.first
-      expect(process_formats(@record)).to include 'Instructional Material'
-      expect(process_formats(@record)).to include 'Juvenile Book'
+      expect(process_formats(@record)).to contain_exactly 'Instructional Material', 'Juvenile Book'
     end
 
     it 'prefers format as Statute by checking 949t over Government Document' do
       @record = MARC::Reader.new(File.join(fixture_path, 'format_949t_statute.mrc')).to_a.first
-      expect(process_formats(@record)).to include 'Statute'
+      expect(process_formats(@record)).to contain_exactly 'Statute'
     end
 
     it 'correctly sets format as Government Document' do
       @record = MARC::Reader.new(File.join(fixture_path, 'format_gov_doc.mrc')).to_a.first
-      expect(process_formats(@record)).to include 'Government Document'
+      expect(process_formats(@record)).to contain_exactly 'Government Document'
     end
 
     it 'correctly sets formats checking leader byte 6 and byte 7' do
       @record = MARC::Reader.new(File.join(fixture_path, 'format_leader6_book.mrc')).to_a.first
-      expect(process_formats(@record)).to eq 'Book'
+      expect(process_formats(@record)).to contain_exactly 'Book'
 
       @record = MARC::Reader.new(File.join(fixture_path, 'format_leader6_video.mrc')).to_a.first
-      expect(process_formats(@record)).to eq 'Video'
+      expect(process_formats(@record)).to contain_exactly 'Video'
 
       @record = MARC::Reader.new(File.join(fixture_path, 'format_leader6_thesis.mrc')).to_a.first
-      expect(process_formats(@record)).to eq 'Thesis/Dissertation'
+      expect(process_formats(@record)).to contain_exactly 'Thesis/Dissertation'
 
       @record = MARC::Reader.new(File.join(fixture_path, 'format_leader6_archives.mrc')).to_a.first
-      expect(process_formats(@record)).to eq 'Archives/Manuscripts'
+      expect(process_formats(@record)).to contain_exactly 'Archives/Manuscripts'
     end
 
     it 'correctly sets 007 formats' do
       @record = MARC::Reader.new(File.join(fixture_path, 'format_007_maps.mrc')).to_a.first
-      expect(process_formats(@record)).to include 'Maps, Atlases, Globes'
-      expect(process_formats(@record)).to include 'Musical Score'
+      expect(process_formats(@record)).to contain_exactly 'Maps, Atlases, Globes', 'Musical Score'
     end
 
     it 'correctly sets format as Thesis/Dissertation if the record has a 502' do
       @record = MARC::Reader.new(File.join(fixture_path, 'format_502_thesis.mrc')).to_a.first
-      expect(process_formats(@record)).to eq 'Thesis/Dissertation'
+      expect(process_formats(@record)).to contain_exactly 'Thesis/Dissertation'
     end
 
     it 'correctly sets format as Newspaper' do
       @record = MARC::Reader.new(File.join(fixture_path, 'format_newspaper.mrc')).to_a.first
-      expect(process_formats(@record)).to eq 'Newspaper'
+      expect(process_formats(@record)).to contain_exactly 'Newspaper'
     end
 
     it 'correctly sets format as Proceeding/Congress' do
       @record = MARC::Reader.new(File.join(fixture_path, 'format_proceeding.mrc')).to_a.first
-      expect(process_formats(@record)).to eq 'Proceeding/Congress'
+      expect(process_formats(@record)).to contain_exactly 'Proceeding/Congress'
     end
 
     it 'correctly sets format as Proceeding/Congress' do
       @record = MARC::Reader.new(File.join(fixture_path, 'format_proceeding.mrc')).to_a.first
-      expect(process_formats(@record)).to eq 'Proceeding/Congress'
+      expect(process_formats(@record)).to contain_exactly 'Proceeding/Congress'
     end
 
     it 'correctly sets format as Congress' do
       @record = MARC::Reader.new(File.join(fixture_path, 'format_congress.mrc')).to_a.first
-      expect(process_formats(@record)).to eq 'Congress'
+      expect(process_formats(@record)).to contain_exactly 'Congress'
     end
 
     it 'correctly sets format as Congress' do
       @record = MARC::Reader.new(File.join(fixture_path, 'format_games.mrc')).to_a.first
-      expect(process_formats(@record)).to eq 'Games/Toys'
+      expect(process_formats(@record)).to contain_exactly 'Games/Toys'
     end
 
     it 'correctly sets format as Other when no other format found' do
       @record = MARC::Reader.new(File.join(fixture_path, 'format_other.mrc')).to_a.first
-      expect(process_formats(@record)).to eq 'Other'
+      expect(process_formats(@record)).to contain_exactly 'Other'
     end
   end
 end

@@ -170,7 +170,7 @@ to_field 'author_ssort', marc_sortable_author
 # Formats and Resources
 to_field 'format' do |record, accumulator|
   formats = process_formats(record)
-  accumulator << formats
+  accumulator.replace(formats).compact!
   accumulator.uniq!
 end
 
