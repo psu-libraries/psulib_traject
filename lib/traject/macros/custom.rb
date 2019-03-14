@@ -47,19 +47,19 @@ module Traject
       end
 
       def fulltext_link_available?(ind2, url_label)
-        (ind2 == '0' || !NOT_FULLTEXT.match?(url_label))
+        ind2 == '0' || !NOT_FULLTEXT.match?(url_label)
       end
 
       def partial_link_available?(ind2)
-        (ind2 == '1')
+        ind2 == '1'
       end
 
       def suppl_link_available?(ind2, url_label)
-        (ind2 == '2' && NOT_FULLTEXT.match?(url_label))
+        ind2 == '2' && NOT_FULLTEXT.match?(url_label)
       end
 
       def serial_solutions_link?(link)
-        (link.downcase == 'sk8es4mc2l.search.serialssolutions.com')
+        link.casecmp('sk8es4mc2l.search.serialssolutions.com').zero?
       end
 
       # The label information present in the catalog.
