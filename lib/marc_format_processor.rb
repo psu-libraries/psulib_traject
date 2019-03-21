@@ -20,6 +20,8 @@ class MarcFormatProcessor
     # eg. prefer Juvenile Book vs Book, Statute vs Government Document
     @formats = resolve_949t
 
+    @formats = 'Instructional Material' if instructional_material? && @formats.empty?
+
     # Check Government Document earlier to avoid overlapping with 007 and leader6-7 formats
     @formats = 'Government Document' if government_document? && @formats.empty?
 
@@ -137,10 +139,15 @@ class MarcFormatProcessor
     end.nil?
   end
 
-  # Check leader byte 16 and 008 byte 33 for games/toys
+  # Checks leader byte 16, 006 and 008 for games/toys
   def games?
     %w[g w].include?(record.leader[16]) ||
-      record['008'] && (%w[g w].include?(record['008'].value[33]) || record['008'].value[26] == 'g') ||
-      record['006'] && record['006'].value[9] == 'g'
+      record['006'] && record['006'].value[9] == 'g' ||
+      record['008'] && (%w[g w].include?(record['008'].value[33]) || record['008'].value[26] == 'g')
+  end
+
+  # Checks 006 and 008 for instructional material
+  def instructional_material?
+    record['006'] && record['006'].value[16] == 'q' || record['008'] && record['008'].value[33] == 'q'
   end
 end

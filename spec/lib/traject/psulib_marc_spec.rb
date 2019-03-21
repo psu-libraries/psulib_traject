@@ -189,6 +189,11 @@ RSpec.describe 'From psulib_marc.rb' do
       expect(process_formats(@record)).to contain_exactly 'Statute'
     end
 
+    it 'correctly sets format as Instructional Material from 006' do
+      @record = MARC::Reader.new(File.join(fixture_path, 'format_006_instructional_material.mrc')).to_a.first
+      expect(process_formats(@record)).to contain_exactly 'Instructional Material'
+    end
+
     it 'correctly sets format as Government Document' do
       @record = MARC::Reader.new(File.join(fixture_path, 'format_gov_doc.mrc')).to_a.first
       expect(process_formats(@record)).to contain_exactly 'Government Document'
@@ -223,13 +228,13 @@ RSpec.describe 'From psulib_marc.rb' do
       expect(process_formats(@record)).to contain_exactly 'Newspaper'
     end
 
-    it 'correctly sets format as Games from 008' do
-      @record = MARC::Reader.new(File.join(fixture_path, 'format_games.mrc')).to_a.first
+    it 'correctly sets format as Games/Toys from 006' do
+      @record = MARC::Reader.new(File.join(fixture_path, 'format_006_games.mrc')).to_a.first
       expect(process_formats(@record)).to contain_exactly 'Games/Toys'
     end
 
-    it 'correctly sets format as Games from 006' do
-      @record = MARC::Reader.new(File.join(fixture_path, 'format_006_games.mrc')).to_a.first
+    it 'correctly sets format as Games/Toys from 008' do
+      @record = MARC::Reader.new(File.join(fixture_path, 'format_games.mrc')).to_a.first
       expect(process_formats(@record)).to contain_exactly 'Games/Toys'
     end
 
