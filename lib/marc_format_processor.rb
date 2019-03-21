@@ -94,10 +94,9 @@ class MarcFormatProcessor
   def resolve_overrides
     @formats = 'Thesis/Dissertation' if thesis?
     @formats = 'Newspaper' if newspaper?
-    @formats = 'Proceeding/Congress' if proceeding?
-    # If not captured in Proceeding/Congress, check if congress check will capture
-    @formats = 'Congress' if congress?
     @formats = 'Games/Toys' if games?
+    @formats = 'Congress' if congress?
+    @formats = 'Proceeding/Congress' if proceeding?
   end
 
   # If no other values are present, use the default value "Other"
@@ -128,7 +127,7 @@ class MarcFormatProcessor
 
   # Check leader byte 12 and 008 byte 29 for proceeding/congress
   def proceeding?
-    !record.leader[12].nil? && record['008'] && record['008'].value[29] == '1'
+    record.leader[12] == '1' || (record['008'] && record['008'].value[29] == '1')
   end
 
   # Checks all $6xx for a $v "congress"
@@ -140,6 +139,8 @@ class MarcFormatProcessor
 
   # Check leader byte 16 and 008 byte 33 for games/toys
   def games?
-    %w[g w].include?(record.leader[16]) || (record['008'] && %w[g w].include?(record['008'].value[33]))
+    %w[g w].include?(record.leader[16]) ||
+      record['008'] && (%w[g w].include?(record['008'].value[33]) || record['008'].value[26] == 'g') ||
+      record['006'] && record['006'].value[9] == 'g'
   end
 end
