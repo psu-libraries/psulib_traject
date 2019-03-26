@@ -9,6 +9,7 @@ is_jruby = RUBY_ENGINE == 'jruby'
 require 'traject/macros/marc21_semantics'
 require 'marc_pub_date_processor'
 require 'marc_format_processor'
+require 'marc_media_type_processor'
 require 'traject/readers/marc_combining_reader'
 require 'traject/psulib_marc'
 
@@ -170,11 +171,16 @@ to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711ab
 ## Author sorting field
 to_field 'author_ssort', marc_sortable_author
 
-# Formats and Resources
+# Formats
 to_field 'format' do |record, accumulator|
   formats = process_formats(record)
-  accumulator.replace(formats).compact!
-  accumulator.uniq!
+  accumulator.replace(formats)
+end
+
+# Media Types Facet
+to_field 'media_type_facet_ssim' do |record, accumulator|
+  media_types = process_media_types(record)
+  accumulator.replace(media_types)
 end
 
 # Publication fields
