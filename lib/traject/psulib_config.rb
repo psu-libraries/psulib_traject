@@ -9,6 +9,7 @@ is_jruby = RUBY_ENGINE == 'jruby'
 require 'traject/macros/marc21_semantics'
 require 'marc_pub_date_processor'
 require 'marc_format_processor'
+require 'marc_media_type_processor'
 require 'traject/readers/marc_combining_reader'
 require 'traject/psulib_marc'
 
@@ -173,12 +174,14 @@ to_field 'author_ssort', marc_sortable_author
 ## Access facet
 to_field 'access_facet_ssim', extract_access_data
 
-# Formats and Resources
+# Formats
 to_field 'format' do |record, accumulator|
   formats = process_formats(record)
-  accumulator.replace(formats).compact!
-  accumulator.uniq!
+  accumulator.replace(formats)
 end
+
+# Media Types Facet
+to_field 'media_type_facet_ssim', process_media_types(record)
 
 # Publication fields
 #
