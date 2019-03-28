@@ -71,6 +71,44 @@ module Traject
       def collect_subfield_values(field:, code:)
         field.subfields.select { |sf| sf.code == code }.collect(&:value)
       end
+
+      # Extract 949m for access facet
+      def extract_access_data
+        lambda do |record, accumulator, _context|
+          return unless record.fields('949').any?
+
+          access_data = []
+          libraries_map = Traject::TranslationMap.new('libraries')
+
+          Traject::MarcExtractor.cached('949m').collect_matching_lines(record) do |field, spec, extractor|
+            library_code = extractor.collect_subfields(field, spec).first
+            case library_code
+            when 'ONLINE'
+              access_data << 'Online'
+            when 'ACQ_DSL', 'ACQUISTNS', 'SERIAL-SRV'
+              access_data << 'On Order'
+            else
+              access_data << resolve_library_code(field, libraries_map.translate_array([library_code])[0])
+            end
+          end
+          access_data.compact!
+          access_data.uniq!
+          # if there is anything other than On Order, we DO NOT include On Order
+          access_data.delete('On Order') if access_data.include?('On Order') && (access_data.length > 1)
+
+          accumulator.replace(access_data)
+        end
+      end
+
+      def resolve_library_code(field, library)
+        return 'Other' if library.nil?
+
+        if !field['l'].nil? && field['l'] == 'ON-ORDER'
+          'On Order'
+        else
+          'In the Library'
+        end
+      end
     end
   end
 end

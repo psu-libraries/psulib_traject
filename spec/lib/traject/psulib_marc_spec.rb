@@ -3,7 +3,7 @@
 require_relative '../../../lib/traject/psulib_marc'
 
 RSpec.describe 'From psulib_marc.rb' do
-  describe 'process_hierarchy function' do
+  describe 'process_hierarchy' do
     before(:all) do
       @subject610 = { '600' => { 'ind1' => '', 'ind2' => '5', 'subfields' => [{ 'a' => 'Exclude' }] } }
       @subject600 = { '600' => { 'ind1' => '', 'ind2' => '0', 'subfields' => [{ 'a' => 'John.' }, { 't' => 'Title.' }, { 'v' => 'split genre' }, { 'd' => '2015' }, { '2' => 'special' }] } }
@@ -35,7 +35,7 @@ RSpec.describe 'From psulib_marc.rb' do
     end
   end
 
-  describe 'process_subject_topic_facet function' do
+  describe 'process_subject_topic_facet' do
     before(:all) do
       @subject600 = { '600' => { 'ind1' => '', 'ind2' => '0', 'subfields' => [{ 'a' => 'John.' }, { 'x' => 'Join' }, { 't' => 'Title' }, { 'd' => '2015' }] } }
       @subject630 = { '630' => { 'ind1' => '', 'ind2' => '0', 'subfields' => [{ 'x' => 'Fiction' }, { 'y' => '1492' }, { 'z' => "don't ignore" }, { 'v' => 'split genre' }] } }
@@ -56,7 +56,7 @@ RSpec.describe 'From psulib_marc.rb' do
     end
   end
 
-  describe 'process_genres function' do
+  describe 'process_genres' do
     before(:all) do
       @genre650 = { '650' => { 'ind1' => '', 'ind2' => '0', 'subfields' => [{ 'v' => 'Maps' }, { 'z' => 'Tippah County' }] } }
       @genre655_fast = { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Fiction films' }, { 'b' => '1900' }, { '2' => 'fast' }, { 'z' => 'Germany' }] } }
