@@ -161,5 +161,10 @@ RSpec.describe 'Macros spec:' do
       result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'access_other.mrc')).to_a.first)
       expect(result['access_facet_ssim']).to contain_exactly 'Other'
     end
+
+    it 'empty when a record has a 949m library code ZREMOVED or XTERNAL' do
+      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'access_zremoved.mrc')).to_a.first)
+      expect(result['access_facet_ssim']).to be_nil
+    end
   end
 end

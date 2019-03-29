@@ -87,6 +87,8 @@ module Traject
               access_data << 'Online'
             when 'ACQ_DSL', 'ACQUISTNS', 'SERIAL-SRV'
               access_data << 'On Order'
+            when 'ZREMOVED', 'XTERNAL'
+              nil
             else
               access_data << resolve_library_code(field, libraries_map.translate_array([library_code])[0])
             end
