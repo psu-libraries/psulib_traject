@@ -181,7 +181,7 @@ to_field 'format' do |record, accumulator|
 end
 
 # Media Types Facet
-to_field 'media_type_facet_ssim', process_media_types(record)
+to_field 'media_type_facet_ssim', process_media_types
 
 # Publication fields
 #

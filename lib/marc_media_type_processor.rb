@@ -3,10 +3,11 @@
 # A tool for classifying MARC records using a combination of data from the
 # record's leader and some 949ts to assign media types to records
 class MarcMediaTypeProcessor
-  attr_reader :record, :media_types
+  attr_reader :record, :media_types, :context
 
-  def initialize(marc_record)
+  def initialize(marc_record, context)
     @record = marc_record
+    @context = context
     @media_types = []
     resolve_media_types
   end
@@ -46,63 +47,61 @@ class MarcMediaTypeProcessor
     media_types = []
 
     Traject::MarcExtractor.cached('007').collect_matching_lines(record) do |field, _spec, _extractor|
-      case field.value[0]
-      when 'g'
-        media_types << 'Slide' if field.value[1] == 's'
-      when 'h'
-        media_types << 'Microfilm/Microfiche'
-      when 'k'
-        media_types << 'Photo' if field.value[1] == 'h'
-      when 'm'
-        media_types << 'Film'
-      when 'r'
-        media_types << 'Remote-sensing image'
-      when 's'
-        # TODO: check: if access_facet.include? 'At the Library'
-        media_type = resolve_007_byte1(field)
-        media_types << media_type unless media_type.empty?
-      when 'v'
-        media_type = resolve_007_byte4(field)
-        media_types << media_type unless media_type.empty?
-      end
+      media_types << case field.value[0]
+                     when 'g'
+                       'Slide' if field.value[1] == 's'
+                     when 'h'
+                       'Microfilm/Microfiche'
+                     when 'k'
+                       'Photo' if field.value[1] == 'h'
+                     when 'm'
+                       'Film'
+                     when 'r'
+                       'Remote-sensing image'
+                     when 's'
+                       resolve_007_byte1(field) if in_the_library?
+                     when 'v'
+                       resolve_007_byte4(field)
+                     end
     end
 
     media_types
   end
 
+  def in_the_library?
+    Array(context.output_hash['access_facet']).include? 'In the Library'
+  end
+
   def resolve_007_byte1(field007)
-    return '' if field007.value[1].nil?
+    return nil if field007.value[1].nil?
 
-    media_type = ''
-
-    case field007.value[1]
-    when 'd'
-      media_type = resolve_007_byte3 field007
-    when 'e'
-      media_type = 'Cylinder'
-    when 'w'
-      media_type = 'Wire recording'
-    else
-      if field007.value[6] == 'j'
-        media_type = 'Audiocassette'
-      elsif field007.value[1] == 'q'
-        media_type = 'Piano/Organ roll'
-      end
-    end
-
-    media_type
+    media_type = case field007.value[1]
+                 when 'd'
+                   resolve_007_byte3 field007
+                 when 'e'
+                   'Cylinder'
+                 when 'w'
+                   'Wire recording'
+                 else
+                   if field007.value[6] == 'j'
+                     'Audiocassette'
+                   elsif field007.value[1] == 'q'
+                     'Piano/Organ roll'
+                   end
+                 end
+    media_type || nil
   end
 
   def resolve_007_byte3(field007)
-    return '' if field007.value[3].nil?
+    return nil if field007.value[3].nil?
 
     media_007_3_map = Traject::TranslationMap.new('media_007_3')
     media_type = media_007_3_map.translate_array([field007.value[3]])[0]
-    media_type || ''
+    media_type || nil
   end
 
   def resolve_007_byte4(field007)
-    return '' if field007.value[4].nil?
+    return nil if field007.value[4].nil?
 
     media_007_4_map = Traject::TranslationMap.new('media_007_4')
     media_type = media_007_4_map.translate_array([field007.value[4]])[0]
