@@ -181,10 +181,7 @@ to_field 'format' do |record, accumulator|
 end
 
 # Media Types Facet
-to_field 'media_type_facet_ssim' do |record, accumulator|
-  media_types = process_media_types(record)
-  accumulator.replace(media_types)
-end
+to_field 'media_type_facet_ssim', process_media_types
 
 # Publication fields
 #

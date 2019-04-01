@@ -103,9 +103,3 @@ def process_formats(record)
   MarcFormatProcessor.new(record).formats
 end
 
-# For media types fields
-def process_media_types(record)
-  return nil unless record.is_a? MARC::Record
-
-  MarcMediaTypeProcessor.new(record).media_types
-end
