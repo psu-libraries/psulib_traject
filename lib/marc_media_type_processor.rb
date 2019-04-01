@@ -69,7 +69,7 @@ class MarcMediaTypeProcessor
   end
 
   def in_the_library?
-    Array(context.output_hash['access_facet']).include? 'In the Library'
+    Array(context.output_hash['access_facet_ssim']).include? 'In the Library'
   end
 
   def resolve_007_byte1(field007)
@@ -83,13 +83,17 @@ class MarcMediaTypeProcessor
                  when 'w'
                    'Wire recording'
                  else
-                   if field007.value[6] == 'j'
-                     'Audiocassette'
-                   elsif field007.value[1] == 'q'
-                     'Piano/Organ roll'
-                   end
+                   resolve_007_byte1_other(field007)
                  end
     media_type || nil
+  end
+
+  def resolve_007_byte1_other(field007)
+    if field007.value[6] == 'j'
+      'Audiocassette'
+    elsif field007.value[1] == 'q'
+      'Piano/Organ roll'
+    end
   end
 
   def resolve_007_byte3(field007)

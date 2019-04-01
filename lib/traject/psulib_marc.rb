@@ -102,4 +102,3 @@ def process_formats(record)
 
   MarcFormatProcessor.new(record).formats
 end
-
