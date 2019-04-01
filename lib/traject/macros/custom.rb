@@ -78,9 +78,9 @@ module Traject
           return unless record.fields('949').any?
 
           access_data = []
-          libraries_map = Traject::TranslationMap.new('libraries')
+          libraries_map = TranslationMap.new('libraries')
 
-          Traject::MarcExtractor.cached('949m').collect_matching_lines(record) do |field, spec, extractor|
+          MarcExtractor.cached('949m').collect_matching_lines(record) do |field, spec, extractor|
             library_code = extractor.collect_subfields(field, spec).first
             case library_code
             when 'ONLINE'
