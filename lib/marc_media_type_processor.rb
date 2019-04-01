@@ -173,7 +173,7 @@ class MarcMediaTypeProcessor
         media_types << 'CD' unless field300 =~ /(DVD|SACD|blu[- ]?ray)/
       end
 
-      media_types << 'Vinyl disc' if field300 =~ %r{33(\.3| 1/3) ?rpm} && field_300 =~ /(10|12) ?in/
+      media_types << 'Vinyl disc' if field300 =~ %r{33(\.3| 1/3) ?rpm} && field300 =~ /(10|12) ?in/
     end
 
     media_types
