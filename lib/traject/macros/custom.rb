@@ -82,24 +82,27 @@ module Traject
 
           MarcExtractor.cached('949m').collect_matching_lines(record) do |field, spec, extractor|
             library_code = extractor.collect_subfields(field, spec).first
-            case library_code
-            when 'ONLINE'
-              access_data << 'Online'
-            when 'ACQ_DSL', 'ACQUISTNS', 'SERIAL-SRV'
-              access_data << 'On Order'
-            when 'ZREMOVED', 'XTERNAL'
-              nil
-            else
-              access_data << resolve_library_code(field, libraries_map.translate_array([library_code])[0])
-            end
+            access_data << case library_code
+                           when 'ONLINE'
+                             'Online'
+                           when 'ACQ_DSL', 'ACQUISTNS', 'SERIAL-SRV'
+                             'On Order'
+                           when 'ZREMOVED', 'XTERNAL'
+                             next
+                           else
+                             resolve_library_code(field, libraries_map.translate_array([library_code])[0])
+                           end
           end
           access_data.compact!
           access_data.uniq!
-          # if there is anything other than On Order, we DO NOT include On Order
-          access_data.delete('On Order') if access_data.include?('On Order') && (access_data.length > 1)
-
+          access_data.delete('On Order') if only_on_order?(access_data)
           accumulator.replace(access_data)
         end
+      end
+
+      # If there is anything other than On Order, we DO NOT include On Order
+      def only_on_order?(access_data)
+        access_data.include?('On Order') && (access_data.length > 1)
       end
 
       def resolve_library_code(field, library)
