@@ -71,6 +71,16 @@ module Traject
       def collect_subfield_values(field:, code:)
         field.subfields.select { |sf| sf.code == code }.collect(&:value)
       end
+
+      # For media types fields
+      def process_media_types
+        lambda do |record, accumulator, context|
+          return nil unless record.is_a? MARC::Record
+
+          media_types = MarcMediaTypeProcessor.new(record, context).media_types
+          accumulator.replace(media_types)
+        end
+      end
     end
   end
 end
