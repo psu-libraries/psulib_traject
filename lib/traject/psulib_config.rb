@@ -170,6 +170,9 @@ to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711ab
 ## Author sorting field
 to_field 'author_ssort', marc_sortable_author
 
+## Access facet
+to_field 'access_facet_ssim', extract_access_data
+
 # Formats and Resources
 to_field 'format' do |record, accumulator|
   formats = process_formats(record)
@@ -262,17 +265,17 @@ to_field 'series_title_display_ssm', extract_marc('490avlx3:440anpvx', alternate
 
 # Call Number fields
 to_field 'lc_callnum_display_ssm', extract_marc('050ab', first: true)
-to_field 'lc_1letter_facet_sim', extract_marc('050ab', first: true, translation_map: 'callnumber_map') do |_rec, acc|
+to_field 'lc_1letter_facet_sim', extract_marc('050ab', first: true, translation_map: 'callnumber_map') do |_record, accumulator|
   # Just get the first letter to send to the translation map
-  acc.map! { |x| x[0] }
+  accumulator.map! { |x| x[0] }
 end
 
 alpha_pat = /\A([A-Z]{1,3})\d.*\Z/
-to_field 'lc_alpha_facet_sim', extract_marc('050a', first: true) do |_rec, acc|
-  acc.map! do |x|
+to_field 'lc_alpha_facet_sim', extract_marc('050a', first: true) do |_record, accumulator|
+  accumulator.map! do |x|
     (m = alpha_pat.match(x)) ? m[1] : nil
   end
-  acc.compact! # eliminate nils
+  accumulator.compact! # eliminate nils
 end
 
 to_field 'lc_b4cutter_facet_sim', extract_marc('050a', first: true)
