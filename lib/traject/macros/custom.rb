@@ -95,13 +95,13 @@ module Traject
           end
           access_data.compact!
           access_data.uniq!
-          access_data.delete('On Order') if only_on_order?(access_data)
+          access_data.delete('On Order') if not_only_on_order?(access_data)
           accumulator.replace(access_data)
         end
       end
 
       # If there is anything other than On Order, we DO NOT include On Order
-      def only_on_order?(access_data)
+      def not_only_on_order?(access_data)
         access_data.include?('On Order') && (access_data.length > 1)
       end
 
