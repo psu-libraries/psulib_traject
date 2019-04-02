@@ -148,7 +148,7 @@ to_field 'additional_title_display_ssm', extract_marc('210ab:246iabfgnp:247abcde
 to_field 'related_title_display_ssm', extract_marc('730adfgiklmnoprst3:740anp', trim_punctuation: true)
 
 ## Title Sort Fields
-to_field 'title_ssort', marc_sortable_title
+to_field 'title_sort', marc_sortable_title
 
 # Author fields
 #
@@ -159,7 +159,7 @@ to_field 'author_tsim', extract_marc('100aqbcdk:110abcdfgkln:111abcdfgklnpq')
 to_field 'author_addl_tsim', extract_marc('700aqbcdk:710abcdfgkln:711abcdfgklnpq')
 
 ## Authors for faceting
-to_field 'all_authors_facet_ssim', extract_marc('100aqbcdkj:110abcdfgklnj:111abcdfgklnpqj:700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq', trim_punctuation: true)
+to_field 'all_authors_facet', extract_marc('100aqbcdkj:110abcdfgklnj:111abcdfgklnpqj:700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq', trim_punctuation: true)
 
 ## Author display
 to_field 'author_person_display_ssm', extract_marc('100aqbcdkj', trim_punctuation: true)
@@ -171,10 +171,10 @@ to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711ab
 to_field 'author_ssort', marc_sortable_author
 
 ## Access facet
-to_field 'access_facet_ssim', extract_access_data
+to_field 'access_facet', extract_access_data
 
 # Formats and Resources
-to_field 'format' do |record, accumulator|
+to_field 'format' do |record, accumulator| #
   formats = process_formats(record)
   accumulator.replace(formats).compact!
   accumulator.uniq!
@@ -186,7 +186,7 @@ end
 to_field 'publisher_manufacturer_tsim', extract_marc('260b:264|*1|b:260f:264|*3|b', trim_punctuation: true)
 
 ## Publication year facet (sidebar)
-to_field 'pub_date_ssim' do |record, accumulator|
+to_field 'pub_date_facet' do |record, accumulator|
   publication_date = process_publication_date record
   accumulator << publication_date if publication_date
 end
@@ -197,7 +197,7 @@ to_field 'overall_imprint_display_ssm', extract_marc('260abcefg3:264|*0|abc3:264
 to_field 'copyright_display_ssm', extract_marc('264|*4|c')
 to_field 'edition_display_ssm', extract_marc('250ab3')
 
-to_field 'language_facet_ssim', marc_languages('008[35-37]')
+to_field 'language_facet', marc_languages('008[35-37]')
 
 # Subject fields
 #
@@ -223,7 +223,7 @@ to_field 'subject_facet' do |record, accumulator|
 end
 
 ## Subject facet (sidebar)
-to_field 'subject_topic_facet_sim' do |record, accumulator|
+to_field 'subject_topic_facet' do |record, accumulator|
   subjects = process_subject_topic_facet(record, '650|*0|aa:650|*0|x:650|*1|aa:650|*1|x:651|*0|a:651|*0|x:600abcdtq:610abt:610x:611abt:611x')
   accumulator.replace(subjects).compact!
   accumulator.uniq!
@@ -235,7 +235,7 @@ end
 to_field 'genre_tsim', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz')
 
 ## Genre facet (sidebar)
-to_field 'genre_facet_sim' do |record, accumulator|
+to_field 'genre_facet' do |record, accumulator|
   genres = process_genre(record, '650|*0|v:655|*0|a:655|*7|a')
   accumulator.replace(genres).uniq!
 end
@@ -247,7 +247,7 @@ to_field 'genre_display_ssm' do |record, accumulator|
 end
 
 ## For genre links
-to_field 'genre_full_facet_ssim', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz', trim_punctuation: true)
+to_field 'genre_full_facet', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz', trim_punctuation: true)
 
 # Series fields
 #
@@ -265,7 +265,7 @@ to_field 'series_title_display_ssm', extract_marc('490avlx3:440anpvx', alternate
 
 # Call Number fields
 to_field 'lc_callnum_display_ssm', extract_marc('050ab', first: true)
-to_field 'lc_1letter_facet_sim', extract_marc('050ab', first: true, translation_map: 'callnumber_map') do |_record, accumulator|
+to_field 'lc_1letter_facet', extract_marc('050ab', first: true, translation_map: 'callnumber_map') do |_record, accumulator|
   # Just get the first letter to send to the translation map
   accumulator.map! { |x| x[0] }
 end
