@@ -97,8 +97,7 @@ class MarcFormatProcessor
     @formats = 'Thesis/Dissertation' if thesis?
     @formats = 'Newspaper' if newspaper?
     @formats = 'Games/Toys' if games?
-    @formats = 'Congress' if congress?
-    @formats = 'Proceeding/Congress' if proceeding?
+    @formats = 'Proceeding/Congress' if proceeding? || congress?
   end
 
   # If no other values are present, use the default value "Other"
