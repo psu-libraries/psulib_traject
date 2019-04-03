@@ -174,7 +174,7 @@ to_field 'author_ssort', marc_sortable_author
 to_field 'access_facet', extract_access_data
 
 # Formats and Resources
-to_field 'format' do |record, accumulator| #
+to_field 'format' do |record, accumulator|
   formats = process_formats(record)
   accumulator.replace(formats).compact!
   accumulator.uniq!
