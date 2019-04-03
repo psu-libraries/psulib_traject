@@ -138,11 +138,12 @@ class MarcFormatProcessor
     end.nil?
   end
 
-  # Checks leader byte 16, 006 and 008 for games/toys
+  # Checks leader byte 6 and 16, 006 and 008 for games/toys
   def games?
-    %w[g w].include?(record.leader[16]) ||
+    %w[r m].include?(record.leader[6]) &&
+      (%w[g w].include?(record.leader[16]) ||
       record['006'] && record['006'].value[9] == 'g' ||
-      record['008'] && (%w[g w].include?(record['008'].value[33]) || record['008'].value[26] == 'g')
+      record['008'] && (%w[g w].include?(record['008'].value[33]) || record['008'].value[26] == 'g'))
   end
 
   # Checks 006 and 008 for instructional material
