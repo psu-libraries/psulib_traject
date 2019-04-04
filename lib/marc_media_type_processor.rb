@@ -69,7 +69,7 @@ class MarcMediaTypeProcessor
   end
 
   def in_the_library?
-    Array(context.output_hash['access_facet_ssim']).include? 'In the Library'
+    Array(context.output_hash['access_facet']).include? 'In the Library'
   end
 
   def resolve_007_byte1(field007)
