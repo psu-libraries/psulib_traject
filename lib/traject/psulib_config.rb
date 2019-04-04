@@ -181,7 +181,10 @@ to_field 'format' do |record, accumulator|
 end
 
 # Media Types Facet
-to_field 'media_type_facet', process_media_types
+to_field 'media_type_facet' do |record, accumulator, context|
+  media_types = MarcMediaTypeProcessor.new(record, context).media_types
+  accumulator.replace(media_types)
+end
 
 # Publication fields
 #
