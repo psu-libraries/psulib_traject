@@ -10,6 +10,7 @@ require 'traject/macros/marc21_semantics'
 require 'marc_pub_date_processor'
 require 'marc_format_processor'
 require 'marc_media_type_processor'
+require 'marc_access_facet_processor'
 require 'traject/readers/marc_combining_reader'
 require 'traject/psulib_marc'
 
@@ -172,7 +173,11 @@ to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711ab
 to_field 'author_ssort', marc_sortable_author
 
 ## Access facet
-to_field 'access_facet', extract_access_data
+access_facet = nil
+to_field 'access_facet' do |record, accumulator, _context|
+  access_facet = MarcAccessFacetProcessor.new(record).extract_access_data
+  accumulator.replace(access_facet) unless access_facet.blank?
+end
 
 # Formats
 to_field 'format' do |record, accumulator|
@@ -182,7 +187,7 @@ end
 
 # Media Types Facet
 to_field 'media_type_facet' do |record, accumulator, context|
-  media_types = MarcMediaTypeProcessor.new(record, context).media_types
+  media_types = MarcMediaTypeProcessor.new(record, context, access_facet).media_types
   accumulator.replace(media_types)
 end
 

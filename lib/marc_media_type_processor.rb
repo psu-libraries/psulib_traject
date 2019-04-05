@@ -3,12 +3,13 @@
 # A tool for classifying MARC records using a combination of data from the
 # record's leader and some 949ts to assign media types to records
 class MarcMediaTypeProcessor
-  attr_reader :record, :media_types, :context
+  attr_reader :record, :media_types, :context, :access_facet
 
-  def initialize(marc_record, context)
+  def initialize(marc_record, context, access_facet)
     @record = marc_record
     @context = context
     @media_types = []
+    @access_facet = access_facet
     resolve_media_types
   end
 
@@ -69,7 +70,7 @@ class MarcMediaTypeProcessor
   end
 
   def in_the_library?
-    Array(context.output_hash['access_facet']).include? 'In the Library'
+    Array(access_facet).include? 'In the Library'
   end
 
   def resolve_007_byte1(field007)
