@@ -12,6 +12,8 @@ class MarcFormatProcessor
     resolve_other
 
     @formats = Array(@formats) unless @formats.is_a? Array
+    @formats.compact!
+    @formats.uniq!
   end
 
   # Check 949t, leader6 and 007 formats
