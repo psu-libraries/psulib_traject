@@ -243,9 +243,9 @@ RSpec.describe 'From psulib_marc.rb' do
       expect(process_formats(@record)).to contain_exactly 'Proceeding/Congress'
     end
 
-    it 'correctly sets format as Congress' do
+    it 'correctly sets format as Proceeding/Congress from $6xx' do
       @record = MARC::Reader.new(File.join(fixture_path, 'format_congress.mrc')).to_a.first
-      expect(process_formats(@record)).to contain_exactly 'Congress'
+      expect(process_formats(@record)).to contain_exactly 'Proceeding/Congress'
     end
 
     it 'correctly sets format as Other when no other format found' do

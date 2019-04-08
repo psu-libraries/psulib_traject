@@ -99,8 +99,7 @@ class MarcFormatProcessor
     @formats = 'Thesis/Dissertation' if thesis?
     @formats = 'Newspaper' if newspaper?
     @formats = 'Games/Toys' if games?
-    @formats = 'Congress' if congress?
-    @formats = 'Proceeding/Congress' if proceeding?
+    @formats = 'Proceeding/Congress' if proceeding? || congress?
   end
 
   # If no other values are present, use the default value "Other"
@@ -141,11 +140,12 @@ class MarcFormatProcessor
     end.nil?
   end
 
-  # Checks leader byte 16, 006 and 008 for games/toys
+  # Checks leader byte 6 and 16, 006 and 008 for games/toys
   def games?
-    %w[g w].include?(record.leader[16]) ||
+    %w[r m].include?(record.leader[6]) &&
+      (%w[g w].include?(record.leader[16]) ||
       record['006'] && record['006'].value[9] == 'g' ||
-      record['008'] && (%w[g w].include?(record['008'].value[33]) || record['008'].value[26] == 'g')
+      record['008'] && (%w[g w].include?(record['008'].value[33]) || record['008'].value[26] == 'g'))
   end
 
   # Checks 006 and 008 for instructional material
