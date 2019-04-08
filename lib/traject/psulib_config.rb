@@ -174,8 +174,10 @@ to_field 'author_ssort', marc_sortable_author
 
 ## Access facet
 access_facet = nil
+access_facet_processor = MarcAccessFacetProcessor.new
 to_field 'access_facet' do |record, accumulator, _context|
-  access_facet = MarcAccessFacetProcessor.new(record).extract_access_data
+  access_facet_processor.record = record
+  access_facet = access_facet_processor.extract_access_data
   accumulator.replace(access_facet) unless access_facet.blank?
 end
 
@@ -186,8 +188,10 @@ to_field 'format' do |record, accumulator|
 end
 
 # Media Types Facet
+media_type_processor = MarcMediaTypeProcessor.new
 to_field 'media_type_facet' do |record, accumulator, context|
-  media_types = MarcMediaTypeProcessor.new(record, context, access_facet).media_types
+  media_type_processor.set_record_details(record, context, access_facet)
+  media_types = media_type_processor.media_types
   accumulator.replace(media_types)
 end
 

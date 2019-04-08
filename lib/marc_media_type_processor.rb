@@ -5,7 +5,7 @@
 class MarcMediaTypeProcessor
   attr_reader :record, :media_types, :context, :access_facet
 
-  def initialize(marc_record, context, access_facet)
+  def set_record_details(marc_record, context, access_facet)
     @record = marc_record
     @context = context
     @media_types = []
