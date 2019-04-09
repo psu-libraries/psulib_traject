@@ -178,7 +178,7 @@ access_facet_processor = MarcAccessFacetProcessor.new
 to_field 'access_facet' do |record, accumulator, _context|
   access_facet_processor.record = record
   access_facet = access_facet_processor.extract_access_data
-  accumulator.replace(access_facet) unless access_facet.blank?
+  accumulator.replace(access_facet) unless !access_facet || access_facet.empty?
 end
 
 # Formats
