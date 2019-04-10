@@ -176,8 +176,7 @@ to_field 'author_ssort', marc_sortable_author
 access_facet = nil
 access_facet_processor = MarcAccessFacetProcessor.new
 to_field 'access_facet' do |record, accumulator|
-  access_facet_processor.record = record
-  access_facet = access_facet_processor.extract_access_data
+  access_facet = access_facet_processor.extract_access_data record
   accumulator.replace(access_facet) unless !access_facet || access_facet.empty?
 end
 

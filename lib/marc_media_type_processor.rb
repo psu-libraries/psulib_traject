@@ -3,7 +3,6 @@
 # A tool for classifying MARC records using a combination of data from the
 # record's leader and some 949ts to assign media types to records
 class MarcMediaTypeProcessor
-
   def initialize
     freeze
   end
