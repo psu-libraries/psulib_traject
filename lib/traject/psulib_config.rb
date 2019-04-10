@@ -547,3 +547,10 @@ to_field 'bound_with_struct' do |record, accumulator|
     accumulator << bound_with_arr.compact.inject(:merge).to_json
   end
 end
+
+# Place
+#
+# UP Library facet
+to_field 'up_library_facet', extract_marc('949m', translation_map: 'up_libraries')
+# Campus facet
+to_field 'campus_facet', extract_marc('949m', translation_map: 'campuses')
