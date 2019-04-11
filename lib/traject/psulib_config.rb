@@ -173,7 +173,6 @@ to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711ab
 to_field 'author_ssort', marc_sortable_author
 
 ## Access facet
-access_facet = nil
 access_facet_processor = MarcAccessFacetProcessor.new
 to_field 'access_facet' do |record, accumulator|
   access_facet = access_facet_processor.extract_access_data record
