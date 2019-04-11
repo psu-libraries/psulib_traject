@@ -5,15 +5,14 @@
 class MarcFormatProcessor
   attr_reader :record, :formats
 
-  def initialize(marc_record)
-    @record = marc_record
+  def set_formats(record)
+    @record = record
     resolve_formats
     resolve_overrides
     resolve_other
 
     @formats = Array(@formats) unless @formats.is_a? Array
-    @formats.compact!
-    @formats.uniq!
+    @formats.compact.uniq
   end
 
   # Check 949t, leader6 and 007 formats

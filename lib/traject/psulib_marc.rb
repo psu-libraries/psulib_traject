@@ -96,9 +96,3 @@ def process_publication_date(record)
   pub_date && (pub_date > MIN_YEAR || pub_date < MAX_YEAR) ? pub_date : nil
 end
 
-# For formats fields
-def process_formats(record)
-  return nil unless record.is_a? MARC::Record
-
-  MarcFormatProcessor.new(record).formats
-end
