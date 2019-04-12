@@ -554,3 +554,5 @@ end
 to_field 'up_library_facet', extract_marc('949m', translation_map: 'up_libraries')
 # Campus facet
 to_field 'campus_facet', extract_marc('949m', translation_map: 'campuses')
+# All libraries (in psulib_blacklight this is used only in advanced search)
+to_field 'library_facet', extract_marc('949m', translation_map: 'libraries')
