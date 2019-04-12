@@ -184,7 +184,7 @@ end
 # Formats
 format_processor = MarcFormatProcessor.new
 to_field 'format' do |record, accumulator|
-  formats = format_processor.set_formats(record)
+  formats = format_processor.resolve_formats record
   accumulator.replace(formats)
 end
 
