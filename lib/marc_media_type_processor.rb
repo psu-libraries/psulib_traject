@@ -3,32 +3,26 @@
 # A tool for classifying MARC records using a combination of data from the
 # record's leader and some 949ts to assign media types to records
 class MarcMediaTypeProcessor
-  attr_reader :record, :media_types, :context, :access_facet
-
-  def set_record_details(marc_record, context, access_facet)
-    @record = marc_record
-    @context = context
-    @media_types = []
-    @access_facet = access_facet
-    resolve_media_types
+  def initialize
+    freeze
   end
 
-  def resolve_media_types
-    @media_types << resolve_949a
-    @media_types << resolve_007
-    @media_types << resolve_538a
-    @media_types << resolve_300b_347b
-    @media_types << resolve_300a_338a
-    @media_types << resolve_300a
-    @media_types << resolve_300
+  def resolve_media_types(record, access_facet)
+    media_types = []
 
-    @media_types.flatten!
-    @media_types.compact!
-    @media_types.uniq!
+    media_types << resolve_949a(record)
+    media_types << resolve_007(record, access_facet)
+    media_types << resolve_538a(record)
+    media_types << resolve_300b_347b(record)
+    media_types << resolve_300a_338a(record)
+    media_types << resolve_300a(record)
+    media_types << resolve_300(record)
+
+    media_types.flatten.compact.uniq
   end
 
   # Check 949a types, a record may have multiple 949s with different 949a's
-  def resolve_949a
+  def resolve_949a(record)
     media_types = []
 
     Traject::MarcExtractor.cached('949a').collect_matching_lines(record) do |field, spec, extractor|
@@ -44,7 +38,7 @@ class MarcMediaTypeProcessor
   end
 
   # Check 007 media types, a record may have multiple 007s
-  def resolve_007
+  def resolve_007(record, access_facet)
     media_types = []
 
     Traject::MarcExtractor.cached('007').collect_matching_lines(record) do |field, _spec, _extractor|
@@ -60,7 +54,7 @@ class MarcMediaTypeProcessor
                      when 'r'
                        'Remote-sensing image'
                      when 's'
-                       resolve_007_byte1(field) if in_the_library?
+                       resolve_007_byte1(field) if in_the_library?(access_facet)
                      when 'v'
                        resolve_007_byte4(field)
                      end
@@ -69,7 +63,7 @@ class MarcMediaTypeProcessor
     media_types
   end
 
-  def in_the_library?
+  def in_the_library?(access_facet)
     Array(access_facet).include? 'In the Library'
   end
 
@@ -113,7 +107,7 @@ class MarcMediaTypeProcessor
     media_type || 'Other video'
   end
 
-  def resolve_538a
+  def resolve_538a(record)
     media_types = []
 
     Traject::MarcExtractor.cached('538a', alternate_script: false).collect_matching_lines(record) do |field, spec, extractor|
@@ -128,7 +122,7 @@ class MarcMediaTypeProcessor
     media_types
   end
 
-  def resolve_300b_347b
+  def resolve_300b_347b(record)
     media_types = []
 
     Traject::MarcExtractor.cached('300b:347b', alternate_script: false).collect_matching_lines(record) do |field, spec, extractor|
@@ -140,7 +134,7 @@ class MarcMediaTypeProcessor
     media_types
   end
 
-  def resolve_300a_338a
+  def resolve_300a_338a(record)
     media_types = []
 
     Traject::MarcExtractor.cached('300a:338a', alternate_script: false).collect_matching_lines(record) do |field, spec, extractor|
@@ -151,7 +145,7 @@ class MarcMediaTypeProcessor
     media_types
   end
 
-  def resolve_300a
+  def resolve_300a(record)
     media_types = []
 
     Traject::MarcExtractor.cached('300a', alternate_script: false).collect_matching_lines(record) do |field, spec, extractor|
@@ -165,7 +159,7 @@ class MarcMediaTypeProcessor
     media_types
   end
 
-  def resolve_300
+  def resolve_300(record)
     media_types = []
 
     Traject::MarcExtractor.cached('300abcdefghijklmnopqrstuvwxyz', alternate_script: false).collect_matching_lines(record) do |field, spec, extractor|

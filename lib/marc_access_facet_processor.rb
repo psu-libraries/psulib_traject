@@ -2,10 +2,12 @@
 
 # Determines the access status of a record, how patrons are able to acquire an item.
 class MarcAccessFacetProcessor
-  attr_accessor :record
+  def initialize
+    freeze
+  end
 
   # Extract 949m for access facet
-  def extract_access_data
+  def extract_access_data(record)
     return unless record.fields('949').any?
 
     access_data = []

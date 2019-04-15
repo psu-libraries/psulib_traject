@@ -173,11 +173,9 @@ to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711ab
 to_field 'author_ssort', marc_sortable_author
 
 ## Access facet
-access_facet = nil
 access_facet_processor = MarcAccessFacetProcessor.new
-to_field 'access_facet' do |record, accumulator, _context|
-  access_facet_processor.record = record
-  access_facet = access_facet_processor.extract_access_data
+to_field 'access_facet' do |record, accumulator|
+  access_facet = access_facet_processor.extract_access_data record
   accumulator.replace(access_facet) unless !access_facet || access_facet.empty?
 end
 
@@ -190,8 +188,8 @@ end
 # Media Types Facet
 media_type_processor = MarcMediaTypeProcessor.new
 to_field 'media_type_facet' do |record, accumulator, context|
-  media_type_processor.set_record_details(record, context, access_facet)
-  media_types = media_type_processor.media_types
+  access_facet = context.output_hash['access_facet']
+  media_types = media_type_processor.resolve_media_types(record, access_facet)
   accumulator.replace(media_types)
 end
 
