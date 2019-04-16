@@ -30,7 +30,6 @@ class MarcMediaTypeProcessor
       media_types << 'Blu-ray' if field_949a =~ /BLU-RAY/i
       media_types << 'Videocassette (VHS)' if field_949a =~ Regexp.union(/ZVC/i, /ARTVC/i, /MVC/i)
       media_types << 'DVD' if field_949a =~ Regexp.union(/ZDVD/i, /ARTDVD/i, /MDVD/i, /ADVD/i, /DVD/i)
-      media_types << 'Videocassette' if field_949a =~ /AVC/i
       media_types << 'Laser disc' if field_949a =~ Regexp.union(/ZVD/i, /MVD/i)
     end
 
