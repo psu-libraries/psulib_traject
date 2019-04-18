@@ -152,6 +152,10 @@ to_field 'related_title_display_ssm', extract_marc('730adfgiklmnoprst3:740anp', 
 ## Title Sort Fields
 to_field 'title_sort', marc_sortable_title
 
+## Series Titles
+to_field 'series_title_tsim', extract_marc('440anpv:490av')
+to_field 'series_title_display_ssm', extract_marc('490avlx3:440anpvx', alternate_script: false, trim_punctuation: true)
+
 # Author fields
 #
 ## Primary author
@@ -262,20 +266,6 @@ end
 
 ## For genre links
 to_field 'genre_full_facet', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz', trim_punctuation: true)
-
-# Series fields
-#
-# Series Titles
-#
-# Series titles can cause some confusion, as they may contain keywords which aren't necessarily related to the series.
-# For example, "Penguin History of Britain" will return in a title search for "Penguin" if it's part of the title search.
-#
-# 490a - the title of a series.
-# 440a - deprecated same as 490a. We still have a lot of these, though, so if we index 490, we should index 440.
-#
-# Note: 400/410/411 subfield t were deprecated but we still have indexing set up for them
-to_field 'series_title_tsim', extract_marc('440anpv:490av')
-to_field 'series_title_display_ssm', extract_marc('490avlx3:440anpvx', alternate_script: false, trim_punctuation: true)
 
 # Call Number fields
 to_field 'lc_callnum_display_ssm', extract_marc('050ab', first: true)
@@ -555,3 +545,20 @@ to_field 'up_library_facet', extract_marc('949m', translation_map: 'up_libraries
 to_field 'campus_facet', extract_marc('949m', translation_map: 'campuses')
 # All libraries (in psulib_blacklight this is used only in advanced search)
 to_field 'library_facet', extract_marc('949m', translation_map: 'libraries')
+
+# Serials fields
+#
+# Preceding and Succeeding Entries display
+to_field 'serials_continues_display_ssim', extract_marc('780|00|iabdghkmnopqrstuxyz3:780|02|iabdghkmnopqrstuxyz3')
+to_field 'serials_continued_by_display_ssim', extract_marc('785|00|iabdghkmnopqrstuxyz3:785|02|iabdghkmnopqrstuxyz3')
+to_field 'serials_continues_in_part_display_ssim', extract_marc('780|01|iabdghkmnopqrstuxyz3:780|03|iabdghkmnopqrstuxyz3')
+to_field 'serials_continued_in_part_by_display_ssim', extract_marc('785|01|iabdghkmnopqrstuxyz3:785|03|iabdghkmnopqrstuxyz3')
+to_field 'serials_formed_from_display_ssim', extract_marc('780|04|iabdghkmnopqrstuxyz3')
+to_field 'serials_absorbs_display_ssim', extract_marc('780|05|iabdghkmnopqrstuxyz3')
+to_field 'serials_absorbed_by_display_ssim', extract_marc('785|04|iabdghkmnopqrstuxyz3')
+to_field 'serials_absorbs_in_part_display_ssim', extract_marc('780|06|iabdghkmnopqrstuxyz3')
+to_field 'serials_absorbed_in_part_by_display_ssim', extract_marc('785|05|iabdghkmnopqrstuxyz3')
+to_field 'serials_separated_from_display_ssim', extract_marc('780|07|iabdghkmnopqrstuxyz3')
+to_field 'serials_split_into_display_ssim', extract_marc('785|06|iabdghkmnopqrstuxyz3')
+to_field 'serials_merged_to_form_display_ssim', extract_marc('785|07|iabdghkmnopqrstuxyz3')
+to_field 'serials_changed_back_to_display_ssim', extract_marc('785|08|iabdghkmnopqrstuxyz3')
