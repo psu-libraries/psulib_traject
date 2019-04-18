@@ -222,26 +222,14 @@ to_field 'subject_tsim', extract_marc('600abcdfklmnopqrtvxyz:610abfklmnoprstvxyz
 to_field 'subject_addl_tsim', extract_marc('600vxyz:610vxyz:611vxyz:630vxyz:647vxyz:648vxyz:650vxyz:651vxyz:654vyz')
 
 ## Subject display
+#
+## For hierarchical subject display and linking
 hierarchy_fields = '650|*0|abcdvxyz:650|*2|abcdvxyz:650|*1|abcdvxyz:650|*3|abcdvxyz:650|*6|abcdvxyz:650|*7|abcdvxyz:600abcdfklmnopqrtvxyz:610abfklmnoprstvxyz:611abcdefgklnpqstvxyz:630adfgklmnoprstvxyz:647acdgvxyz:648avxyz:651avxyz'
-to_field 'subject_display_ssm' do |record, accumulator|
-  subjects = process_hierarchy(record, hierarchy_fields)
-  accumulator.replace(subjects).compact!
-  accumulator.uniq!
-end
-
-## For hierarchical subject display
-to_field 'subject_facet' do |record, accumulator|
-  subjects = process_hierarchy(record, hierarchy_fields)
-  accumulator.replace(subjects).compact!
-  accumulator.uniq!
-end
+to_field 'subject_display_ssm', process_subject_hierarchy(hierarchy_fields)
+to_field 'subject_facet', process_subject_hierarchy(hierarchy_fields)
 
 ## Subject facet (sidebar)
-to_field 'subject_topic_facet' do |record, accumulator|
-  subjects = process_subject_topic_facet(record, '650|*0|aa:650|*0|x:650|*1|aa:650|*1|x:651|*0|a:651|*0|x:600abcdtq:610abt:610x:611abt:611x')
-  accumulator.replace(subjects).compact!
-  accumulator.uniq!
-end
+to_field 'subject_topic_facet', process_subject_topic_facet('650|*0|aa:650|*0|x:650|*1|aa:650|*1|x:651|*0|a:651|*0|x:600abcdtq:610abt:610x:611abt:611x')
 
 # Genre Fields
 #
@@ -249,16 +237,10 @@ end
 to_field 'genre_tsim', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz')
 
 ## Genre facet (sidebar)
-to_field 'genre_facet' do |record, accumulator|
-  genres = process_genre(record, '650|*0|v:655|*0|a:655|*7|a')
-  accumulator.replace(genres).uniq!
-end
+to_field 'genre_facet', process_genre('650|*0|v:655|*0|a:655|*7|a')
 
 ## Genre display
-to_field 'genre_display_ssm' do |record, accumulator|
-  genres = process_genre(record, '655|*0|abcvxyz:655|*7|abcvxyz')
-  accumulator.replace(genres).uniq!
-end
+to_field 'genre_display_ssm', process_genre('655|*0|abcvxyz:655|*7|abcvxyz')
 
 ## For genre links
 to_field 'genre_full_facet', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz', trim_punctuation: true)

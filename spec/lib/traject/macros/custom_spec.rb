@@ -132,39 +132,16 @@ RSpec.describe 'Macros spec:' do
     end
   end
 
-  describe 'access_facet' do
-    let(:fixture_path) { './spec/fixtures' }
+  describe 'process_genres' do
+    let(:genre650) { { '650' => { 'ind1' => '', 'ind2' => '0', 'subfields' => [{ 'v' => 'Maps' }, { 'z' => 'Tippah County' }] } } }
+    let(:genre655_fast) { { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Fiction films' }, { 'b' => '1900' }, { '2' => 'fast' }, { 'z' => 'Germany' }] } } }
+    let(:genre655_lcgft) { { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Drama.' }, { '2' => 'lcgft' }] } } }
+    let(:genre655_aat) { { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Novels' }, { '2' => 'aat' }] } } }
+    let(:result) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [genre650, genre655_fast, genre655_lcgft, genre655_aat], 'leader' => leader)) }
 
-    it 'works with empty record, returns empty' do
-      @empty_record = MARC::Record.new
-      @empty_record.append(MARC::ControlField.new('001', '000000000'))
-      result = @indexer.map_record(@empty_record)
-      expect(result['access_facet']).to be_nil
-    end
-
-    it 'produces In the Library and Online when a record has both an online copy and a physical copy' do
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'access_in_library.mrc')).to_a.first)
-      expect(result['access_facet']).to contain_exactly 'In the Library', 'Online'
-    end
-
-    it 'produces On Order when a record has a copy with an on-order location' do
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'access_on_order.mrc')).to_a.first)
-      expect(result['access_facet']).to contain_exactly 'On Order'
-    end
-
-    it 'produces In the Library and Online when a record has an online copy, a physical copy and an on-order copy' do
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'access_all.mrc')).to_a.first)
-      expect(result['access_facet']).to contain_exactly 'In the Library', 'Online'
-    end
-
-    it 'produces Other when a record has a 949m library code that is not listed' do
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'access_other.mrc')).to_a.first)
-      expect(result['access_facet']).to contain_exactly 'Other'
-    end
-
-    it 'empty when a record has a 949m library code ZREMOVED or XTERNAL' do
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'access_zremoved.mrc')).to_a.first)
-      expect(result['access_facet']).to be_nil
+    it 'limits 655 to fast and lcgft genres' do
+      expect(result['genre_display_ssm']).to include('Fiction films 1900 Germany')
+      expect(result['genre_display_ssm']).to include('Drama')
     end
   end
 end
