@@ -200,7 +200,7 @@ end
 to_field 'publisher_manufacturer_tsim', extract_marc('260b:264|*1|b:260f:264|*3|b', trim_punctuation: true)
 
 ## Publication year facet (sidebar)
-to_field 'pub_date_facet' do |record, accumulator|
+to_field 'pub_date_sort_itsi' do |record, accumulator|
   publication_date = process_publication_date record
   accumulator << publication_date if publication_date
 end
