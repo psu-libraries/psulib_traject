@@ -11,7 +11,7 @@ RSpec.describe 'Macros spec:' do
     @indexer.load_config_file(c)
   end
 
-  describe 'A record with a fulltext link because of indicator 2 is 0' do
+  describe 'A record where indicator 2 is 0 and magic word is not in one of the label subfields' do
     let(:url_856_1) do
       { '856' => { 'ind1' => '0', 'ind2' => '0', 'subfields' => [{ 'u' => 'https://scholarsphere.psu.edu/files/02870v8'\
                                                                           '5d' },
@@ -25,70 +25,23 @@ RSpec.describe 'Macros spec:' do
     end
   end
 
-  describe 'A record without a magic word in one of the label subfields' do
-    let(:url_856_2) do
-      { '856' => { 'ind1' => '0', 'ind2' => '7', 'subfields' => [{ 'u' => 'https://scholarsphere.psu.edu/files/02870v8'\
-                                                                           '5d' },
-                                                                 { '3' => 'Apples bananas' }] } }
-    end
-    let(:result_2) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_2], 'leader' => leader)) }
-
-    it 'produces a fulltext link' do
-      expect(result_2['full_links_struct']).to eq ['{"text":"scholarsphere.psu.edu","url":"https://scholarsphere.psu.e'\
-                                                                                          'du/files/02870v85d"}']
-    end
-  end
-
-  describe 'A record with an indicator 2 of 2 and magic word is in one of the label subfields' do
+  describe 'A record with an indicator 2 of 0 and magic word is in one of the label subfields' do
     let(:url_856_3) do
-      { '856' => { 'ind1' => '0', 'ind2' => '2', 'subfields' => [{ 'u' => 'http://library.columbia.edu/content/library'\
+      { '856' => { 'ind1' => '0', 'ind2' => '0', 'subfields' => [{ 'u' => 'http://library.columbia.edu/content/library'\
                                                                    'web/indiv/ccoh/our_work/how_to_use_the_archives.ht'\
                                                                    'ml' },
                                                                  { '3' => 'Carrots executive summary peas' }] } }
     end
     let(:result_3) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_3], 'leader' => leader)) }
 
-    it 'produces a supplemental link' do
-      expect(result_3['suppl_links_struct']).to match ['{"text":"library.columbia.edu","url":"http://library.columbia.'\
+    it 'produces a partial link' do
+      expect(result_3['partial_links_struct']).to match ['{"text":"library.columbia.edu","url":"http://library.columbia.'\
                                                        'edu/content/libraryweb/indiv/ccoh/our_work/how_to_use_the_arch'\
                                                        'ives.html"}']
     end
   end
 
-  describe 'A record with an indicator 2 of 2 and magic word is not one of the label subfields' do
-    let(:url_856_3a) do
-      { '856' => { 'ind1' => '0', 'ind2' => '2', 'subfields' => [{ 'u' => 'http://library.columbia.edu/content/library'\
-                                                                   'web/indiv/ccoh/our_work/how_to_use_the_archives.ht'\
-                                                                   'ml' },
-                                                                 { '3' => 'Carrots peas' }] } }
-    end
-    let(:result_3a) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_3a], 'leader' => leader)) }
-
-    it 'produces a fulltext link' do
-      expect(result_3a['full_links_struct']).to match ['{"text":"library.columbia.edu","url":"http://library.columbia.'\
-                                                       'edu/content/libraryweb/indiv/ccoh/our_work/how_to_use_the_arch'\
-                                                       'ives.html"}']
-    end
-  end
-
-  describe 'A record with a url prefix is not http or https' do
-    let(:url_856_4) do
-      { '856' => { 'ind1' => '0', 'ind2' => '2', 'subfields' => [{ 'u' => 'ftp://ppftpuser:welcome@ftp01.penguingroup.'\
-                                                                   'com/BooksellersandMedia/Covers/2008_2009_New_Cover'\
-                                                                   's/9780525953951.jpg' },
-                                                                 { '3' => 'Cover image' }] } }
-    end
-    let(:result_4) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_4], 'leader' => leader)) }
-
-    it 'doesn\'t produce any URL' do
-      expect(result_4['full_links_struct']).to be_nil
-      expect(result_4['partial_links_struct']).to be_nil
-      expect(result_4['suppl_links_struct']).to be_nil
-    end
-  end
-
-  describe 'A record with multiple 856s, one with ind2 of 1 and other with ind2 2, neither of which have no-fulltext '\
-           'indicator word in a label subfield' do
+  describe 'A record with multiple 856s, one with ind2 of 1 and other with ind2 2' do
     let(:url_856_5) do
       [
         { '856' =>
@@ -105,30 +58,43 @@ RSpec.describe 'Macros spec:' do
     end
     let(:result_5) { @indexer.map_record(MARC::Record.new_from_hash('fields' => url_856_5, 'leader' => leader)) }
 
-    it 'produces 2 fulltext links and 1 partial link' do
-      expect(result_5['full_links_struct']).to match ['{"text":"usacac.army.mil","url":"http://usacac.army.mil/CAC2/Mi'\
-                                                      'litaryReview/mrpast2.asp"}',
-                                                      '{"text":"calldp.leavenworth.army.mil","url":"http://calldp.leav'\
-                                                      'enworth.army.mil/"}']
-      expect(result_5['partial_links_struct']).to match ['{"text":"usacac.army.mil","url":"http://usacac.army.mil/CAC2'\
-                                                         '/MilitaryReview/mrpast2.asp"}']
+    it 'produces 1 supplemental link and 1 partial link' do
+      expect(result_5['partial_links_struct']).to match ['{"text":"usacac.army.mil","url":"http://usacac.army.mil/CAC2/Mi'\
+                                                      'litaryReview/mrpast2.asp"}']
+      expect(result_5['suppl_links_struct']).to match ['{"text":"calldp.leavenworth.army.mil","url":"http://calldp.leavenworth.army.mil/"}']
     end
   end
 
   describe 'A record with a fulltext link to Summon' do
     let(:url_856_6) do
-      { '856' => { 'ind1' => '0', 'ind2' => '1', 'subfields' => [{ 'u' => 'http://SK8ES4MC2L.search.serialssolutions.c'\
+      { '856' => { 'ind1' => '0', 'ind2' => '0', 'subfields' => [{ 'u' => 'http://SK8ES4MC2L.search.serialssolutions.c'\
                             'om/?sid=sersol&SS_jc=TC0001341523&title=11th%20Working%20Conference%20on%20Mining%20Softw'\
                             'are%20Repositories%20%3A%20proceedings%20%3A%20May%2031%20-%20June%201%2C%202014%2C%20Hyd'\
                             'erabad%2C%20India' }] } }
     end
     let(:result_6) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_6], 'leader' => leader)) }
 
-    it 'produces a fulltext link with text that drop summon\'s sub-domains' do
+    it 'produces a fulltext link with text that drops summon\'s sub-domains' do
       expect(result_6['full_links_struct']).to match ['{"text":"serialssolutions.com","url":"http://SK8ES4MC2L.search.'\
                                         'serialssolutions.com/?sid=sersol&SS_jc=TC0001341523&title=11th%20Working%20Co'\
                                         'nference%20on%20Mining%20Software%20Repositories%20%3A%20proceedings%20%3A%20'\
                                         'May%2031%20-%20June%201%2C%202014%2C%20Hyderabad%2C%20India"}']
+    end
+  end
+
+  describe 'A record with a url prefix is not http or https' do
+    let(:url_856_4) do
+      { '856' => { 'ind1' => '0', 'ind2' => '2', 'subfields' => [{ 'u' => 'ftp://ppftpuser:welcome@ftp01.penguingroup.'\
+                                                                   'com/BooksellersandMedia/Covers/2008_2009_New_Cover'\
+                                                                   's/9780525953951.jpg' },
+                                                                 { '3' => 'Cover image' }] } }
+    end
+    let(:result_4) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_4], 'leader' => leader)) }
+
+    it 'doesn\'t produce any URL' do
+      expect(result_4['full_links_struct']).to be_nil
+      expect(result_4['partial_links_struct']).to be_nil
+      expect(result_4['suppl_links_struct']).to be_nil
     end
   end
 
