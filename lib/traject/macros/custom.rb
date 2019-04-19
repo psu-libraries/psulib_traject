@@ -87,7 +87,7 @@ module Traject
           link_data = []
 
           record.fields('856').each do |field|
-            break unless sought_link_data_exists?(link_type, field)
+            next unless sought_link_data_exists?(link_type, field)
 
             link_data << collect_subfield_values(field: field, code: 'u')
           end
