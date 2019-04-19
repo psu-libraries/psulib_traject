@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 SEPARATOR = '—'.freeze
+NOT_FULLTEXT = /addendum|appendices|appendix|appendixes|cover|excerpt|executive summary|index/i.freeze
 
 module Traject
   module Macros
@@ -76,8 +77,6 @@ module Traject
           accumulator.replace(genres).uniq!
         end
       end
-
-      NOT_FULLTEXT = /addendum|appendices|appendix|appendixes|cover|excerpt|executive summary|index/i.freeze
 
       # Extract fulltext links
       def extract_link_data(link_type: 'full')
