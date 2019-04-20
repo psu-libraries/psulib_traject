@@ -250,21 +250,24 @@ to_field 'genre_display_ssm', process_genre('655|*0|abcvxyz:655|*7|abcvxyz')
 to_field 'genre_full_facet', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz', trim_punctuation: true)
 
 # Call Number fields
-to_field 'lc_callnum_display_ssm', extract_marc('050ab', first: true)
-to_field 'lc_1letter_facet', extract_marc('050ab', first: true, translation_map: 'callnumber_map') do |_record, accumulator|
-  # Just get the first letter to send to the translation map
-  accumulator.map! { |x| x[0] }
-end
-
-alpha_pat = /\A([A-Z]{1,3})\d.*\Z/
-to_field 'lc_alpha_facet_sim', extract_marc('050a', first: true) do |_record, accumulator|
-  accumulator.map! do |x|
-    (m = alpha_pat.match(x)) ? m[1] : nil
+to_field 'lc_1letter_facet' do |record, accumulator|
+  if record['050']
+    if record['050']['a']
+      first_letter = record['050']['a'].lstrip.slice(0, 1)
+      letters = /([[:alpha:]])*/.match(record['050']['a'])[0]
+      accumulator << Traject::TranslationMap.new('callnumber_map')[first_letter] unless Traject::TranslationMap.new('callnumber_map')[letters].nil?
+    end
   end
-  accumulator.compact! # eliminate nils
 end
 
-to_field 'lc_b4cutter_facet_sim', extract_marc('050a', first: true)
+to_field 'lc_rest_facet' do |record, accumulator|
+  if record['050']
+    if record['050']['a']
+      letters = /([[:alpha:]])*/.match(record['050']['a'])[0]
+      accumulator << Traject::TranslationMap.new('callnumber_map')[letters]
+    end
+  end
+end
 
 # Material Characteristics
 #
