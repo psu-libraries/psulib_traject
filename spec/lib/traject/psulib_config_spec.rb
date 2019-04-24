@@ -26,4 +26,21 @@ RSpec.describe 'Psulib_config spec:' do
       expect(result[field]).to eq ['op. 36; op. 86; op. 35', 'Bach', 'Motzart']
     end
   end
+
+  describe 'Call numbers' do
+    let(:lc_050) do
+      { '050' => { 'ind1' => '0', 'ind2' => '0', 'subfields' => [{ 'a' => 'AC41' },
+                                                                 { 'b' => '.A36 1982' }] } }
+    end
+
+    let(:result) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [lc_050], 'leader' => leader)) }
+
+    it 'grouped by single letter with label' do
+      expect(result['lc_1letter_facet']).to eq ['A - General Works']
+    end
+
+    it 'grouped by all 1-3 letter prefixes with labels' do
+      expect(result['lc_rest_facet']).to eq ['AC - Collections Works']
+    end
+  end
 end
