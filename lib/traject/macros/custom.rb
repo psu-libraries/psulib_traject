@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 SEPARATOR = '—'.freeze
+NOT_FULLTEXT = /addendum|appendices|appendix|appendixes|cover|excerpt|executive summary|index/i.freeze
 
 module Traject
   module Macros
@@ -77,8 +78,6 @@ module Traject
         end
       end
 
-      NOT_FULLTEXT = /addendum|appendices|appendix|appendixes|cover|excerpt|executive summary|index/i.freeze
-
       # Extract fulltext links
       def extract_link_data(link_type: 'full')
         lambda do |record, accumulator, _context|
@@ -87,11 +86,10 @@ module Traject
           link_data = []
 
           record.fields('856').each do |field|
-            break unless sought_link_data_exists?(link_type, field)
+            next unless sought_link_data_exists?(link_type, field)
 
             link_data << collect_subfield_values(field: field, code: 'u')
           end
-
           link_data.flatten.compact.each do |link|
             url_match = link.match(%r{https*://([\w*|\.*]*)})
             break nil if url_match.nil?
@@ -103,32 +101,36 @@ module Traject
       end
 
       def sought_link_data_exists?(link_type, field)
-        sfz = collect_subfield_values(field: field, code: 'z').join ' '
-        sf3 = collect_subfield_values(field: field, code: '3').join ' '
-        url_label = url_label(sfz, sf3)
+        url_label = ''
+
+        if %w[full partial].include? link_type
+          sfz = collect_subfield_values(field: field, code: 'z').join ' '
+          sf3 = collect_subfield_values(field: field, code: '3').join ' '
+          url_label = url_label(sfz, sf3)
+        end
 
         case link_type
         when 'full'
           fulltext_link_available?(field.indicator2, url_label)
         when 'partial'
-          partial_link_available?(field.indicator2)
+          partial_link_available?(field.indicator2, url_label)
         when 'suppl'
-          suppl_link_available?(field.indicator2, url_label)
+          suppl_link_available?(field.indicator2)
         else
           false
         end
       end
 
       def fulltext_link_available?(ind2, url_label)
-        ind2 == '0' || !NOT_FULLTEXT.match?(url_label)
+        ind2 == '0' && !NOT_FULLTEXT.match?(url_label)
       end
 
-      def partial_link_available?(ind2)
-        ind2 == '1'
+      def partial_link_available?(ind2, url_label)
+        ind2 == '1' || (ind2 == '0' && NOT_FULLTEXT.match?(url_label))
       end
 
-      def suppl_link_available?(ind2, url_label)
-        ind2 == '2' && NOT_FULLTEXT.match?(url_label)
+      def suppl_link_available?(ind2)
+        ind2 == '2'
       end
 
       def serial_solutions_link?(link)
