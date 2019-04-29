@@ -45,6 +45,16 @@ end
 
 logger.info RUBY_DESCRIPTION
 
+# work-around for https://github.com/jruby/jruby/issues/4868
+def regex_split(str, regex)
+  str.split(regex).to_a
+end
+
+# work-around for https://github.com/jruby/jruby/issues/4868
+def regex_to_extract_data_from_a_string(str, regex)
+  str[regex]
+end
+
 to_field 'marc_display_ss', serialized_marc(format: 'xml', allow_oversized: true)
 
 to_field 'all_text_timv', extract_all_marc_values do |_r, acc|
@@ -248,16 +258,6 @@ to_field 'genre_display_ssm', process_genre('655|*0|abcvxyz:655|*7|abcvxyz')
 
 ## For genre links
 to_field 'genre_full_facet', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz', trim_punctuation: true)
-
-# work-around for https://github.com/jruby/jruby/issues/4868
-def regex_split(str, regex)
-  str.split(regex).to_a
-end
-
-# work-around for https://github.com/jruby/jruby/issues/4868
-def regex_to_extract_data_from_a_string(str, regex)
-  str[regex]
-end
 
 # Call Number fields
 to_field 'lc_1letter_facet', extract_marc('050a') do |_record, accumulator|

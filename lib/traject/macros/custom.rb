@@ -91,8 +91,8 @@ module Traject
             link_data << collect_subfield_values(field: field, code: 'u')
           end
           link_data.flatten.compact.each do |link|
-            url_match = link.match(%r{https*://([\w*|\.*]*)})
-            break nil if url_match.nil?
+            url_match = regex_split link, %r{https*://([\w*|\.*]*)}
+            next if url_match[1].nil?
 
             domain = serial_solutions_link?(url_match[1]) ? 'serialssolutions.com' : url_match[1]
             accumulator << { text: domain, url: link }.to_json
