@@ -4,8 +4,8 @@ source 'https://rubygems.org'
 
 gem 'coveralls', require: false
 gem 'library_stdnums'
-gem 'marc'
 gem 'mail'
+gem 'marc'
 gem 'rake'
 gem 'rsolr'
 gem 'traject', '3.0.0'
