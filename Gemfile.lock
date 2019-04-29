@@ -6,6 +6,7 @@ GEM
     ast (2.4.0)
     builder (3.2.3)
     byebug (11.0.1)
+    chronic (0.10.2)
     columnize (0.9.0)
     concurrent-ruby (1.1.5)
     coveralls (0.8.22)
@@ -33,7 +34,6 @@ GEM
     http_parser.rb (0.6.0)
     http_parser.rb (0.6.0-java)
     httpclient (2.8.3)
-    jar-dependencies (0.4.0)
     jaro_winkler (1.5.2)
     jaro_winkler (1.5.2-java)
     json (2.2.0)
@@ -56,11 +56,8 @@ GEM
       mini_portile2 (~> 2.4.0)
     nokogiri (1.10.3-java)
     parallel (1.17.0)
-    parser (2.6.2.1)
+    parser (2.6.3.0)
       ast (~> 2.4.0)
-    psych (3.1.0)
-    psych (3.1.0-java)
-      jar-dependencies (>= 0.1.7)
     public_suffix (3.0.3)
     rainbow (3.0.0)
     rake (12.3.2)
@@ -80,11 +77,10 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
-    rubocop (0.67.2)
+    rubocop (0.68.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.5, != 2.5.1.1)
-      psych (>= 3.1.0)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.6)
@@ -124,6 +120,8 @@ GEM
     unf (0.1.4-java)
     unf_ext (0.0.7.6)
     unicode-display_width (1.5.0)
+    whenever (0.11.0)
+      chronic (>= 0.6.3)
     yell (2.1.0)
 
 PLATFORMS
@@ -143,6 +141,7 @@ DEPENDENCIES
   ruby-debug
   traject (= 3.0.0)
   traject-marc4j_reader
+  whenever
 
 BUNDLED WITH
    2.0.1
