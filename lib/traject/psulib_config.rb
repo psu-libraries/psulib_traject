@@ -249,24 +249,32 @@ to_field 'genre_display_ssm', process_genre('655|*0|abcvxyz:655|*7|abcvxyz')
 ## For genre links
 to_field 'genre_full_facet', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz', trim_punctuation: true)
 
-# Call Number fields
-to_field 'lc_1letter_facet' do |record, accumulator|
-  if record['050']
-    if record['050']['a']
-      first_letter = record['050']['a'].lstrip.slice(0, 1)
-      letters = /([[:alpha:]])*/.match(record['050']['a'])[0]
-      accumulator << Traject::TranslationMap.new('callnumber_map')[first_letter] unless Traject::TranslationMap.new('callnumber_map')[letters].nil?
-    end
-  end
+# work-around for https://github.com/jruby/jruby/issues/4868
+def regex_split(str, regex)
+  str.split(regex).to_a
 end
 
-to_field 'lc_rest_facet' do |record, accumulator|
-  if record['050']
-    if record['050']['a']
-      letters = /([[:alpha:]])*/.match(record['050']['a'])[0]
-      accumulator << Traject::TranslationMap.new('callnumber_map')[letters]
-    end
-  end
+# work-around for https://github.com/jruby/jruby/issues/4868
+def regex_to_extract_data_from_a_string(str, regex)
+  str[regex]
+end
+
+# Call Number fields
+to_field 'lc_1letter_facet', extract_marc('050a') do |_record, accumulator|
+  next unless accumulator.any?
+
+  first_letter = accumulator[0].lstrip.slice(0, 1)
+  letters = regex_to_extract_data_from_a_string accumulator[0], /([[:alpha:]])*/
+  lc1letter = Traject::TranslationMap.new('callnumber_map')[first_letter] unless Traject::TranslationMap.new('callnumber_map')[letters].nil?
+  accumulator.replace [lc1letter]
+end
+
+to_field 'lc_rest_facet', extract_marc('050a') do |_record, accumulator|
+  next unless accumulator.any?
+
+  letters = regex_to_extract_data_from_a_string accumulator[0], /([[:alpha:]])*/
+  lc_rest = Traject::TranslationMap.new('callnumber_map')[letters]
+  accumulator.replace [lc_rest]
 end
 
 # Material Characteristics
