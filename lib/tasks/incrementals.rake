@@ -25,7 +25,7 @@ namespace :incrementals do
           body    'Traject failed to import the marc file.'
         end
       else
-        system "rm #{SIRSI_DATA_HOME}/daily/daily_addupdate_20190422.mrc"
+        File.delete("#{SIRSI_DATA_HOME}/daily/daily_addupdate_20190422.mrc")
       end
 
     else
@@ -40,17 +40,26 @@ namespace :incrementals do
 
   desc 'Deletes from the index'
   task :delete_daily do
+    indexer = Traject::Indexer.new(
+        'solr.version' => '7.4.0',
+        'solr.url' => 'http://localhost:8983/solr/blacklight-core',
+        'log.file' => 'log/traject.log',
+        'log.error_file' => 'log/traject_error.log',
+        'solr_writer.commit_on_close' => 'true',
+        'marc4j_reader.permissive' => true,
+        'marc4j_reader.source_encoding' => 'UTF-8'
+        )
+
     didnt_work = []
-    daily_deletion_files = Dir["#{SIRSI_DATA_HOME}/daily/*.txt"]
+    daily_deletion_files = Dir["#{SIRSI_DATA_HOME}/daily/daily_deletes_20190416.txt"]
     dont_delete = []
 
     daily_deletion_files.each do |file_name|
       File.open(file_name, 'r') do |file|
         file.each_line do |line|
           id = line.chomp.chomp('|')
-          system "/usr/bin/curl 'http://localhost:8983/solr/blacklight-core/update?commit=true' -H "\
-                 "'Content-type:text/xml' -d '<delete><id>#{id}</id></delete>'"
-          response = `"/usr/bin/curl 'http://localhost:8983/solr/blacklight-core/select?defType=edismax&fq=id:#{id} -H 'Content-type:text/xml'"`
+          indexer.writer.delete(id)
+          response = HTTP.get "#{SOLR_URL}/select?defType=edismax&fq=id:#{id}"
           parsed_response = JSON.parse(response)
 
           if parsed_response['response']['numFound'] != 0
