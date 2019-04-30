@@ -8,7 +8,7 @@ gem 'mail'
 gem 'marc'
 gem 'rake'
 gem 'rsolr'
-gem 'traject', '3.0.0'
+gem 'traject', '3.1.0'
 gem 'traject-marc4j_reader', platform: :jruby
 gem 'whenever', require: false
 
