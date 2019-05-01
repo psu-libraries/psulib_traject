@@ -53,7 +53,7 @@ namespace :incrementals do
     daily_deletion_files.each do |file_name|
       File.open(file_name, 'r') do |file|
         file.each_line do |line|
-          id = line.chomp.chomp('|')
+          id = line.chomp
           indexer.writer.delete(id)
           response = HTTP.get "#{indexer_settings['solr_url']}/select?defType=edismax&fq=id:#{id}"
           parsed_response = JSON.parse(response)
