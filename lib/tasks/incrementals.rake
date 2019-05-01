@@ -58,7 +58,7 @@ namespace :incrementals do
           response = HTTP.get "#{indexer_settings['solr_url']}/select?defType=edismax&fq=id:#{id}"
           parsed_response = JSON.parse(response)
 
-          # Sanity checking, may be uneccesary bloat because the SolrJsonWrite::delete will throw an exception if the
+          # Sanity checking, may be unnecessary bloat because the SolrJsonWrite::delete will throw an exception if the
           # response from the server isn't 200, and that only happens when the delete fails (as far as I know).
           if parsed_response['response']['numFound'] != 0
             didnt_work << id
