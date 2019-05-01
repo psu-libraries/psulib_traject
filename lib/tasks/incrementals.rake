@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'mail'
+require 'traject'
 
 TRAJECT_HOME = '/opt/psulib_traject'.freeze
 TRAJECT_LOGS_HOME = '/var/log/traject'.freeze
@@ -42,14 +43,14 @@ namespace :incrementals do
   desc 'Deletes from the index'
   task :delete_daily do
     indexer = Traject::Indexer.new(
-        'solr.version' => '7.4.0',
-        'solr.url' => 'http://localhost:8983/solr/blacklight-core',
-        'log.file' => 'log/traject.log',
-        'log.error_file' => 'log/traject_error.log',
-        'solr_writer.commit_on_close' => 'true',
-        'marc4j_reader.permissive' => true,
-        'marc4j_reader.source_encoding' => 'UTF-8'
-        )
+      'solr.version' => '7.4.0',
+      'solr.url' => 'http://localhost:8983/solr/blacklight-core',
+      'log.file' => 'log/traject.log',
+      'log.error_file' => 'log/traject_error.log',
+      'solr_writer.commit_on_close' => 'true',
+      'marc4j_reader.permissive' => true,
+      'marc4j_reader.source_encoding' => 'UTF-8'
+    )
 
     didnt_work = []
     daily_deletion_files = Dir["#{SIRSI_DATA_HOME}/daily/daily_deletes_20190416.txt"]
@@ -63,6 +64,8 @@ namespace :incrementals do
           response = HTTP.get "#{SOLR_URL}/select?defType=edismax&fq=id:#{id}"
           parsed_response = JSON.parse(response)
 
+          # Sanity checking, may be uneccesary bloat because the SolrJsonWrite::delete will throw an exception if the
+          # response from the server isn't 200, and that only happens when the delete fails (as far as I know).
           if parsed_response['response']['numFound'] != 0
             didnt_work << id
             dont_delete << file_name
