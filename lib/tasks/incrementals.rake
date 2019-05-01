@@ -34,14 +34,17 @@ namespace :incrementals do
   desc 'Deletes from the index'
   task :delete_daily do
     require 'traject'
+    require 'yaml'
+    indexer_settings = YAML.load_file('config/indexer_settings.yml')
+
     indexer = Traject::Indexer.new(
-      'solr.version' => '7.4.0',
-      'solr.url' => 'http://localhost:8983/solr/blacklight-core',
-      'log.file' => 'log/traject.log',
-      'log.error_file' => 'log/traject_error.log',
-      'solr_writer.commit_on_close' => 'true',
-      'marc4j_reader.permissive' => true,
-      'marc4j_reader.source_encoding' => 'UTF-8'
+      'solr.version' => indexer_settings['solr_version'],
+      'solr.url' => indexer_settings['solr_url'],
+      'log.file' => "#{TRAJECT_LOGS_HOME}/traject_incremental.log",
+      'log.error_file' => "#{TRAJECT_LOGS_HOME}/traject_incremental_error.log",
+      'solr_writer.commit_on_close' => indexer_settings['solr_writer_commit_on_close'],
+      'marc4j_reader.permissive' => indexer_settings['marc4j_reader_permissive'],
+      'marc4j_reader.source_encoding' => indexer_settings['marc4j_reader_source_encoding']
     )
 
     didnt_work = []
