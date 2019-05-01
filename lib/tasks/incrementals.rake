@@ -11,31 +11,21 @@ SOLR_URL = 'http://localhost:8983/solr/blacklight-core'.freeze
 namespace :incrementals do
   desc 'Adds to the index'
   task :import_daily do
-    system "stat #{SIRSI_DATA_HOME}/daily/daily_addupdate_201a90422.mrc"
+    daily_addition_files = Dir["#{SIRSI_DATA_HOME}/daily/*.mrc"]
 
-    if $CHILD_STATUS.exitstatus == 0
-      system("cat #{SIRSI_DATA_HOME}/daily/daily_addupdate_20190422.mrc | bundle exec traject -s "\
-              "log.file=#{TRAJECT_LOGS_HOME}/traject_incremental.log -s "\
-              "log.error_file=#{TRAJECT_LOGS_HOME}/traject_incremental_error.log -s processing_thread_pool=7 "\
-              "-c #{TRAJECT_HOME}/lib/traject/psulib_config.rb --stdin")
-
+    daily_addition_files.each do |f|
+      system("bundle exec traject -s log.file=#{TRAJECT_LOGS_HOME}/traject_incremental.log -s "\
+             "log.error_file=#{TRAJECT_LOGS_HOME}/traject_incremental_error.log -s processing_thread_pool=7 "\
+             "-c #{TRAJECT_HOME}/lib/traject/psulib_config.rb #{f}")
       if $CHILD_STATUS.exitstatus.zero?
+        File.delete(f)
+      else
         Mail.deliver do
           from    'noreply@psu.edu'
           to      'cdm32@psu.edu'
           subject 'The daily import to BlackCat failed'
-          body    'Traject failed to import the marc file.'
+          body    "Traject failed to import the marc file #{f}."
         end
-      else
-        File.delete("#{SIRSI_DATA_HOME}/daily/daily_addupdate_20190422.mrc")
-      end
-
-    else
-      Mail.deliver do
-        from    'noreply@psu.edu'
-        to      'cdm32@psu.edu'
-        subject 'The daily import to BlackCat failed'
-        body    'No marc files exist to import.'
       end
     end
   end
