@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'mail'
-require 'traject'
 
 TRAJECT_HOME = '/opt/psulib_traject'.freeze
 TRAJECT_LOGS_HOME = '/var/log/traject'.freeze
@@ -34,6 +33,7 @@ namespace :incrementals do
 
   desc 'Deletes from the index'
   task :delete_daily do
+    require 'traject'
     indexer = Traject::Indexer.new(
       'solr.version' => '7.4.0',
       'solr.url' => 'http://localhost:8983/solr/blacklight-core',
