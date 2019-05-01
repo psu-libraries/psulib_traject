@@ -5,6 +5,7 @@ require 'mail'
 TRAJECT_HOME = '/opt/psulib_traject'.freeze
 TRAJECT_LOGS_HOME = '/var/log/traject'.freeze
 SIRSI_DATA_HOME = '/data/symphony_data'.freeze
+SOLR_URL = 'http://localhost:8983/solr/blacklight-core'.freeze
 
 namespace :incrementals do
   desc 'Adds to the index'
