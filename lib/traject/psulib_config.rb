@@ -11,6 +11,7 @@ require 'marc_pub_date_processor'
 require 'marc_format_processor'
 require 'marc_media_type_processor'
 require 'marc_access_facet_processor'
+require 'traject/regex_split'
 require 'traject/readers/marc_combining_reader'
 require 'traject/psulib_marc'
 
@@ -44,16 +45,6 @@ settings do
 end
 
 logger.info RUBY_DESCRIPTION
-
-# work-around for https://github.com/jruby/jruby/issues/4868
-def regex_split(str, regex)
-  str.split(regex).to_a
-end
-
-# work-around for https://github.com/jruby/jruby/issues/4868
-def regex_to_extract_data_from_a_string(str, regex)
-  str[regex]
-end
 
 to_field 'marc_display_ss', serialized_marc(format: 'xml', allow_oversized: true)
 
