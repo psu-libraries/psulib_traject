@@ -5,7 +5,6 @@ require 'mail'
 TRAJECT_HOME = '/opt/psulib_traject'.freeze
 TRAJECT_LOGS_HOME = '/var/log/traject'.freeze
 SIRSI_DATA_HOME = '/data/symphony_data'.freeze
-SOLR_URL = 'http://localhost:8983/solr/blacklight-core'.freeze
 
 # This job, and :delete_daily expect there to be file to add and delete, it is not responsible for getting those files
 # from the catalog.
@@ -56,7 +55,7 @@ namespace :incrementals do
         file.each_line do |line|
           id = line.chomp.chomp('|')
           indexer.writer.delete(id)
-          response = HTTP.get "#{SOLR_URL}/select?defType=edismax&fq=id:#{id}"
+          response = HTTP.get "#{indexer_settings['solr_url']}/select?defType=edismax&fq=id:#{id}"
           parsed_response = JSON.parse(response)
 
           # Sanity checking, may be uneccesary bloat because the SolrJsonWrite::delete will throw an exception if the
