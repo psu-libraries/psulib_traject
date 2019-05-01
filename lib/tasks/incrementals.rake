@@ -8,6 +8,8 @@ TRAJECT_LOGS_HOME = '/var/log/traject'.freeze
 SIRSI_DATA_HOME = '/data/symphony_data'.freeze
 SOLR_URL = 'http://localhost:8983/solr/blacklight-core'.freeze
 
+# This job, and :delete_daily expect there to be file to add and delete, it is not responsible for getting those files
+# from the catalog.
 namespace :incrementals do
   desc 'Adds to the index'
   task :import_daily do
