@@ -43,7 +43,7 @@ namespace :incrementals do
     )
 
     didnt_work = []
-    daily_deletion_files = Dir["#{SIRSI_DATA_HOME}/daily/daily_deletes_20190416.txt"]
+    daily_deletion_files = Dir["#{SIRSI_DATA_HOME}/daily/*.txt"]
     dont_delete = []
 
     daily_deletion_files.each do |file_name|
