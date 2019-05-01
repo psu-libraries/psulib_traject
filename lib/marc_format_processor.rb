@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'traject/regex_split'
+
 # A tool for classifying MARC records using a combination of data from the
 # record's leader and some 949ts to assign format types to records
 class MarcFormatProcessor
@@ -138,7 +140,7 @@ class MarcFormatProcessor
   # Checks all $6xx for a $v "congress"
   def congress?(record)
     !record.find do |field|
-      field.tag.slice(0) == '6' && field.subfields.find { |sf| sf.code == 'v' && /Congress/i.match(sf.value) }
+      field.tag.slice(0) == '6' && field.subfields.find { |sf| sf.code == 'v' && regex_to_extract_data_from_a_string(sf.value, /Congress/i) }
     end.nil?
   end
 

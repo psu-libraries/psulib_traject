@@ -20,7 +20,7 @@ module Traject
             subject = extractor.collect_subfields(field, spec).first
             unless subject.nil?
               field.subfields.each do |s_field|
-                subject = subject.gsub(" #{s_field.value}", "#{SEPARATOR}#{s_field.value}") if split_on_subfield.include?(s_field.code)
+                subject = add_subject_separator(subject, s_field) if split_on_subfield.include?(s_field.code)
               end
               subject = subject.split(SEPARATOR)
               subject = subject.map { |s| Traject::Macros::Marc21.trim_punctuation(s) }.join(SEPARATOR)
@@ -45,7 +45,7 @@ module Traject
             subject = extractor.collect_subfields(field, spec).first
             unless subject.nil?
               field.subfields.each do |s_field|
-                subject = subject.gsub(" #{s_field.value}", "#{SEPARATOR}#{s_field.value}") if split_on_subfield.include?(s_field.code)
+                subject = add_subject_separator(subject, s_field) if split_on_subfield.include?(s_field.code)
               end
               subject = subject.split(SEPARATOR)
               subjects << subject.map { |s| Traject::Macros::Marc21.trim_punctuation(s) }
@@ -54,6 +54,10 @@ module Traject
 
           accumulator.replace(subjects.flatten.compact.uniq)
         end
+      end
+
+      def add_subject_separator(subject, s_field)
+        subject.gsub(" #{s_field.value}", "#{SEPARATOR}#{s_field.value}")
       end
 
       # For genre facet and display
@@ -91,8 +95,8 @@ module Traject
             link_data << collect_subfield_values(field: field, code: 'u')
           end
           link_data.flatten.compact.each do |link|
-            url_match = link.match(%r{https*://([\w*|\.*]*)})
-            break nil if url_match.nil?
+            url_match = regex_split link, %r{https*://([\w*|\.*]*)}
+            next if url_match[1].nil?
 
             domain = serial_solutions_link?(url_match[1]) ? 'serialssolutions.com' : url_match[1]
             accumulator << { text: domain, url: link }.to_json

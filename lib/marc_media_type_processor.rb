@@ -163,7 +163,7 @@ class MarcMediaTypeProcessor
 
     Traject::MarcExtractor.cached('300abcdefghijklmnopqrstuvwxyz', alternate_script: false).collect_matching_lines(record) do |field, spec, extractor|
       field300 = extractor.collect_subfields(field, spec).first
-      if field300 =~ %r{(sound|audio) discs? (\((ca. )?\d+.*\))?\D+((digital|CD audio)\D*[,\;.])? (c )?(4 3/4|12 c)}
+      if %r{(sound|audio) discs? (\((ca. )?\d+.*\))?\D+((digital|CD audio)\D*[,\;.])? (c )?(4 3/4|12 c)}.match?(field300)
         media_types << 'CD' unless field300 =~ /(DVD|SACD|blu[- ]?ray)/
       end
 
