@@ -11,7 +11,7 @@ namespace :incrementals do
   desc 'Adds to the index'
   task :import_daily do
     today_ymd = Date.today.strftime('%Y%m%d')
-    file  = "#{SIRSI_DATA_HOME}/daily/daily_addupdate_#{today_ymd}.mrc"
+    file = "#{SIRSI_DATA_HOME}/daily/daily_addupdate_#{today_ymd}.mrc"
     indexer = Traject::Indexer::MarcIndexer.new
     indexer.load_config_file('lib/traject/psulib_config.rb')
     indexer.logger.info "   Processing incremental import_daily rake task on #{f}"
