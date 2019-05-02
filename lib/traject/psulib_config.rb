@@ -14,6 +14,7 @@ require 'marc_access_facet_processor'
 require 'traject/regex_split'
 require 'traject/readers/marc_combining_reader'
 require 'traject/psulib_marc'
+require 'yaml'
 
 extend Traject::Macros::Marc21
 extend Traject::Macros::Marc21Semantics
@@ -24,21 +25,23 @@ MarcExtractor = Traject::MarcExtractor
 require 'traject/macros/custom'
 extend Traject::Macros::Custom
 
+indexer_settings = YAML.load_file('config/indexer_settings.yml')
+
 ATOZ = ('a'..'z').to_a.join('')
 ATOU = ('a'..'u').to_a.join('')
 
 settings do
-  provide 'solr.url', 'http://localhost:8983/solr/blacklight-core'
-  provide 'log.batch_size', 100_000
-  provide 'solr.version', '7.4.0'
-  provide 'log.file', 'log/traject.log'
-  provide 'log.error_file', 'log/traject_error.log'
-  provide 'solr_writer.commit_on_close', 'true'
-  provide 'reader_class_name', 'Traject::MarcCombiningReader'
+  provide 'solr.url', indexer_settings['solr_url']
+  provide 'log.batch_size', indexer_settings['log_batch_size']
+  provide 'solr.version', indexer_settings['solr_version']
+  provide 'log.file', indexer_settings['log_file']
+  provide 'log.error_file', indexer_settings['Log_error_file']
+  provide 'solr_writer.commit_on_close', indexer_settings['solr_writer_commit_on_close']
+  provide 'reader_class_name', indexer_settings['reader_class_name']
 
   if is_jruby
-    provide 'marc4j_reader.permissive', true
-    provide 'marc4j_reader.source_encoding', 'UTF-8'
+    provide 'marc4j_reader.permissive', indexer_settings['marc4j_reader_permissive']
+    provide 'marc4j_reader.source_encoding', indexer_settings['marc4j_reader_source_encoding']
     # defaults to 1 less than the number of processors detected on your machine
     # provide 'processing_thread_pool', 7
   end
