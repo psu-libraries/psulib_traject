@@ -10,22 +10,21 @@ SIRSI_DATA_HOME = '/data/symphony_data'.freeze
 namespace :incrementals do
   desc 'Adds to the index'
   task :import_daily do
+    today_ymd = Date.today.strftime('%Y%m%d')
+    file  = "#{SIRSI_DATA_HOME}/daily/daily_addupdate_#{today_ymd}.mrc"
     indexer = Traject::Indexer::MarcIndexer.new
     indexer.load_config_file('lib/traject/psulib_config.rb')
-    daily_addition_files = Dir["#{SIRSI_DATA_HOME}/daily/*.mrc"]
+    indexer.logger.info "   Processing incremental import_daily rake task on #{f}"
 
-    daily_addition_files.each do |f|
-      indexer.logger.info "   Processing incremental import_daily rake task on #{f}"
-
-      if indexer.process(File.open(f))
-        File.delete f
-      else
-        Mail.deliver do
-          from    'noreply@psu.edu'
-          to      'cdm32@psu.edu'
-          subject 'The daily import to BlackCat failed'
-          body    "Traject failed to import the marc file #{f}."
-        end
+    if indexer.process(File.open(file))
+      indexer.logger.info "   #{file} has been indexed"
+      File.delete file
+    else
+      Mail.deliver do
+        from    'noreply@psu.edu'
+        to      'cdm32@psu.edu'
+        subject 'The daily import to BlackCat failed'
+        body    "Traject failed to import the marc file #{file}."
       end
     end
   end
