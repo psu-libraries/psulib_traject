@@ -159,11 +159,12 @@ module Traject
       # Refactor of Traject::Macros::Marc21Semantics#marc_publication_date as the basic logic but check for 264|*1|c before
       # 260c.
       def process_publication_date
+        marc_date_processor = MarcPubDateProcessor.new
+
         lambda do |record, accumulator|
           return nil unless record.is_a? MARC::Record
 
           field008 = Traject::MarcExtractor.cached('008').extract(record).first
-          marc_date_processor = MarcPubDateProcessor.new
           pub_date = marc_date_processor.find_date(field008)
 
           if pub_date.nil?
