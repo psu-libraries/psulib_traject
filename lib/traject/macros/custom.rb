@@ -5,6 +5,7 @@ NOT_FULLTEXT = /addendum|appendices|appendix|appendixes|cover|excerpt|executive 
 ESTIMATE_TOLERANCE = 15
 MIN_YEAR = 500
 MAX_YEAR = Time.new.year + 6
+PubDateProcessor = MarcPubDateProcessor.new
 
 module Traject
   module Macros
@@ -159,19 +160,17 @@ module Traject
       # Refactor of Traject::Macros::Marc21Semantics#marc_publication_date as the basic logic but check for 264|*1|c before
       # 260c.
       def process_publication_date
-        marc_date_processor = MarcPubDateProcessor.new
-
         lambda do |record, accumulator|
           return nil unless record.is_a? MARC::Record
 
           field008 = Traject::MarcExtractor.cached('008').extract(record).first
-          pub_date = marc_date_processor.find_date(field008)
+          pub_date = PubDateProcessor.find_date(field008)
 
           if pub_date.nil?
             # Nothing from 008, try 264 and 260
             field264c = Traject::MarcExtractor.cached('264|*1|c', separator: nil).extract(record).first
             field260c = Traject::MarcExtractor.cached('260c', separator: nil).extract(record).first
-            pub_date = marc_date_processor.check_elsewhere field264c, field260c
+            pub_date = PubDateProcessor.check_elsewhere field264c, field260c
           end
 
           publication_date = pub_date_in_range(pub_date)
