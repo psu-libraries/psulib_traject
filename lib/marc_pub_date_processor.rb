@@ -9,43 +9,55 @@
 # @return nil if field008 is not set
 # @return [Integer] if the field's date can be found, the year found
 class MarcPubDateProcessor
-  attr_accessor :field008, :date_type, :date1, :date2
-
-  def initialize(field008)
-    @field008 = field008
-    return unless @field008 && @field008.length >= 11
-
-    @date_type = field008.slice(6)
-    @date1_str = field008.slice(7, 4)
-    @date2_str = field008.length > 15 ? field008.slice(11, 4) : ''
+  def initialize
+    freeze
   end
 
   # Based on the date_type, return the proper value.
-  def find_date
-    return nil if @date_type.nil? || @date_type == 'n'
+  def find_date(field008)
+    return unless field008 && field008.length >= 11
 
-    case @date_type
+    date_type = date_type(field008)
+    return if date_type.nil?
+
+    date1_str, date2_str = dates_str(field008)
+
+    case date_type
     when 'p', 'r'
       # Reissue/reprint/re-recording, etc.
-      date_str = @date2_str.to_i != 0 ? @date2_str : @date1_str
-      resolve_date date_str
+      resolve_date date_to_resolve(date1_str, date2_str)
     when 'q'
       # Questionable
-      resolve_range
+      resolve_range(date1_str, date2_str)
     else
       # Default case, just resolve the first date.
-      resolve_date @date1_str
+      resolve_date date1_str
     end
   end
 
+  def date_type(field008)
+    date_type = field008.slice(6)
+    date_type unless date_type.nil? || date_type == 'n'
+  end
+
+  def dates_str(field008)
+    date1_str = field008.slice(7, 4)
+    date2_str = field008.length > 15 ? field008.slice(11, 4) : ''
+    [date1_str, date2_str]
+  end
+
+  def date_to_resolve(date1_str, date2_str)
+    date2_str.to_i != 0 ? date2_str : date1_str
+  end
+
   # For when we are dealing with ranges.
-  def resolve_range
+  def resolve_range(date1_str, date2_str)
     # Make unknown digits at the beginning or end of range
-    date1 = @date1_str.tr('u', '0').to_i
-    date2 = @date2_str.tr('u', '9').to_i
+    date1 = date1_str.tr('u', '0').to_i
+    date2 = date2_str.tr('u', '9').to_i
 
     # Do we have a range we can use?
-    return nil unless (date2 > date1) && ((date2 - date1) <= ESTIMATE_TOLERANCE)
+    return unless (date2 > date1) && ((date2 - date1) <= ESTIMATE_TOLERANCE)
 
     (date2 + date1) / 2
   end
