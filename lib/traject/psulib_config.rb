@@ -207,7 +207,7 @@ end
 to_field 'publisher_manufacturer_tsim', extract_marc('260b:264|*1|b:260f:264|*3|b', trim_punctuation: true)
 
 ## Publication year facet (sidebar)
-to_field 'pub_date_sort_itsi', process_publication_date
+to_field 'pub_date_itsi', process_publication_date
 
 ## Publication fields for display
 to_field 'publication_display_ssm', extract_marc('260abcefg3:264|*1|abc3') # display in search results
