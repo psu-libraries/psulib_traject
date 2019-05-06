@@ -14,7 +14,7 @@ namespace :incrementals do
     file = "#{SIRSI_DATA_HOME}/daily/daily_addupdate_#{today_ymd}.mrc"
     indexer = Traject::Indexer::MarcIndexer.new
     indexer.load_config_file('lib/traject/psulib_config.rb')
-    indexer.logger.info "   Processing incremental import_daily rake task on #{f}"
+    indexer.logger.info "   Processing incremental import_daily rake task on #{file}"
 
     if indexer.process(File.open(file))
       indexer.logger.info "   #{file} has been indexed"
@@ -37,7 +37,7 @@ namespace :incrementals do
     indexer = Traject::Indexer.new(
       'solr.version' => indexer_settings['solr_version'],
       'solr.url' => indexer_settings['solr_url'],
-      'log.file' => indexer_settingsp['log_file'],
+      'log.file' => indexer_settings['log_file'],
       'log.error_file' => indexer_settings['log_error_file'],
       'solr_writer.commit_on_close' => indexer_settings['solr_writer_commit_on_close'],
       'marc4j_reader.permissive' => indexer_settings['marc4j_reader_permissive'],
