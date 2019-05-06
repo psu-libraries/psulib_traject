@@ -44,37 +44,16 @@ namespace :incrementals do
       'marc4j_reader.source_encoding' => indexer_settings['marc4j_reader_source_encoding']
     )
 
-    didnt_work = []
-    daily_deletion_files = Dir["#{SIRSI_DATA_HOME}/daily/*.txt"]
-    dont_delete = []
-
-    daily_deletion_files.each do |file_name|
+    Dir["#{SIRSI_DATA_HOME}/daily/*.txt"].each do |file_name|
       File.open(file_name, 'r') do |file|
         file.each_line do |line|
           id = line.chomp
-          if indexer.writer.delete(id)
-            indexer.logger.info "   Deleted #{id} as part of incremental delete_daily rake task"
-          else
-            didnt_work << id
-            dont_delete << file_name
-          end
+          indexer.writer.delete(id)
+          indexer.logger.info "   Deleted #{id} as part of incremental delete_daily rake task"
         end
+
+        File.delete(file)
       end
-    end
-
-    if didnt_work.any?
-      Mail.deliver do
-        from    'noreply@psu.edu'
-        to      'cdm32@psu.edu'
-        subject 'Some of the daily delete to BlackCat failed'
-        body    "Solr failed to delete the following ids: #{didnt_work}"
-      end
-    end
-
-    daily_deletion_files.each do |f|
-      next unless dont_delete.include? f
-
-      File.delete(f)
     end
   end
 end
