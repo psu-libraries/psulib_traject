@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'mail'
 require 'traject'
 
 SIRSI_DATA_HOME = '/data/symphony_data'.freeze
@@ -10,6 +9,7 @@ SIRSI_DATA_HOME = '/data/symphony_data'.freeze
 namespace :incrementals do
   desc 'Adds to the index'
   task :import_daily do
+    require 'mail'
     today_ymd = Date.today.strftime('%Y%m%d')
     file = "#{SIRSI_DATA_HOME}/daily/daily_addupdate_#{today_ymd}.mrc"
     indexer = Traject::Indexer::MarcIndexer.new
