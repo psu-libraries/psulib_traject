@@ -29,12 +29,12 @@ extend Traject::Macros::Custom
 ATOZ = ('a'..'z').to_a.join('')
 ATOU = ('a'..'u').to_a.join('')
 
-case ENV['RUBY_ENVIRONMENT']
-when 'prod'
-  indexer_settings = YAML.load_file('config/indexer_settings_prod.yml')
-else
-  indexer_settings = YAML.load_file('config/indexer_settings.yml')
-end
+indexer_settings = case ENV['RUBY_ENVIRONMENT']
+                   when 'prod'
+                     YAML.load_file('config/indexer_settings_prod.yml')
+                   else
+                     YAML.load_file('config/indexer_settings.yml')
+                   end
 
 settings do
   provide 'solr.url', indexer_settings['solr_url']

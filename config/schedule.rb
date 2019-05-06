@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 set :environment_variable, 'RUBY_ENVIRONMENT'
 env 'MAILTO', 'cdm32@psu.edu'
 
