@@ -30,8 +30,8 @@ ATOZ = ('a'..'z').to_a.join('')
 ATOU = ('a'..'u').to_a.join('')
 
 indexer_settings = case ENV['RUBY_ENVIRONMENT']
-                   when 'prod'
-                     YAML.load_file('config/indexer_settings_prod.yml')
+                   when 'production'
+                     YAML.load_file('config/indexer_settings_production.yml')
                    else
                      YAML.load_file('config/indexer_settings.yml')
                    end
