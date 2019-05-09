@@ -32,7 +32,7 @@ namespace :incrementals do
   desc 'Deletes from the index'
   task :delete_daily do
     require 'yaml'
-    indexer_settings = YAML.load_file('config/indexer_settings.yml')
+    indexer_settings = YAML.load_file('config/indexer_settings_production.yml')
 
     indexer = Traject::Indexer.new(
       'solr.version' => indexer_settings['solr_version'],
