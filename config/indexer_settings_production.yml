@@ -1,6 +1,7 @@
 ---
 
-solr_url: http://localhost:8983/solr/psul_blacklight_read
+solr_url: http://localhost:8983/solr/
+collection_name: psu_v1
 log_batch_size: 100_000
 solr_version: 7.4.0
 log_file: /var/log/traject/traject.log

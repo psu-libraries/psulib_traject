@@ -37,7 +37,7 @@ indexer_settings = case ENV['RUBY_ENVIRONMENT']
                    end
 
 settings do
-  provide 'solr.url', indexer_settings['solr_url']
+  provide 'solr.url', indexer_settings['solr_url'] + indexer_settings['collection_name']
   provide 'log.batch_size', indexer_settings['log_batch_size']
   provide 'solr.version', indexer_settings['solr_version']
   provide 'log.file', indexer_settings['log_file']
