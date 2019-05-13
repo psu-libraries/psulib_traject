@@ -1,7 +1,5 @@
 ---
-#No collection alias in local dev
-solr_url: http://localhost:8983/solr/
-collection_name: psul_blacklight
+solr_url: http://localhost:8983/solr/psul_blacklight
 log_batch_size: 100_000
 solr_version: 7.4.0
 log_file: log/traject.log
