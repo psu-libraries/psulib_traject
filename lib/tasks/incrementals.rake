@@ -13,7 +13,7 @@ namespace :incrementals do
     today_ymd = Date.today.strftime('%Y%m%d')
     indexer = Traject::Indexer::MarcIndexer.new
     indexer.load_config_file('lib/traject/psulib_config.rb')
-    file = "#{SIRSI_DATA_HOME}/#{args[:period]}_#{psulib_resolve_environment}/daily_addupdate_#{today_ymd}.mrc"
+    file = "#{SIRSI_DATA_HOME}/#{args[:period]}_#{psulib_resolve_environment}/#{args[:period]}_addupdate_#{today_ymd}.mrc"
     indexer.logger.info "   Processing incremental import_#{args[:period]} rake task on #{file}"
 
     if indexer.process(File.open(file))
