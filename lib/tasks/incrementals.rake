@@ -8,13 +8,13 @@ SIRSI_DATA_HOME = '/data/symphony_data'.freeze
 # from the catalog.
 namespace :incrementals do
   desc 'Adds to the index'
-  task :import_daily do
+  task :import, [:period] do |_task, args|
     require 'mail'
     today_ymd = Date.today.strftime('%Y%m%d')
-    file = "#{SIRSI_DATA_HOME}/daily/daily_addupdate_#{today_ymd}.mrc"
     indexer = Traject::Indexer::MarcIndexer.new
     indexer.load_config_file('lib/traject/psulib_config.rb')
-    indexer.logger.info "   Processing incremental import_daily rake task on #{file}"
+    file = "#{SIRSI_DATA_HOME}/#{args[:period]}_#{psulib_resolve_environment}/daily_addupdate_#{today_ymd}.mrc"
+    indexer.logger.info "   Processing incremental import_#{args[:period]} rake task on #{file}"
 
     if indexer.process(File.open(file))
       indexer.logger.info "   #{file} has been indexed"
@@ -30,7 +30,7 @@ namespace :incrementals do
   end
 
   desc 'Deletes from the index'
-  task :delete_daily do
+  task :delete, [:period] do |_task, args|
     require 'yaml'
     indexer_settings = YAML.load_file('config/indexer_settings_production.yml')
 
@@ -44,16 +44,22 @@ namespace :incrementals do
       'marc4j_reader.source_encoding' => indexer_settings['marc4j_reader_source_encoding']
     )
 
-    Dir["#{SIRSI_DATA_HOME}/daily/*.txt"].each do |file_name|
+    Dir["#{SIRSI_DATA_HOME}/#{args[:period]}_#{psulib_resolve_environment}/*.txt"].each do |file_name|
       File.open(file_name, 'r') do |file|
         file.each_line do |line|
           id = line.chomp
           indexer.writer.delete(id)
-          indexer.logger.info "   Deleted #{id} as part of incremental delete_daily rake task"
+          indexer.logger.info "   Deleted #{id} as part of incremental delete_#{args[:period]} rake task"
         end
 
         File.delete(file)
       end
     end
   end
+end
+
+def psulib_resolve_environment
+  return 'qa' unless defined? RUBY_ENVIRONMENT && (RUBY_ENVIRONMENT == 'production')
+
+  'prod'
 end
