@@ -184,9 +184,6 @@ to_field 'author_corp_display_ssm', extract_marc('110abcdfgklnj', trim_punctuati
 to_field 'author_meeting_display_ssm', extract_marc('111abcdfgklnpqj', trim_punctuation: true)
 to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq', trim_punctuation: true)
 
-## Author sorting field
-to_field 'author_ssort', marc_sortable_author
-
 ## Access facet
 access_facet_processor = MarcAccessFacetProcessor.new
 to_field 'access_facet' do |record, accumulator|
