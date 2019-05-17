@@ -32,7 +32,11 @@ namespace :incrementals do
   desc 'Deletes from the index'
   task :delete, [:period] do |_task, args|
     require 'yaml'
-    indexer_settings = YAML.load_file('config/indexer_settings_production.yml')
+    indexer_settings = if ENV['RUBY_ENVIRONMENT'] == 'production'
+                         YAML.load_file('config/indexer_settings_production.yml')
+                       else
+                         YAML.load_file('config/indexer_settings.yml')
+                       end
 
     indexer = Traject::Indexer.new(
       'solr.version' => indexer_settings['solr_version'],
