@@ -9,3 +9,4 @@ solr_writer_commit_on_close: true
 reader_class_name: Traject::MarcCombiningReader
 marc4j_reader_permissive: true
 marc4j_reader_source_encoding: UTF-8
+processing_thread_pool: 5
