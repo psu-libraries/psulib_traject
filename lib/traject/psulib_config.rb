@@ -3,7 +3,6 @@
 $LOAD_PATH << File.expand_path('../', __dir__)
 
 ENV['RUBY_ENVIRONMENT'] = 'dev' if ENV['RUBY_ENVIRONMENT'].nil?
-
 require 'bundler/setup'
 require 'library_stdnums'
 require 'traject'
@@ -29,12 +28,7 @@ extend Traject::Macros::Custom
 ATOZ = ('a'..'z').to_a.join('')
 ATOU = ('a'..'u').to_a.join('')
 
-indexer_settings = case ENV['RUBY_ENVIRONMENT']
-                   when 'production'
-                     YAML.load_file('config/indexer_settings_production.yml')
-                   else
-                     YAML.load_file('config/indexer_settings.yml')
-                   end
+indexer_settings = YAML.load_file("config/indexer_settings_#{ENV['RUBY_ENVIRONMENT']}.yml")
 
 settings do
   provide 'solr.url', indexer_settings['solr_url']
@@ -49,7 +43,7 @@ settings do
     provide 'marc4j_reader.permissive', indexer_settings['marc4j_reader_permissive']
     provide 'marc4j_reader.source_encoding', indexer_settings['marc4j_reader_source_encoding']
     # defaults to 1 less than the number of processors detected on your machine
-    provide 'processing_thread_pool', indexer_settings['processing_thread_pool']
+    provide 'processing_thread_pool', indexer_settings['processing_thread_pool'].to_i
   end
 end
 
