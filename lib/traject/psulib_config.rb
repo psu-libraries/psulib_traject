@@ -3,7 +3,6 @@
 $LOAD_PATH << File.expand_path('../', __dir__)
 
 ENV['RUBY_ENVIRONMENT'] = 'dev' if ENV['RUBY_ENVIRONMENT'].nil?
-puts ENV['RUBY_ENVIRONMENT']
 require 'bundler/setup'
 require 'library_stdnums'
 require 'traject'
