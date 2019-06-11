@@ -69,7 +69,7 @@ to_field 'isbn_sim', extract_marc('020az', separator: nil) do |_record, accumula
   accumulator.uniq!
 end
 
-to_field('isbn_valid_ssm', extract_marc("020a", separator: nil)) do |_record, accumulator|
+to_field('isbn_valid_ssm', extract_marc('020a', separator: nil)) do |_record, accumulator|
   accumulator.map! { |x| StdNum::ISBN.allNormalizedValues(x) }
   accumulator.flatten!
   accumulator.uniq!
