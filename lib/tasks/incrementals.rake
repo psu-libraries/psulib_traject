@@ -16,15 +16,15 @@ namespace :incrementals do
     Dir["#{SIRSI_DATA_HOME}/#{args[:period]}_#{ENV['RUBY_ENVIRONMENT']}/*.mrc"].each do |file_name|
       if indexer.process(File.open(file_name))
         indexer.logger.info "   Processing incremental import_#{args[:period]} rake task on #{file_name}"
-        indexer.logger.info "   #{file} has been indexed"
-        File.delete file
+        indexer.logger.info "   #{file_name} has been indexed"
+        File.delete file_name
       else
         # This is here mostly as a test.
         Mail.deliver do
           from    'noreply@psu.edu'
           to      'cdm32@psu.edu,bzk60@psu.edu'
           subject 'The daily import to BlackCat failed'
-          body    "Traject failed to import the marc file #{file}."
+          body    "Traject failed to import the marc file #{file_name}."
         end
       end
     end
