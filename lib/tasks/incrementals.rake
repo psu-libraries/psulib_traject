@@ -32,11 +32,7 @@ namespace :incrementals do
   desc 'Deletes from the index'
   task :delete, [:period] do |_task, args|
     require 'yaml'
-    indexer_settings = if ENV['RUBY_ENVIRONMENT'] == 'production'
-                         YAML.load_file('config/indexer_settings_production.yml')
-                       else
-                         YAML.load_file('config/indexer_settings.yml')
-                       end
+    indexer_settings = YAML.load_file("config/indexer_settings_#{ENV['RUBY_ENVIRONMENT']}.yml")
 
     indexer = Traject::Indexer.new(
       'solr.version' => indexer_settings['solr_version'],
@@ -45,7 +41,8 @@ namespace :incrementals do
       'log.error_file' => indexer_settings['log_error_file'],
       'solr_writer.commit_on_close' => indexer_settings['solr_writer_commit_on_close'],
       'marc4j_reader.permissive' => indexer_settings['marc4j_reader_permissive'],
-      'marc4j_reader.source_encoding' => indexer_settings['marc4j_reader_source_encoding']
+      'marc4j_reader.source_encoding' => indexer_settings['marc4j_reader_source_encoding'],
+      'processing_thread_pool' => indexer_settings['processing_thread_pool'].to_i
     )
 
     Dir["#{SIRSI_DATA_HOME}/#{args[:period]}_#{ENV['RUBY_ENVIRONMENT']}/*.txt"].each do |file_name|
