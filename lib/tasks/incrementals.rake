@@ -10,21 +10,22 @@ namespace :incrementals do
   desc 'Adds to the index'
   task :import, [:period] do |_task, args|
     require 'mail'
-    today_ymd = Date.today.strftime('%Y%m%d')
     indexer = Traject::Indexer::MarcIndexer.new
     indexer.load_config_file('lib/traject/psulib_config.rb')
-    file = "#{SIRSI_DATA_HOME}/#{args[:period]}_#{ENV['RUBY_ENVIRONMENT']}/#{args[:period]}_addupdate_#{today_ymd}.mrc"
-    indexer.logger.info "   Processing incremental import_#{args[:period]} rake task on #{file}"
 
-    if indexer.process(File.open(file))
-      indexer.logger.info "   #{file} has been indexed"
-      File.delete file
-    else
-      Mail.deliver do
-        from    'noreply@psu.edu'
-        to      'cdm32@psu.edu'
-        subject 'The daily import to BlackCat failed'
-        body    "Traject failed to import the marc file #{file}."
+    Dir["#{SIRSI_DATA_HOME}/#{args[:period]}_#{ENV['RUBY_ENVIRONMENT']}/*.mrc"].each do |file_name|
+      if indexer.process(File.open(file_name))
+        indexer.logger.info "   Processing incremental import_#{args[:period]} rake task on #{file_name}"
+        indexer.logger.info "   #{file} has been indexed"
+        File.delete file
+      else
+        # This is here mostly as a test.
+        Mail.deliver do
+          from    'noreply@psu.edu'
+          to      'cdm32@psu.edu,bzk60@psu.edu'
+          subject 'The daily import to BlackCat failed'
+          body    "Traject failed to import the marc file #{file}."
+        end
       end
     end
   end
