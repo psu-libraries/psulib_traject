@@ -35,9 +35,10 @@ settings do
   provide 'log.batch_size', indexer_settings['log_batch_size']
   provide 'solr.version', indexer_settings['solr_version']
   provide 'log.file', indexer_settings['log_file']
-  provide 'log.error_file', indexer_settings['Log_error_file']
+  provide 'log.error_file', indexer_settings['log_error_file']
   provide 'solr_writer.commit_on_close', indexer_settings['solr_writer_commit_on_close']
   provide 'reader_class_name', indexer_settings['reader_class_name']
+  provide 'commit_timeout', indexer_settings['commit_timeout']
 
   if is_jruby
     provide 'marc4j_reader.permissive', indexer_settings['marc4j_reader_permissive']
