@@ -1,6 +1,5 @@
 ---
 
-solr_url: http://localhost:8983/solr/psu_v1
 log_batch_size: 100_000
 solr_version: 7.4.0
 log_file: /var/log/traject/traject_qa.log
