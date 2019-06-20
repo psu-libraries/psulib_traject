@@ -29,7 +29,8 @@ ATOZ = ('a'..'z').to_a.join('')
 ATOU = ('a'..'u').to_a.join('')
 
 indexer_settings = YAML.load_file("config/indexer_settings_#{ENV['RUBY_ENVIRONMENT']}.yml")
-SOLR_URL = ENV['SOLR_URL'] || indexer_settings['solr_url']
+
+SOLR_URL = ENV['RUBY_ENVIRONMENT'] == 'production' ? ENV['SOLR_URL'] : indexer_settings['solr_url']
 
 settings do
   provide 'solr.url', SOLR_URL
