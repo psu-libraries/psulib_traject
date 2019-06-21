@@ -182,6 +182,21 @@ module Traject
       def pub_date_in_range(pub_date)
         pub_date && (pub_date > MIN_YEAR || pub_date < MAX_YEAR) ? pub_date : nil
       end
+
+      # Extract OCLC number
+      def extract_oclc_number
+        lambda do |record, accumulator|
+          record.fields(['035']).each do |field|
+            unless field.nil?
+              unless field['a'].nil?
+                subfield = regex_split(field['a'], //).map { |x| x[/\d+/] }.compact.join('') if field['a'].include?('OCoLC') || field['a'].include?('ocn') || field['a'].include?('ocm') || field['a'].include?('OCLC')
+                accumulator << subfield
+              end
+            end
+            accumulator.uniq!
+          end
+        end
+      end
     end
   end
 end

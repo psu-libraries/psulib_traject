@@ -223,6 +223,9 @@ to_field 'overall_imprint_display_ssm', extract_marc('260abcefg3:264|*0|abc3:264
 to_field 'copyright_display_ssm', extract_marc('264|*4|c')
 to_field 'edition_display_ssm', extract_marc('250ab3')
 
+## Publication date for ILL
+to_field 'pub_date_illiad_ssm', extract_marc('260c:264|*1|c', trim_punctuation: true)
+
 to_field 'language_facet', marc_languages('008[35-37]')
 
 # Subject fields
@@ -553,3 +556,6 @@ to_field 'serials_separated_from_display_ssim', extract_marc('780|07|iabdghkmnop
 to_field 'serials_split_into_display_ssim', extract_marc('785|06|iabdghkmnopqrstuxyz3')
 to_field 'serials_merged_to_form_display_ssim', extract_marc('785|07|iabdghkmnopqrstuxyz3')
 to_field 'serials_changed_back_to_display_ssim', extract_marc('785|08|iabdghkmnopqrstuxyz3')
+
+# OCLC number
+to_field 'oclc_number_display_ssm', extract_oclc_number
