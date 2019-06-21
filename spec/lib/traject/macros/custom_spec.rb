@@ -154,7 +154,7 @@ RSpec.describe 'Macros spec:' do
 
     context 'when 035 field does not include any of the OCLC prefixes' do
       it 'ignores the 035 value' do
-        expect(result['oclc_number_display_ssm']).to eq ['154806744', '239422053', '40777018', '70197573']
+        expect(result['oclc_number_display_ssm']).to eq %w[154806744 239422053 40777018 70197573]
       end
     end
   end
