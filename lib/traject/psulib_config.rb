@@ -30,8 +30,10 @@ ATOU = ('a'..'u').to_a.join('')
 
 indexer_settings = YAML.load_file("config/indexer_settings_#{ENV['RUBY_ENVIRONMENT']}.yml")
 
+SOLR_URL = ENV['RUBY_ENVIRONMENT'] == 'production' ? ENV['SOLR_URL'] : indexer_settings['solr_url']
+
 settings do
-  provide 'solr.url', indexer_settings['solr_url']
+  provide 'solr.url', SOLR_URL
   provide 'log.batch_size', indexer_settings['log_batch_size']
   provide 'solr.version', indexer_settings['solr_version']
   provide 'log.file', indexer_settings['log_file']
