@@ -223,8 +223,10 @@ to_field 'overall_imprint_display_ssm', extract_marc('260abcefg3:264|*0|abc3:264
 to_field 'copyright_display_ssm', extract_marc('264|*4|c')
 to_field 'edition_display_ssm', extract_marc('250ab3')
 
-## Publication date for ILL
+## Publication fields for Illiad and Aeon
 to_field 'pub_date_illiad_ssm', extract_marc('260c:264|*1|c', trim_punctuation: true)
+to_field 'publisher_name_ssm', extract_marc('260b:264|*1|b', trim_punctuation: true)
+to_field 'publication_place_ssm', extract_marc('260a:264|*1|a', trim_punctuation: true)
 
 to_field 'language_facet', marc_languages('008[35-37]')
 
