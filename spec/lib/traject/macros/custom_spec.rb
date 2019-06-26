@@ -128,7 +128,7 @@ RSpec.describe 'Macros spec:' do
       end
     end
 
-    context 'when 035 field includes OCoLC' do
+    context 'when 035 field includes \"OCoLC\"' do
       it 'maps the oclc number' do
         expect(result['oclc_number_display_ssm']).to include('154806744')
       end
