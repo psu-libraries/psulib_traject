@@ -110,4 +110,52 @@ RSpec.describe 'Macros spec:' do
       expect(result['genre_display_ssm']).to include('Drama')
     end
   end
+
+  describe 'extract_oclc_number' do
+    let(:oclc_no_035_1) { { '035' => { 'ind1' => '', 'ind2' => '', 'subfields' => [{ 'a' => '(OCoLC)154806744' }] } } }
+    let(:oclc_no_035_2) { { '035' => { 'ind1' => '', 'ind2' => '', 'subfields' => [{ 'a' => '(ocn)239422053' }] } } }
+    let(:oclc_no_035_3) { { '035' => { 'ind1' => '', 'ind2' => '', 'subfields' => [{ 'a' => '(ocm)40777018' }] } } }
+    let(:oclc_no_035_4) { { '035' => { 'ind1' => '', 'ind2' => '', 'subfields' => [{ 'a' => '(OCLC)70197573' }] } } }
+    let(:oclc_no_035_5) { { '035' => { 'ind1' => '', 'ind2' => '', 'subfields' => [{ 'a' => 'LIAS92' }] } } }
+    let(:result) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [oclc_no_035_1, oclc_no_035_2, oclc_no_035_3, oclc_no_035_4, oclc_no_035_5], 'leader' => leader)) }
+
+    context 'when there is no 035' do
+      it 'does not map record' do
+        @empty_record = MARC::Record.new
+        @empty_record.append(MARC::ControlField.new('001', '000000000'))
+        result = @indexer.map_record(@empty_record)
+        expect(result['oclc_number_display_ssm']).to be_nil
+      end
+    end
+
+    context 'when 035 field includes \"OCoLC\"' do
+      it 'maps the oclc number' do
+        expect(result['oclc_number_display_ssm']).to include('154806744')
+      end
+    end
+
+    context 'when 035 field includes \"ocn\"' do
+      it 'maps the oclc number' do
+        expect(result['oclc_number_display_ssm']).to include('239422053')
+      end
+    end
+
+    context 'when 035 field includes \"ocm\"' do
+      it 'maps the oclc number' do
+        expect(result['oclc_number_display_ssm']).to include('40777018')
+      end
+    end
+
+    context 'when 035 field includes \"OCLC\"' do
+      it 'maps the oclc number' do
+        expect(result['oclc_number_display_ssm']).to include('70197573')
+      end
+    end
+
+    context 'when 035 field does not include any of the OCLC prefixes' do
+      it 'ignores the 035 value' do
+        expect(result['oclc_number_display_ssm']).to eq %w[154806744 239422053 40777018 70197573]
+      end
+    end
+  end
 end
