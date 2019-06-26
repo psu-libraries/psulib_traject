@@ -189,13 +189,20 @@ module Traject
           record.fields(['035']).each do |field|
             unless field.nil?
               unless field['a'].nil?
-                subfield = regex_split(field['a'], //).map { |x| x[/\d+/] }.compact.join('') if field['a'].include?('OCoLC') || field['a'].include?('ocn') || field['a'].include?('ocm') || field['a'].include?('OCLC')
+                subfield = regex_split(field['a'], //).map { |x| x[/\d+/] }.compact.join('') if Custom.includes_oclc_indicators?(field['a'])
                 accumulator << subfield
               end
             end
             accumulator.uniq!
           end
         end
+      end
+
+      def self.includes_oclc_indicators?(sf_a)
+        sf_a.include?('OCoLC') ||
+          sf_a.include?('ocn') ||
+          sf_a.include?('ocm') ||
+          sf_a.include?('OCLC')
       end
     end
   end
