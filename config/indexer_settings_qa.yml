@@ -3,8 +3,8 @@
 solr_url: http://localhost:8983/solr/psul_blacklight
 log_batch_size: 100_000
 solr_version: 7.4.0
-log_file: /var/log/traject/traject.log
-log_error_file: /var/log/traject/traject_error.log
+log_file: /var/log/traject/traject_qa.log
+log_error_file: /var/log/traject/traject_error_qa.log
 solr_writer_commit_on_close: true
 reader_class_name: Traject::MarcCombiningReader
 marc4j_reader_permissive: true
