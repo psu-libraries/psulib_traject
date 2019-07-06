@@ -22,7 +22,7 @@ $ ruby --version
 1.  [Make sure you have docker installed and running](https://docs.docker.com/install/)
 1.  Clone the application and install.
     ``` 
-    $ git clone git@git.psu.edu:i-tech/psulib_traject.git
+    $ git clone git@github.com:psu-libraries/psulib_traject.git
     $ cd psulib_traject
     $ bundle install
     ```
