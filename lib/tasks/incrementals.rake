@@ -34,10 +34,11 @@ namespace :incrementals do
   task :delete, [:period] do |_task, args|
     require 'yaml'
     indexer_settings = YAML.load_file("config/indexer_settings_#{ENV['RUBY_ENVIRONMENT']}.yml")
+    SOLR_URL = ENV['RUBY_ENVIRONMENT'] == 'production' ? ENV['SOLR_URL'] : indexer_settings['solr_url']
 
     indexer = Traject::Indexer.new(
       'solr.version' => indexer_settings['solr_version'],
-      'solr.url' => indexer_settings['solr_url'],
+      'solr.url' => SOLR_URL,
       'log.file' => indexer_settings['log_file'],
       'log.error_file' => indexer_settings['log_error_file'],
       'solr_writer.commit_on_close' => indexer_settings['solr_writer_commit_on_close'],
