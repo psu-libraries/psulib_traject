@@ -46,6 +46,9 @@ RSpec.describe 'Formats spec:' do
       result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_leader6_book.mrc')).to_a.first)
       expect(result['format']).to contain_exactly 'Book'
 
+      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_leader6_book_override.mrc')).to_a.first)
+      expect(result['format']).to contain_exactly 'Book'
+
       result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_leader6_video.mrc')).to_a.first)
       expect(result['format']).to contain_exactly 'Video'
 

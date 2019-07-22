@@ -108,6 +108,8 @@ class MarcFormatProcessor
     format = 'Newspaper' if newspaper? record
     format = 'Games/Toys' if games? record
     format = 'Proceeding/Congress' if proceeding?(record) || congress?(record)
+    # Override for Book when leader(6-7) is 'am' - issue#172
+    format = 'Book' if record.leader[6] == 'a' && record.leader[7] == 'm' && resolve_949t(record).include?('Archives/Manuscripts')
     format
   end
 
