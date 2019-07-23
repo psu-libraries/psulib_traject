@@ -108,6 +108,7 @@ class MarcFormatProcessor
     format = 'Newspaper' if newspaper? record
     format = 'Games/Toys' if games? record
     format = 'Proceeding/Congress' if proceeding?(record) || congress?(record)
+    format = 'Book' if book? record
     format
   end
 
@@ -155,5 +156,10 @@ class MarcFormatProcessor
   # Checks 006 and 008 for instructional material
   def instructional_material?(record)
     record['006'] && record['006'].value[16] == 'q' || record['008'] && record['008'].value[33] == 'q'
+  end
+
+  # Override for Book when leader(6-7) is 'am' - issue#172
+  def book?(record)
+    record.leader[6] == 'a' && record.leader[7] == 'm' && resolve_949t(record).include?('Archives/Manuscripts')
   end
 end
