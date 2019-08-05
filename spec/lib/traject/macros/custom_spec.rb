@@ -25,6 +25,20 @@ RSpec.describe 'Macros spec:' do
     end
   end
 
+  describe 'A record where indicator 1 is 4, indicator 2 is blank and magic word is not in one of the label subfields' do
+    let(:url_856_2) do
+      { '856' => { 'ind1' => '4', 'ind2' => '', 'subfields' => [{ 'u' => 'https://scholarsphere.psu.edu/files/02870v8'\
+                                                                          '5d' },
+                                                                { 'z' => 'This text is irrelevant' }] } }
+    end
+    let(:result_1) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_2], 'leader' => leader)) }
+
+    it 'produces a fulltext link' do
+      expect(result_1['full_links_struct']).to match ['{"text":"scholarsphere.psu.edu","url":"https://scholarsphere.ps'\
+                                                      'u.edu/files/02870v85d"}']
+    end
+  end
+
   describe 'A record with an indicator 2 of 0 and magic word is in one of the label subfields' do
     let(:url_856_3) do
       { '856' => { 'ind1' => '0', 'ind2' => '0', 'subfields' => [{ 'u' => 'http://library.columbia.edu/content/library'\
@@ -33,6 +47,22 @@ RSpec.describe 'Macros spec:' do
                                                                  { '3' => 'Carrots executive summary peas' }] } }
     end
     let(:result_3) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_3], 'leader' => leader)) }
+
+    it 'produces a partial link' do
+      expect(result_3['partial_links_struct']).to match ['{"text":"library.columbia.edu","url":"http://library.columbia.'\
+                                                       'edu/content/libraryweb/indiv/ccoh/our_work/how_to_use_the_arch'\
+                                                       'ives.html"}']
+    end
+  end
+
+  describe 'A record with an indicator 1 of 4, indicator 2 is blank and magic word is in one of the label subfields' do
+    let(:url_856_7) do
+      { '856' => { 'ind1' => '4', 'ind2' => '', 'subfields' => [{ 'u' => 'http://library.columbia.edu/content/library'\
+                                                                   'web/indiv/ccoh/our_work/how_to_use_the_archives.ht'\
+                                                                   'ml' },
+                                                                { '3' => 'Carrots executive summary peas' }] } }
+    end
+    let(:result_3) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_7], 'leader' => leader)) }
 
     it 'produces a partial link' do
       expect(result_3['partial_links_struct']).to match ['{"text":"library.columbia.edu","url":"http://library.columbia.'\
