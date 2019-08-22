@@ -2,7 +2,7 @@
 
 require 'traject'
 
-SIRSI_DATA_HOME = '/data/symphony_data'.freeze
+SIRSI_DATA_HOME = '/data/symphony_data'
 
 # This job, and :delete_daily expect there to be file to add and delete, it is not responsible for getting those files
 # from the catalog.
