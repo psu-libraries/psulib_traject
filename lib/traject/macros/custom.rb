@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-SEPARATOR = '—'.freeze
+SEPARATOR = '—'
 NOT_FULLTEXT = /addendum|appendices|appendix|appendixes|cover|excerpt|executive summary|index/i.freeze
 ESTIMATE_TOLERANCE = 15
 MIN_YEAR = 500
