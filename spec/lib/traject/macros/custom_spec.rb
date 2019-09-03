@@ -49,9 +49,9 @@ RSpec.describe 'Macros spec:' do
     let(:result_3) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_3], 'leader' => leader)) }
 
     it 'produces a partial link' do
-      expect(result_3['partial_links_struct']).to match ['{"text":"library.columbia.edu","url":"http://library.columbia.'\
-                                                       'edu/content/libraryweb/indiv/ccoh/our_work/how_to_use_the_arch'\
-                                                       'ives.html"}']
+      expect(result_3['partial_links_struct']).to match ['{"text":"library.columbia.edu","url":"http://library.columbi'\
+                                                         'a.edu/content/libraryweb/indiv/ccoh/our_work/how_to_use_the_'\
+                                                         'archives.html"}']
     end
   end
 
@@ -89,9 +89,10 @@ RSpec.describe 'Macros spec:' do
     let(:result_5) { @indexer.map_record(MARC::Record.new_from_hash('fields' => url_856_5, 'leader' => leader)) }
 
     it 'produces 1 supplemental link and 1 partial link' do
-      expect(result_5['partial_links_struct']).to match ['{"text":"usacac.army.mil","url":"http://usacac.army.mil/CAC2/Mi'\
-                                                      'litaryReview/mrpast2.asp"}']
-      expect(result_5['suppl_links_struct']).to match ['{"text":"calldp.leavenworth.army.mil","url":"http://calldp.leavenworth.army.mil/"}']
+      expect(result_5['partial_links_struct']).to match ['{"text":"usacac.army.mil","url":"http://usacac.army.mil/CAC2'\
+                                                         '/MilitaryReview/mrpast2.asp"}']
+      expect(result_5['suppl_links_struct']).to match ['{"text":"calldp.leavenworth.army.mil","url":"http://calldp.lea'\
+                                                       'venworth.army.mil/"}']
     end
   end
 
