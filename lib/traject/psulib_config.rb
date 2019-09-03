@@ -90,6 +90,10 @@ to_field 'issn_sim', extract_marc('022a:022l:022m:022y:022z', separator: nil) do
 end
 to_field 'issn_ssm', extract_marc('022a', separator: nil)
 
+# OCLC number
+#
+## Not sure why didn't end up using the method Traject::Macros::Marc21Semantics::oclcnum
+to_field 'oclc_number_ssim', extract_oclc_number
 # Title fields
 #
 ## Title Search Fields
@@ -559,5 +563,3 @@ to_field 'serials_split_into_display_ssim', extract_marc('785|06|iabdghkmnopqrst
 to_field 'serials_merged_to_form_display_ssim', extract_marc('785|07|iabdghkmnopqrstuxyz3')
 to_field 'serials_changed_back_to_display_ssim', extract_marc('785|08|iabdghkmnopqrstuxyz3')
 
-# OCLC number
-to_field 'oclc_number_display_ssm', extract_oclc_number
