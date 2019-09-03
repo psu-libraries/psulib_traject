@@ -155,37 +155,37 @@ RSpec.describe 'Macros spec:' do
         @empty_record = MARC::Record.new
         @empty_record.append(MARC::ControlField.new('001', '000000000'))
         result = @indexer.map_record(@empty_record)
-        expect(result['oclc_number_display_ssm']).to be_nil
+        expect(result['oclc_number_ssim']).to be_nil
       end
     end
 
     context 'when 035 field includes \"OCoLC\"' do
       it 'maps the oclc number' do
-        expect(result['oclc_number_display_ssm']).to include('154806744')
+        expect(result['oclc_number_ssim']).to include('154806744')
       end
     end
 
     context 'when 035 field includes \"ocn\"' do
       it 'maps the oclc number' do
-        expect(result['oclc_number_display_ssm']).to include('239422053')
+        expect(result['oclc_number_ssim']).to include('239422053')
       end
     end
 
     context 'when 035 field includes \"ocm\"' do
       it 'maps the oclc number' do
-        expect(result['oclc_number_display_ssm']).to include('40777018')
+        expect(result['oclc_number_ssim']).to include('40777018')
       end
     end
 
     context 'when 035 field includes \"OCLC\"' do
       it 'maps the oclc number' do
-        expect(result['oclc_number_display_ssm']).to include('70197573')
+        expect(result['oclc_number_ssim']).to include('70197573')
       end
     end
 
     context 'when 035 field does not include any of the OCLC prefixes' do
       it 'ignores the 035 value' do
-        expect(result['oclc_number_display_ssm']).to eq %w[154806744 239422053 40777018 70197573]
+        expect(result['oclc_number_ssim']).to eq %w[154806744 239422053 40777018 70197573]
       end
     end
   end
