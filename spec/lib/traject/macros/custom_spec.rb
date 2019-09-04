@@ -75,15 +75,15 @@ RSpec.describe 'Macros spec:' do
     let(:url_856_5) do
       [
         { '856' =>
-              { 'ind1' => '0', 'ind2' => '1', 'subfields' => [
-                { 'u' => 'http://usacac.army.mil/CAC2/MilitaryReview/mrpast2.asp' }
-              ] } },
+             { 'ind1' => '0', 'ind2' => '1', 'subfields' => [
+               { 'u' => 'http://usacac.army.mil/CAC2/MilitaryReview/mrpast2.asp' }
+             ] } },
         { '856' =>
-              { 'ind1' => '4', 'ind2' => '2', 'subfields' => [
-                { 'u' => 'http://calldp.leavenworth.army.mil/' },
-                { 'z' => 'Gateway to archives.' },
-                { 'z' => 'URL does not work, Feb. 3, 2016.' }
-              ] } }
+             { 'ind1' => '4', 'ind2' => '2', 'subfields' => [
+               { 'u' => 'http://calldp.leavenworth.army.mil/' },
+               { 'z' => 'Gateway to archives.' },
+               { 'z' => 'URL does not work, Feb. 3, 2016.' }
+             ] } }
       ]
     end
     let(:result_5) { @indexer.map_record(MARC::Record.new_from_hash('fields' => url_856_5, 'leader' => leader)) }
