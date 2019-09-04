@@ -49,9 +49,9 @@ RSpec.describe 'Macros spec:' do
     let(:result_3) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_3], 'leader' => leader)) }
 
     it 'produces a partial link' do
-      expect(result_3['partial_links_struct']).to match ['{"text":"library.columbia.edu","url":"http://library.columbia.'\
-                                                       'edu/content/libraryweb/indiv/ccoh/our_work/how_to_use_the_arch'\
-                                                       'ives.html"}']
+      expect(result_3['partial_links_struct']).to match ['{"text":"library.columbia.edu","url":"http://library.columbi'\
+                                                         'a.edu/content/libraryweb/indiv/ccoh/our_work/how_to_use_the_'\
+                                                         'archives.html"}']
     end
   end
 
@@ -75,23 +75,24 @@ RSpec.describe 'Macros spec:' do
     let(:url_856_5) do
       [
         { '856' =>
-              { 'ind1' => '0', 'ind2' => '1', 'subfields' => [
-                { 'u' => 'http://usacac.army.mil/CAC2/MilitaryReview/mrpast2.asp' }
-              ] } },
+             { 'ind1' => '0', 'ind2' => '1', 'subfields' => [
+               { 'u' => 'http://usacac.army.mil/CAC2/MilitaryReview/mrpast2.asp' }
+             ] } },
         { '856' =>
-              { 'ind1' => '4', 'ind2' => '2', 'subfields' => [
-                { 'u' => 'http://calldp.leavenworth.army.mil/' },
-                { 'z' => 'Gateway to archives.' },
-                { 'z' => 'URL does not work, Feb. 3, 2016.' }
-              ] } }
+             { 'ind1' => '4', 'ind2' => '2', 'subfields' => [
+               { 'u' => 'http://calldp.leavenworth.army.mil/' },
+               { 'z' => 'Gateway to archives.' },
+               { 'z' => 'URL does not work, Feb. 3, 2016.' }
+             ] } }
       ]
     end
     let(:result_5) { @indexer.map_record(MARC::Record.new_from_hash('fields' => url_856_5, 'leader' => leader)) }
 
     it 'produces 1 supplemental link and 1 partial link' do
-      expect(result_5['partial_links_struct']).to match ['{"text":"usacac.army.mil","url":"http://usacac.army.mil/CAC2/Mi'\
-                                                      'litaryReview/mrpast2.asp"}']
-      expect(result_5['suppl_links_struct']).to match ['{"text":"calldp.leavenworth.army.mil","url":"http://calldp.leavenworth.army.mil/"}']
+      expect(result_5['partial_links_struct']).to match ['{"text":"usacac.army.mil","url":"http://usacac.army.mil/CAC2'\
+                                                         '/MilitaryReview/mrpast2.asp"}']
+      expect(result_5['suppl_links_struct']).to match ['{"text":"calldp.leavenworth.army.mil","url":"http://calldp.lea'\
+                                                       'venworth.army.mil/"}']
     end
   end
 
@@ -154,37 +155,37 @@ RSpec.describe 'Macros spec:' do
         @empty_record = MARC::Record.new
         @empty_record.append(MARC::ControlField.new('001', '000000000'))
         result = @indexer.map_record(@empty_record)
-        expect(result['oclc_number_display_ssm']).to be_nil
+        expect(result['oclc_number_ssim']).to be_nil
       end
     end
 
     context 'when 035 field includes \"OCoLC\"' do
       it 'maps the oclc number' do
-        expect(result['oclc_number_display_ssm']).to include('154806744')
+        expect(result['oclc_number_ssim']).to include('154806744')
       end
     end
 
     context 'when 035 field includes \"ocn\"' do
       it 'maps the oclc number' do
-        expect(result['oclc_number_display_ssm']).to include('239422053')
+        expect(result['oclc_number_ssim']).to include('239422053')
       end
     end
 
     context 'when 035 field includes \"ocm\"' do
       it 'maps the oclc number' do
-        expect(result['oclc_number_display_ssm']).to include('40777018')
+        expect(result['oclc_number_ssim']).to include('40777018')
       end
     end
 
     context 'when 035 field includes \"OCLC\"' do
       it 'maps the oclc number' do
-        expect(result['oclc_number_display_ssm']).to include('70197573')
+        expect(result['oclc_number_ssim']).to include('70197573')
       end
     end
 
     context 'when 035 field does not include any of the OCLC prefixes' do
       it 'ignores the 035 value' do
-        expect(result['oclc_number_display_ssm']).to eq %w[154806744 239422053 40777018 70197573]
+        expect(result['oclc_number_ssim']).to eq %w[154806744 239422053 40777018 70197573]
       end
     end
   end
