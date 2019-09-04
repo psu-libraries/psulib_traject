@@ -94,6 +94,10 @@ to_field 'issn_ssm', extract_marc('022a', separator: nil)
 #
 ## Not sure why didn't end up using the method Traject::Macros::Marc21Semantics::oclcnum
 to_field 'oclc_number_ssim', extract_oclc_number
+
+# Library of Congress number
+to_field 'lccn_ssim', extract_marc('010a', trim_punctuation: true)
+
 # Title fields
 #
 ## Title Search Fields
