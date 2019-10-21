@@ -566,3 +566,6 @@ to_field 'serials_separated_from_display_ssim', extract_marc('780|07|iabdghkmnop
 to_field 'serials_split_into_display_ssim', extract_marc('785|06|iabdghkmnopqrstuxyz3')
 to_field 'serials_merged_to_form_display_ssim', extract_marc('785|07|iabdghkmnopqrstuxyz3')
 to_field 'serials_changed_back_to_display_ssim', extract_marc('785|08|iabdghkmnopqrstuxyz3')
+
+# 799a - Sublocation
+to_field 'sublocation_ssm', extract_marc('799a')
