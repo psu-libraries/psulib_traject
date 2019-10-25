@@ -568,4 +568,6 @@ to_field 'serials_merged_to_form_display_ssim', extract_marc('785|07|iabdghkmnop
 to_field 'serials_changed_back_to_display_ssim', extract_marc('785|08|iabdghkmnopqrstuxyz3')
 
 # 799a - Sublocation
+# From our catalog experts: "The data in this field corresponds to "collections" within Special Collections, and 
+# the 799 data lets their staff know which shelf (or range of shelves) to check for the call number in question.
 to_field 'sublocation_ssm', extract_marc('799a')
