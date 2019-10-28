@@ -144,7 +144,6 @@ to_field 'title_related_tsim', extract_marc(%w[
   796lktmnoprs
   797lktmnoprs
   798lktmnoprs
-  799alktmnoprs
 ].join(':'), trim_punctuation: true) do |record, accumulator|
   accumulator.each { |value| value.chomp!(' --') } unless record.fields('505').empty?
 end
