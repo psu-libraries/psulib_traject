@@ -144,7 +144,6 @@ to_field 'title_related_tsim', extract_marc(%w[
   796lktmnoprs
   797lktmnoprs
   798lktmnoprs
-  799alktmnoprs
 ].join(':'), trim_punctuation: true) do |record, accumulator|
   accumulator.each { |value| value.chomp!(' --') } unless record.fields('505').empty?
 end
@@ -566,3 +565,8 @@ to_field 'serials_separated_from_display_ssim', extract_marc('780|07|iabdghkmnop
 to_field 'serials_split_into_display_ssim', extract_marc('785|06|iabdghkmnopqrstuxyz3')
 to_field 'serials_merged_to_form_display_ssim', extract_marc('785|07|iabdghkmnopqrstuxyz3')
 to_field 'serials_changed_back_to_display_ssim', extract_marc('785|08|iabdghkmnopqrstuxyz3')
+
+# 799a - Sublocation
+# From our catalog experts: "The data in this field corresponds to "collections" within Special Collections, and
+# the 799 data lets their staff know which shelf (or range of shelves) to check for the call number in question.
+to_field 'sublocation_ssm', extract_marc('799a')
