@@ -149,8 +149,8 @@ to_field 'title_related_tsim', extract_marc(%w[
 end
 
 ## Title Display Fields
-to_field 'title_latin_display_ssm', extract_marc('245abcfgknps', alternate_script: false, trim_punctuation: true)
-to_field 'title_vern', extract_marc('245abcfgknps', alternate_script: :only, trim_punctuation: true)
+to_field 'title_latin_display_ssm', extract_marc('245abcfghknps', alternate_script: false, trim_punctuation: true)
+to_field 'title_vern', extract_marc('245abcfghknps', alternate_script: :only, trim_punctuation: true)
 # use vern title as title_display_ssm if exists
 # otherwise use latin character title as title_display_ssm
 each_record do |_record, context|
