@@ -196,8 +196,8 @@ to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711ab
 
 ## Access facet
 access_facet_processor = MarcAccessFacetProcessor.new
-to_field 'access_facet' do |record, accumulator|
-  access_facet = access_facet_processor.extract_access_data record
+to_field 'access_facet' do |record, accumulator, context|
+  access_facet = access_facet_processor.extract_access_data record, context
   accumulator.replace(access_facet) unless !access_facet || access_facet.empty?
 end
 
