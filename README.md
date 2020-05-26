@@ -1,5 +1,10 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/f877d0681e38deb0f3c8/maintainability)](https://codeclimate.com/github/psu-libraries/psulib_traject/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/f877d0681e38deb0f3c8/test_coverage)](https://codeclimate.com/github/psu-libraries/psulib_traject/test_coverage)
+
 # psulib_traject
+
 ## Dependencies
+
 ### Java
 To run JRuby you will need a JRE (the JVM runtime environment) version 7 or higher.
 ```
