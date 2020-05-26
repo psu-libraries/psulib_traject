@@ -25,6 +25,7 @@ GEM
     http-form_data (2.3.0)
     http_parser.rb (0.6.0-java)
     httpclient (2.8.3)
+    json (2.3.0-java)
     library_stdnums (1.6.0)
     mail (2.7.1)
       mini_mime (>= 0.1.1)
@@ -73,10 +74,11 @@ GEM
       parser (>= 2.7.0.1)
     ruby-progressbar (1.10.1)
     scrub_rb (1.0.1)
-    simplecov (0.18.5)
+    simplecov (0.16.1)
       docile (~> 1.1)
-      simplecov-html (~> 0.11)
-    simplecov-html (0.12.2)
+      json (>= 1.8, < 3)
+      simplecov-html (~> 0.10.0)
+    simplecov-html (0.10.2)
     slop (3.6.0)
     traject (3.1.0)
       concurrent-ruby (>= 0.8.0)
@@ -110,7 +112,7 @@ DEPENDENCIES
   rsolr
   rspec
   rubocop
-  simplecov
+  simplecov (< 0.18)
   traject (= 3.1.0)
   traject-marc4j_reader
   whenever
