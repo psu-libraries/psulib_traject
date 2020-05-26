@@ -15,5 +15,5 @@ group :development, :test do
   gem 'byebug', platform: :mri
   gem 'rspec'
   gem 'rubocop'
-  gem 'simplecov'
+  gem 'simplecov', '< 0.18'
 end
