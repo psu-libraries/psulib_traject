@@ -5,7 +5,6 @@ require 'csv'
 # https://github.com/psu-libraries/psulib_blacklight/wiki/Access-Facet
 class MarcAccessFacetProcessor
   LIBRARIES_MAP = Traject::TranslationMap.new('libraries')
-  HATHI_ETAS_OVERLAP = CSV.read('overlap_all_unique.csv').flatten
 
   def initialize
     freeze
@@ -27,7 +26,7 @@ class MarcAccessFacetProcessor
       end
     end
 
-    access << 'Online' if in_hathi_etas_overlap? context
+    access << 'Online' if context.output_hash&.dig('ht_bib_key_ssim')
     access.compact.uniq
     access.delete 'On Order' if not_only_on_order? access
     access
@@ -43,9 +42,5 @@ class MarcAccessFacetProcessor
     return 'In the Library' unless field['l'] == 'ON-ORDER'
 
     'On Order'
-  end
-
-  def in_hathi_etas_overlap? context
-    HATHI_ETAS_OVERLAP.include? context.output_hash&.dig('oclc_number_ssim')&.first
   end
 end
