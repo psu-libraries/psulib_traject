@@ -195,7 +195,7 @@ to_field 'author_meeting_display_ssm', extract_marc('111abcdfgklnpqj', trim_punc
 to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq', trim_punctuation: true)
 
 # Permanent HathiTrust item identifier
-to_field 'ht_bib_key_ssim', extract_ht_bib_key
+to_field 'ht_id_ssim', extract_ht_id
 
 ## Access facet
 access_facet_processor = MarcAccessFacetProcessor.new
