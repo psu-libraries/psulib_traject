@@ -208,7 +208,7 @@ module Traject
 
       # Extract ht_bib_key
       def extract_ht_bib_key
-        lambda do |record, accumulator, context|
+        lambda do |_record, accumulator, context|
           HATHI_ETAS_OVERLAP.each do |ht_bib_key, oclc|
             accumulator << ht_bib_key if oclc == context.output_hash&.dig('oclc_number_ssim')&.first
           end

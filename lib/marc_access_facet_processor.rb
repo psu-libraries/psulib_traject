@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'csv'
 
 # Determines the access status of a record, how patrons are able to acquire an item.
@@ -10,19 +11,19 @@ class MarcAccessFacetProcessor
     freeze
   end
 
-    # Extract 949m for access facet
+  # Extract 949m for access facet
   def extract_access_data(record, context)
     access = Traject::MarcExtractor.cached('949m').collect_matching_lines(record) do |field, spec, extractor|
       library_code = extractor.collect_subfields(field, spec).first
       case library_code
       when 'ONLINE'
-       'Online'
+        'Online'
       when 'ACQ_DSL', 'ACQUISTNS', 'SERIAL-SRV'
-       'On Order'
+        'On Order'
       when 'ZREMOVED', 'XTERNAL'
-       next
+        next
       else
-       resolve_library_code field, LIBRARIES_MAP[library_code]
+        resolve_library_code field, LIBRARIES_MAP[library_code]
       end
     end
 
