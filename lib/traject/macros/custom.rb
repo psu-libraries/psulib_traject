@@ -2,7 +2,7 @@
 
 SEPARATOR = '—'
 NOT_FULLTEXT = /addendum|appendices|appendix|appendixes|cover|excerpt|executive summary|index/i.freeze
-HATHI_ETAS_OVERLAP = CSV.read('hathi_filtered_by_overlap_uniq.csv')
+HATHI_ETAS_OVERLAP = CSV.read('final_overlap_may.csv').map(&:reverse).to_h
 ESTIMATE_TOLERANCE = 15
 MIN_YEAR = 500
 MAX_YEAR = Time.new.year + 6
@@ -208,10 +208,11 @@ module Traject
 
       # Extract ht_id
       def extract_ht_id
+          # require 'pry'
         lambda do |_record, accumulator, context|
-          HATHI_ETAS_OVERLAP.each do |_ht_bib_key, oclc, ht_id|
-            accumulator << ht_id if oclc == context.output_hash&.dig('oclc_number_ssim')&.first
-          end
+          oclc_number = context.output_hash&.dig('oclc_number_ssim')&.first
+          accumulator << HATHI_ETAS_OVERLAP[oclc_number]
+          accumulator.compact
         end
       end
     end
