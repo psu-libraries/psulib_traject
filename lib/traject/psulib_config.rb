@@ -61,7 +61,7 @@ end
 # Identifiers
 #
 ## Catkey
-to_field 'id', extract_marc('001', first: true)
+to_field 'id', extract_marc('001', first: true).rstrip
 
 ## ISBN
 to_field 'isbn_sim', extract_marc('020az', separator: nil) do |_record, accumulator|
