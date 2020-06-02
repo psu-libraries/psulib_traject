@@ -191,4 +191,23 @@ RSpec.describe 'Macros spec:' do
       end
     end
   end
+
+  describe '#extract_ht_id' do
+    let(:oclc) { { '035' => { 'ind1' => '', 'ind2' => '', 'subfields' => [{ 'a' => '(OCLC)70197573' }] } } }
+    let(:result) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [oclc], 'leader' => leader)) }
+
+    context 'when a record does not have a match in the overlap report' do
+      it 'does not produce an ht_id' do
+        stub_const 'HATHI_ETAS_OVERLAP', { 'not a match' => 'psu.12347' }
+        expect(result['ht_id_ssim']).to be_nil
+      end
+    end
+
+    context 'when a record has a match in the overlap report' do
+      it 'does maps the ht_id' do
+        stub_const  'HATHI_ETAS_OVERLAP', { '70197573' => 'psu.12347' }
+        expect(result['ht_id_ssim']).to eq(['psu.12347'])
+      end
+    end
+  end
 end
