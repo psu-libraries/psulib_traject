@@ -278,7 +278,9 @@ to_field 'lc_1letter_facet', extract_marc('050a') do |_record, accumulator|
 
   first_letter = accumulator[0].lstrip.slice(0, 1)
   letters = regex_to_extract_data_from_a_string accumulator[0], /([[:alpha:]])*/
-  lc1letter = Traject::TranslationMap.new('callnumber_map')[first_letter] unless Traject::TranslationMap.new('callnumber_map')[letters].nil?
+  unless Traject::TranslationMap.new('callnumber_map')[letters].nil?
+    lc1letter = Traject::TranslationMap.new('callnumber_map')[first_letter]
+  end
   accumulator.replace [lc1letter]
 end
 

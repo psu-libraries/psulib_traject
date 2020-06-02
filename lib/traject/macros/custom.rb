@@ -81,7 +81,9 @@ module Traject
             genre = extractor.collect_subfields(field, spec).first
             include_genre = true
             unless genre.nil?
-              include_genre = vocabulary.include?(field['2'].to_s.downcase) if (field.tag == '655') && (field.indicator2 == '7')
+              if (field.tag == '655') && (field.indicator2 == '7')
+                include_genre = vocabulary.include?(field['2'].to_s.downcase)
+              end
               genres << Traject::Macros::Marc21.trim_punctuation(genre) if include_genre
             end
           end
@@ -193,7 +195,9 @@ module Traject
           record.fields(['035']).each do |field|
             unless field.nil?
               unless field['a'].nil?
-                subfield = regex_split(field['a'], //).map { |x| x[/\d+/] }.compact.join('') if Custom.includes_oclc_indicators?(field['a'])
+                if Custom.includes_oclc_indicators?(field['a'])
+                  subfield = regex_split(field['a'], //).map { |x| x[/\d+/] }.compact.join('')
+                end
                 accumulator << subfield
               end
             end
@@ -211,7 +215,6 @@ module Traject
 
       # Extract ht_id
       def extract_ht_id
-          # require 'pry'
         lambda do |_record, accumulator, context|
           oclc_number = context.output_hash&.dig('oclc_number_ssim')&.first
           accumulator << HATHI_ETAS_OVERLAP[oclc_number]
