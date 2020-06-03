@@ -5,6 +5,8 @@ SimpleCov.start do
   add_filter '/spec/'
 end
 
+ENV['RUBY_ENVIRONMENT'] = 'test'
+
 require 'rspec'
 require 'traject'
 require_relative '../lib/traject/readers/marc_combining_reader'

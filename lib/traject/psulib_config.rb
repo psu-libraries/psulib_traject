@@ -25,30 +25,35 @@ MarcExtractor = Traject::MarcExtractor
 require 'traject/macros/custom'
 extend Traject::Macros::Custom
 
-ATOZ = ('a'..'z').to_a.join('')
-ATOU = ('a'..'u').to_a.join('')
-
 indexer_settings = YAML.load_file("config/indexer_settings_#{ENV['RUBY_ENVIRONMENT']}.yml")
 
-SOLR_URL = ENV['RUBY_ENVIRONMENT'] == 'production' ? ENV['SOLR_URL'] : indexer_settings['solr_url']
-
 settings do
-  provide 'solr.url', SOLR_URL
-  provide 'log.batch_size', indexer_settings['log_batch_size']
-  provide 'solr.version', indexer_settings['solr_version']
-  provide 'log.file', indexer_settings['log_file']
-  provide 'log.error_file', indexer_settings['log_error_file']
-  provide 'solr_writer.commit_on_close', indexer_settings['solr_writer_commit_on_close']
-  provide 'reader_class_name', indexer_settings['reader_class_name']
-  provide 'commit_timeout', indexer_settings['commit_timeout']
+  provide 'solr.url', ENV['SOLR_URL'] || 'http://localhost:8983/solr/psul_blacklight'
+  provide 'log.batch_size', '100_000'
+  provide 'solr.version', '7.4'
+  provide 'log.file', indexer_settings['log_file'] || 'log/traject.log'
+  provide 'log.error_file', indexer_settings['log_error_file'] || 'log/traject_error.log'
+  provide 'solr_writer.commit_on_close', true
+  provide 'reader_class_name', 'Traject::MarcCombiningReader'
+  provide 'commit_timeout', '10000'
+  provide 'hathi_overlap_path', indexer_settings['hathi_overlap_path'] || '/data/hathitrust_data/'
+  provide 'hathi_overlap_file', indexer_settings['hathi_overlap_file'] || 'final_hathi_overlap.csv'
 
   if is_jruby
-    provide 'marc4j_reader.permissive', indexer_settings['marc4j_reader_permissive']
-    provide 'marc4j_reader.source_encoding', indexer_settings['marc4j_reader_source_encoding']
-    # defaults to 1 less than the number of processors detected on your machine
-    provide 'processing_thread_pool', indexer_settings['processing_thread_pool'].to_i
+    provide 'marc4j_reader.permissive', true
+    provide 'marc4j_reader.source_encoding', 'UTF-8'
+    provide 'processing_thread_pool', indexer_settings['processing_thread_pool'].to_i || 7
   end
 end
+
+# This HATHI_ETAS_OVERLAP constant is expected to be a two column csv of htid and oclc numbers. It is
+# created by a process described at
+# https://github.com/psu-libraries/psulib_blacklight/wiki/Synthesizing-overlap-data-from-HathiTrust
+# @todo replace above with rake task
+hathi_overlap_csv = "#{settings['hathi_overlap_path']}#{settings['hathi_overlap_file']}"
+Traject::Macros::Custom::HATHI_ETAS_OVERLAP = CSV.read(hathi_overlap_csv).map(&:reverse).to_h
+ATOZ = ('a'..'z').to_a.join('')
+ATOU = ('a'..'u').to_a.join('')
 
 logger.info RUBY_DESCRIPTION
 

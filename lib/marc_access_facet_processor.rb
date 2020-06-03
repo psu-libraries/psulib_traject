@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'csv'
-
 # Determines the access status of a record, how patrons are able to acquire an item.
 # https://github.com/psu-libraries/psulib_blacklight/wiki/Access-Facet
 class MarcAccessFacetProcessor

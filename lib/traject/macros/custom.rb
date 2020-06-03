@@ -2,10 +2,6 @@
 
 SEPARATOR = '—'
 NOT_FULLTEXT = /addendum|appendices|appendix|appendixes|cover|excerpt|executive summary|index/i.freeze
-# This HATHI_ETAS_OVERLAP constant is expected to be a two column csv of htid and oclc numbers. It is
-# created by a process described at
-# https://github.com/psu-libraries/psulib_blacklight/wiki/Synthesizing-overlap-data-from-HathiTrust
-HATHI_ETAS_OVERLAP = CSV.read('final_overlap_may.csv').map(&:reverse).to_h
 ESTIMATE_TOLERANCE = 15
 MIN_YEAR = 500
 MAX_YEAR = Time.new.year + 6
