@@ -114,9 +114,7 @@ class MarcFormatProcessor
 
   # Check if government document using leader byte 6 and 008 also not university_press?
   def government_document?(record)
-    unless university_press? record
-      record.leader[6] == 'a' && record['008'] && /[acfilmosz]/.match?(record['008'].value[28])
-    end
+    record.leader[6] == 'a' && record['008'] && /[acfilmosz]/.match?(record['008'].value[28]) unless university_press? record
   end
 
   # Check if 260b OR 264b contain variations of "University Press"

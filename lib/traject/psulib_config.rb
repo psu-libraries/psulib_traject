@@ -14,6 +14,7 @@ require 'marc_media_type_processor'
 require 'marc_access_facet_processor'
 require 'traject/regex_split'
 require 'traject/readers/marc_combining_reader'
+require 'csv'
 require 'yaml'
 
 extend Traject::Macros::Marc21
@@ -283,9 +284,7 @@ to_field 'lc_1letter_facet', extract_marc('050a') do |_record, accumulator|
 
   first_letter = accumulator[0].lstrip.slice(0, 1)
   letters = regex_to_extract_data_from_a_string accumulator[0], /([[:alpha:]])*/
-  unless Traject::TranslationMap.new('callnumber_map')[letters].nil?
-    lc1letter = Traject::TranslationMap.new('callnumber_map')[first_letter]
-  end
+  lc1letter = Traject::TranslationMap.new('callnumber_map')[first_letter] unless Traject::TranslationMap.new('callnumber_map')[letters].nil?
   accumulator.replace [lc1letter]
 end
 

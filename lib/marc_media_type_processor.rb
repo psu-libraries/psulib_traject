@@ -151,9 +151,7 @@ class MarcMediaTypeProcessor
       field300a = extractor.collect_subfields(field, spec).first
       media_types << 'Microfilm/Microfiche' if field300a =~ Regexp.union(/microfilm/i, /microfiche/i)
       media_types << 'Photo' if field300a =~ /photograph/i
-      if field300a =~ Regexp.union(/remote-sensing image/i, /remote sensing image/i)
-        media_types << 'Remote-sensing image'
-      end
+      media_types << 'Remote-sensing image' if field300a =~ Regexp.union(/remote-sensing image/i, /remote sensing image/i)
       media_types << 'Slide' if field300a =~ /slide/i
     end
 

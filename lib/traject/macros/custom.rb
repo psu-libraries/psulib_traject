@@ -77,9 +77,7 @@ module Traject
             genre = extractor.collect_subfields(field, spec).first
             include_genre = true
             unless genre.nil?
-              if (field.tag == '655') && (field.indicator2 == '7')
-                include_genre = vocabulary.include?(field['2'].to_s.downcase)
-              end
+              include_genre = vocabulary.include?(field['2'].to_s.downcase) if (field.tag == '655') && (field.indicator2 == '7')
               genres << Traject::Macros::Marc21.trim_punctuation(genre) if include_genre
             end
           end
@@ -191,9 +189,7 @@ module Traject
           record.fields(['035']).each do |field|
             unless field.nil?
               unless field['a'].nil?
-                if Custom.includes_oclc_indicators?(field['a'])
-                  subfield = regex_split(field['a'], //).map { |x| x[/\d+/] }.compact.join('')
-                end
+                subfield = regex_split(field['a'], //).map { |x| x[/\d+/] }.compact.join('') if Custom.includes_oclc_indicators?(field['a'])
                 accumulator << subfield
               end
             end
