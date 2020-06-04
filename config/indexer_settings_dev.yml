@@ -2,4 +2,4 @@
 
 processing_thread_pool: 5
 hathi_overlap_path: ignorethis_hathi/
-hathi_overlap_file: final_overlap_may.csv
+hathi_overlap_file: final_hathi_overlap.csv

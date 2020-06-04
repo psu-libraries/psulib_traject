@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-HATHI_DATA_HOME = '/data/hathitrust_data'
-
 namespace :hathitrust do
   desc 'Process overlap file for emergency access to restricted HathiTrust material'
   task :process_hathi_etas, [:hathi_full, :overlap_psu] do |_task, args|
-    Dir.chdir(HATHI_DATA_HOME.to_s) do
+    indexer_settings = YAML.load_file("config/indexer_settings_#{ENV['RUBY_ENVIRONMENT']}.yml")
+
+    Dir.chdir(indexer_settings['hathi_overlap_path']) do
       Rake::Task['hathitrust:pare_hathi_full'].invoke(args[:hathi_full])
       Rake::Task['hathitrust:extract_overlap_oclc'].invoke(args[:overlap_psu])
       Rake::Task['hathitrust:filter_overlap'].invoke
