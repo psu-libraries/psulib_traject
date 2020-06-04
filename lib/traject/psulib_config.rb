@@ -14,6 +14,7 @@ require 'marc_media_type_processor'
 require 'marc_access_facet_processor'
 require 'traject/regex_split'
 require 'traject/readers/marc_combining_reader'
+require 'csv'
 require 'yaml'
 
 extend Traject::Macros::Marc21
@@ -25,30 +26,35 @@ MarcExtractor = Traject::MarcExtractor
 require 'traject/macros/custom'
 extend Traject::Macros::Custom
 
-ATOZ = ('a'..'z').to_a.join('')
-ATOU = ('a'..'u').to_a.join('')
-
 indexer_settings = YAML.load_file("config/indexer_settings_#{ENV['RUBY_ENVIRONMENT']}.yml")
 
-SOLR_URL = ENV['RUBY_ENVIRONMENT'] == 'production' ? ENV['SOLR_URL'] : indexer_settings['solr_url']
-
 settings do
-  provide 'solr.url', SOLR_URL
-  provide 'log.batch_size', indexer_settings['log_batch_size']
-  provide 'solr.version', indexer_settings['solr_version']
-  provide 'log.file', indexer_settings['log_file']
-  provide 'log.error_file', indexer_settings['log_error_file']
-  provide 'solr_writer.commit_on_close', indexer_settings['solr_writer_commit_on_close']
-  provide 'reader_class_name', indexer_settings['reader_class_name']
-  provide 'commit_timeout', indexer_settings['commit_timeout']
+  provide 'solr.url', ENV['SOLR_URL'] || 'http://localhost:8983/solr/psul_blacklight'
+  provide 'log.batch_size', '100_000'
+  provide 'solr.version', '7.4'
+  provide 'log.file', indexer_settings['log_file'] || 'log/traject.log'
+  provide 'log.error_file', indexer_settings['log_error_file'] || 'log/traject_error.log'
+  provide 'solr_writer.commit_on_close', true
+  provide 'reader_class_name', 'Traject::MarcCombiningReader'
+  provide 'commit_timeout', '10000'
+  provide 'hathi_overlap_path', indexer_settings['hathi_overlap_path'] || '/data/hathitrust_data/'
+  provide 'hathi_overlap_file', indexer_settings['hathi_overlap_file'] || 'final_hathi_overlap.csv'
 
   if is_jruby
-    provide 'marc4j_reader.permissive', indexer_settings['marc4j_reader_permissive']
-    provide 'marc4j_reader.source_encoding', indexer_settings['marc4j_reader_source_encoding']
-    # defaults to 1 less than the number of processors detected on your machine
-    provide 'processing_thread_pool', indexer_settings['processing_thread_pool'].to_i
+    provide 'marc4j_reader.permissive', true
+    provide 'marc4j_reader.source_encoding', 'UTF-8'
+    provide 'processing_thread_pool', indexer_settings['processing_thread_pool'].to_i || 7
   end
 end
+
+# This HATHI_ETAS_OVERLAP constant is expected to be a two column csv of htid and oclc numbers. It is
+# created by a process described at
+# https://github.com/psu-libraries/psulib_blacklight/wiki/Synthesizing-overlap-data-from-HathiTrust
+# @todo replace above with rake task
+hathi_overlap_csv = "#{settings['hathi_overlap_path']}#{settings['hathi_overlap_file']}"
+Traject::Macros::Custom::HATHI_ETAS_OVERLAP = CSV.read(hathi_overlap_csv).map(&:reverse).to_h
+ATOZ = ('a'..'z').to_a.join('')
+ATOU = ('a'..'u').to_a.join('')
 
 logger.info RUBY_DESCRIPTION
 
@@ -61,7 +67,7 @@ end
 # Identifiers
 #
 ## Catkey
-to_field 'id', extract_marc('001', first: true)
+to_field 'id', extract_marc('001'), first_only, strip
 
 ## ISBN
 to_field 'isbn_sim', extract_marc('020az', separator: nil) do |_record, accumulator|
@@ -78,7 +84,7 @@ to_field('isbn_valid_ssm', extract_marc('020a', separator: nil)) do |_record, ac
   accumulator.uniq!
 end
 
-to_field 'isbn_ssm', extract_marc('020aqz', separator: ' ', trim_punctuation: true)
+to_field 'isbn_ssm', extract_marc('020aqz', separator: ' '), trim_punctuation
 
 ## ISSN
 to_field 'issn_sim', extract_marc('022a:022l:022m:022y:022z', separator: nil) do |_record, accumulator|
@@ -96,13 +102,13 @@ to_field 'issn_ssm', extract_marc('022a', separator: nil)
 to_field 'oclc_number_ssim', extract_oclc_number
 
 # Library of Congress number
-to_field 'lccn_ssim', extract_marc('010a', trim_punctuation: true)
+to_field 'lccn_ssim', extract_marc('010a'), trim_punctuation
 
 # Title fields
 #
 ## Title Search Fields
 to_field 'title_tsim', extract_marc('245a')
-to_field 'title_245ab_tsim', extract_marc('245ab', trim_punctuation: true)
+to_field 'title_245ab_tsim', extract_marc('245ab'), trim_punctuation
 to_field 'title_addl_tsim', extract_marc(%W[
   245abnps
   130#{ATOZ}
@@ -144,13 +150,13 @@ to_field 'title_related_tsim', extract_marc(%w[
   796lktmnoprs
   797lktmnoprs
   798lktmnoprs
-].join(':'), trim_punctuation: true) do |record, accumulator|
+].join(':')), trim_punctuation do |record, accumulator|
   accumulator.each { |value| value.chomp!(' --') } unless record.fields('505').empty?
 end
 
 ## Title Display Fields
-to_field 'title_latin_display_ssm', extract_marc('245abcfghknps', alternate_script: false, trim_punctuation: true)
-to_field 'title_vern', extract_marc('245abcfghknps', alternate_script: :only, trim_punctuation: true)
+to_field 'title_latin_display_ssm', extract_marc('245abcfghknps', alternate_script: false), trim_punctuation
+to_field 'title_vern', extract_marc('245abcfghknps', alternate_script: :only), trim_punctuation
 # use vern title as title_display_ssm if exists
 # otherwise use latin character title as title_display_ssm
 each_record do |_record, context|
@@ -166,16 +172,16 @@ each_record do |_record, context|
     context.output_hash.delete('title_vern')
   end
 end
-to_field 'uniform_title_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai', trim_punctuation: true)
-to_field 'additional_title_display_ssm', extract_marc('210ab:246iabfgnp:247abcdefgnp', trim_punctuation: true)
-to_field 'related_title_display_ssm', extract_marc('730adfgiklmnoprst3:740anp', trim_punctuation: true)
+to_field 'uniform_title_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai'), trim_punctuation
+to_field 'additional_title_display_ssm', extract_marc('210ab:246iabfgnp:247abcdefgnp'), trim_punctuation
+to_field 'related_title_display_ssm', extract_marc('730adfgiklmnoprst3:740anp'), trim_punctuation
 
 ## Title Sort Fields
 to_field 'title_sort', marc_sortable_title
 
 ## Series Titles
 to_field 'series_title_tsim', extract_marc('440anpv:490av')
-to_field 'series_title_display_ssm', extract_marc('490avlx3:440anpvx', alternate_script: false, trim_punctuation: true)
+to_field 'series_title_display_ssm', extract_marc('490avlx3:440anpvx', alternate_script: false), trim_punctuation
 
 # Author fields
 #
@@ -186,18 +192,21 @@ to_field 'author_tsim', extract_marc('100aqbcdk:110abcdfgkln:111abcdfgklnpq')
 to_field 'author_addl_tsim', extract_marc('700aqbcdk:710abcdfgkln:711abcdfgklnpq')
 
 ## Authors for faceting
-to_field 'all_authors_facet', extract_marc('100aqbcdkj:110abcdfgklnj:111abcdfgklnpqj:700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq', trim_punctuation: true)
+to_field 'all_authors_facet', extract_marc('100aqbcdkj:110abcdfgklnj:111abcdfgklnpqj:700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq'), trim_punctuation
 
 ## Author display
-to_field 'author_person_display_ssm', extract_marc('100aqbcdkj', trim_punctuation: true)
-to_field 'author_corp_display_ssm', extract_marc('110abcdfgklnj', trim_punctuation: true)
-to_field 'author_meeting_display_ssm', extract_marc('111abcdfgklnpqj', trim_punctuation: true)
-to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq', trim_punctuation: true)
+to_field 'author_person_display_ssm', extract_marc('100aqbcdkj'), trim_punctuation
+to_field 'author_corp_display_ssm', extract_marc('110abcdfgklnj'), trim_punctuation
+to_field 'author_meeting_display_ssm', extract_marc('111abcdfgklnpqj'), trim_punctuation
+to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq'), trim_punctuation
+
+# Permanent HathiTrust item identifier
+to_field 'ht_id_ssim', extract_ht_id
 
 ## Access facet
 access_facet_processor = MarcAccessFacetProcessor.new
-to_field 'access_facet' do |record, accumulator|
-  access_facet = access_facet_processor.extract_access_data record
+to_field 'access_facet' do |record, accumulator, context|
+  access_facet = access_facet_processor.extract_access_data record, context
   accumulator.replace(access_facet) unless !access_facet || access_facet.empty?
 end
 
@@ -219,7 +228,7 @@ end
 # Publication fields
 #
 ## Publisher/Manufacturer for search
-to_field 'publisher_manufacturer_tsim', extract_marc('260b:264|*1|b:260f:264|*3|b', trim_punctuation: true)
+to_field 'publisher_manufacturer_tsim', extract_marc('260b:264|*1|b:260f:264|*3|b'), trim_punctuation
 
 ## Publication year facet (sidebar)
 to_field 'pub_date_itsi', process_publication_date
@@ -231,9 +240,9 @@ to_field 'copyright_display_ssm', extract_marc('264|*4|c')
 to_field 'edition_display_ssm', extract_marc('250ab3')
 
 ## Publication fields for Illiad and Aeon
-to_field 'pub_date_illiad_ssm', extract_marc('260c:264|*1|c', trim_punctuation: true)
-to_field 'publisher_name_ssm', extract_marc('260b:264|*1|b', trim_punctuation: true)
-to_field 'publication_place_ssm', extract_marc('260a:264|*1|a', trim_punctuation: true)
+to_field 'pub_date_illiad_ssm', extract_marc('260c:264|*1|c'), trim_punctuation
+to_field 'publisher_name_ssm', extract_marc('260b:264|*1|b'), trim_punctuation
+to_field 'publication_place_ssm', extract_marc('260a:264|*1|a'), trim_punctuation
 
 to_field 'language_facet', marc_languages('008[35-37]')
 
@@ -267,7 +276,7 @@ to_field 'genre_facet', process_genre('650|*0|v:655|*0|a:655|*7|a')
 to_field 'genre_display_ssm', process_genre('655|*0|abcvxyz:655|*7|abcvxyz')
 
 ## For genre links
-to_field 'genre_full_facet', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz', trim_punctuation: true)
+to_field 'genre_full_facet', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz'), trim_punctuation
 
 # Call Number fields
 to_field 'lc_1letter_facet', extract_marc('050a') do |_record, accumulator|
@@ -290,10 +299,10 @@ end
 # Material Characteristics
 #
 ## 300 / 340 Physical description / physical medium
-to_field 'phys_desc_ssm', extract_marc('300abcefg3:340abcdefhijkmno3', trim_punctuation: true)
+to_field 'phys_desc_ssm', extract_marc('300abcefg3:340abcdefhijkmno3'), trim_punctuation
 
 ## 380 Form of work
-to_field 'form_work_ssm', extract_marc('380a', trim_punctuation: true)
+to_field 'form_work_ssm', extract_marc('380a'), trim_punctuation
 
 ## Work other characteristics
 
@@ -543,11 +552,11 @@ end
 # Place
 #
 # UP Library facet
-to_field 'up_library_facet', extract_marc('949m', translation_map: 'up_libraries')
+to_field 'up_library_facet', extract_marc('949m'), translation_map('up_libraries')
 # Campus facet
-to_field 'campus_facet', extract_marc('949m', translation_map: 'campuses')
+to_field 'campus_facet', extract_marc('949m'), translation_map('campuses')
 # All libraries (in psulib_blacklight this is used only in advanced search)
-to_field 'library_facet', extract_marc('949m', translation_map: 'libraries')
+to_field 'library_facet', extract_marc('949m'), translation_map('libraries')
 
 # Serials fields
 #

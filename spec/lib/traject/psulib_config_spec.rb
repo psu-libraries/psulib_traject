@@ -43,4 +43,30 @@ RSpec.describe 'Psulib_config spec:' do
       expect(result['lc_rest_facet']).to eq ['AC - Collections Works']
     end
   end
+
+  describe 'id' do
+    context 'one record with trailing whitespace' do
+      let(:id) do
+        { '001' => '2 ' }
+      end
+      let(:result) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [id], 'leader' => leader)) }
+
+      it 'should strip off white space at the end' do
+        expect(result['id']).to eq ['2']
+      end
+    end
+    context 'one record with two 001 values' do
+      let(:id1) do
+        { '001' => '2' }
+      end
+      let(:id2) do
+        { '001' => '3' }
+      end
+      let(:result) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [id1, id2], 'leader' => leader)) }
+
+      it 'should only take the first match' do
+        expect(result['id']).to eq ['2']
+      end
+    end
+  end
 end

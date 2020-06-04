@@ -204,6 +204,15 @@ module Traject
           sf_a.include?('ocm') ||
           sf_a.include?('OCLC')
       end
+
+      # Extract ht_id
+      def extract_ht_id
+        lambda do |_record, accumulator, context|
+          oclc_number = context.output_hash&.dig('oclc_number_ssim')&.first
+          accumulator << HATHI_ETAS_OVERLAP[oclc_number]
+          accumulator.compact
+        end
+      end
     end
   end
 end
