@@ -11,7 +11,7 @@ RSpec.describe 'Macros spec:' do
     @indexer.load_config_file(c)
   end
 
-  describe '#extract_link_date' do
+  describe '#extract_link_data' do
     context 'A record where indicator 2 is 0 and magic word is not in one of the label subfields' do
       let(:url_856_1) do
         { '856' => { 'ind1' => '0', 'ind2' => '0', 'subfields' => [{ 'u' => 'https://scholarsphere.psu.edu/files/02870v8'\
