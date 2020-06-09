@@ -90,7 +90,7 @@ GEM
       parser (>= 2.7.0.1)
     ruby-progressbar (1.10.1)
     scrub_rb (1.0.1)
-    simplecov (0.16.1)
+    simplecov (0.17.1)
       docile (~> 1.1)
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
