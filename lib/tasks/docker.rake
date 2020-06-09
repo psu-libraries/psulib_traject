@@ -11,7 +11,7 @@ namespace :docker do
     else
       Rake::Task['docker:start'].invoke
       Rake::Task['docker:conf'].invoke
-      Rake::Task['docker::down'].invoke
+      Rake::Task['docker:down'].invoke
       Rake::Task['docker:start'].invoke
     end
 
