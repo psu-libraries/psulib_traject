@@ -205,12 +205,24 @@ module Traject
           sf_a.include?('OCLC')
       end
 
+      # Extract ht_bib_key
+      def extract_ht_bib_key
+        lambda do |_record, accumulator, context|
+          oclc_number = context.output_hash&.dig('oclc_number_ssim')&.first
+          accumulator << HATHI_MULTI_OVERLAP&.dig(oclc_number, :ht_bib_key)
+          accumulator.compact
+        end
+      end
+
       # Extract ht_id
       def extract_ht_id
         lambda do |_record, accumulator, context|
-          oclc_number = context.output_hash&.dig('oclc_number_ssim')&.first
-          accumulator << HATHI_ETAS_OVERLAP[oclc_number]
-          accumulator.compact
+          ht_bib_key = context.output_hash&.dig('ht_bib_key_ssim')&.first
+          if ht_bib_key.nil?
+            oclc_number = context.output_hash&.dig('oclc_number_ssim')&.first
+            accumulator << HATHI_MONO_OVERLAP&.dig(oclc_number, :ht_id)
+            accumulator.compact
+          end
         end
       end
     end
