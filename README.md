@@ -18,7 +18,7 @@ $ java --version
 Follow these instructions to [install JRuby](https://github.com/psu-libraries/psulib_traject/wiki/Install-JRuby) if you do not already have it.
 ```
 $ ruby --version
-  jruby 9.2.5.0
+  jruby 9.2.11.1
 ```
 
 ## Development Setup
