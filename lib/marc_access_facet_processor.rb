@@ -25,7 +25,8 @@ class MarcAccessFacetProcessor
       end
     end
 
-    access << 'Online' if context.output_hash&.dig('ht_id_ssim') || context.output_hash&.dig('ht_bib_key_ssim')
+    # TODO: after ETAS JSON.parse(context.output_hash&.dig('hathitrust_struct')&.first)["access"] == 'allow'
+    access << 'Online' if context.output_hash&.dig('hathitrust_struct')
     access.compact!
     access.uniq!
     access.delete 'On Order' if not_only_on_order? access
