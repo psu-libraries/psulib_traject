@@ -32,6 +32,11 @@ RSpec.describe 'Subjects spec:' do
       expect(result['access_facet']).to contain_exactly 'In the Library', 'Online'
     end
 
+    it 'produces a uniq set of access facet values' do
+      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'access_uniq.mrc')).to_a.first)
+      expect(result['access_facet']).to contain_exactly 'Online', 'In the Library'
+    end
+
     it 'produces Other when a record has a 949m library code that is not listed' do
       result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'access_other.mrc')).to_a.first)
       expect(result['access_facet']).to contain_exactly 'Other'

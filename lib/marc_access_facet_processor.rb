@@ -26,7 +26,7 @@ class MarcAccessFacetProcessor
     end
 
     access << 'Online' if context.output_hash&.dig('ht_id_ssim')
-    access.compact.uniq
+    access = access.compact.uniq
     access.delete 'On Order' if not_only_on_order? access
     access
   end
