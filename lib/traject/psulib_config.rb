@@ -43,7 +43,7 @@ settings do
   if is_jruby
     provide 'marc4j_reader.permissive', true
     provide 'marc4j_reader.source_encoding', 'UTF-8'
-    provide 'processing_thread_pool', indexer_settings['processing_thread_pool'].to_i || 7
+    provide 'processing_thread_pool', (indexer_settings['processing_thread_pool'] || '7').to_i
   end
 end
 
