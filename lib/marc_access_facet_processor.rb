@@ -25,8 +25,12 @@ class MarcAccessFacetProcessor
       end
     end
 
-    # TODO: after ETAS JSON.parse(context.output_hash&.dig('hathitrust_struct')&.first)["access"] == 'allow'
-    access << 'Online' if context.output_hash&.dig('hathitrust_struct')
+    hathitrust_struct = context.output_hash&.dig('hathitrust_struct')
+    hathitrust_etas = context.settings['hathi_etas']
+    if hathitrust_struct
+      access << 'Online' if JSON.parse(hathitrust_struct&.first)['access'] == 'allow' && !hathitrust_etas
+      access << 'Online' if hathitrust_etas
+    end
     access.compact!
     access.uniq!
     access.delete 'On Order' if not_only_on_order? access

@@ -6,3 +6,4 @@ hathi_mono_overlap_file: final_hathi_mono_overlap.csv
 hathi_multi_overlap_file: final_hathi_multi_overlap.csv
 hathi_load_period: 20200501
 overlap_file: overlap_20200518_psu.tsv
+hathi_etas: true
