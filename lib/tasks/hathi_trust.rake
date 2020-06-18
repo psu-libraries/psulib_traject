@@ -12,7 +12,6 @@ namespace :hathitrust do
       Rake::Task['hathitrust:extract_overlap_oclc'].invoke(indexer_settings['overlap_file'])
       Rake::Task['hathitrust:split_overlap_oclc'].invoke
       Rake::Task['hathitrust:filter_overlap'].invoke
-      # Rake::Task['hathitrust:extract_uniq_oclc'].invoke
     end
   end
 
@@ -53,15 +52,10 @@ namespace :hathitrust do
   task :filter_overlap do
     print `csvgrep -c 1 -f overlap_mono_unique.csv hathi_full_dedupe_with_headers.csv | \
                csvcut -C 3 | \
-               sort | uniq > hathi_filtered_by_mono_overlap.csv`
+               sort | uniq > final_hathi_mono_overlap.csv`
 
     print `csvgrep -c 1 -f overlap_multi_unique.csv hathi_full_dedupe_with_headers.csv | \
                csvcut -C 2 | \
-               sort | uniq > hathi_filtered_by_multi_overlap.csv`
-  end
-
-  desc 'Extract the unique set of OCLC numbers from the filtered data'
-  task :extract_uniq_oclc do
-    print `sort -t, -k2 -u hathi_filtered_by_overlap.csv > final_hathi_overlap.csv`
+               sort | uniq > final_hathi_multi_overlap.csv`
   end
 end

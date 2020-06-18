@@ -205,6 +205,14 @@ module Traject
           sf_a.include?('OCLC')
       end
 
+      def extract_hathi_data
+        lambda do |_record, accumulator, context|
+          oclc_number = context.output_hash&.dig('oclc_number_ssim')&.first
+          ht_hash = HATHI_MULTI_OVERLAP&.dig(oclc_number)&.first || HATHI_MONO_OVERLAP&.dig(oclc_number)&.first
+          accumulator << ht_hash.to_json unless ht_hash.nil?
+        end
+      end
+
       def hathi_to_hash(ht_format)
         hathi_overlap_csv = "#{settings['hathi_overlap_path']}#{settings["hathi_#{ht_format}_overlap_file"]}"
         CSV.read(hathi_overlap_csv)

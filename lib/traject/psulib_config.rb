@@ -38,8 +38,8 @@ settings do
   provide 'reader_class_name', 'Traject::MarcCombiningReader'
   provide 'commit_timeout', '10000'
   provide 'hathi_overlap_path', indexer_settings['hathi_overlap_path'] || '/data/hathitrust_data/'
-  provide 'hathi_mono_overlap_file', indexer_settings['hathi_mono_overlap_file'] || 'hathi_filtered_by_mono_overlap.csv'
-  provide 'hathi_multi_overlap_file', indexer_settings['hathi_multi_overlap_file'] || 'hathi_filtered_by_multi_overlap.csv'
+  provide 'hathi_mono_overlap_file', indexer_settings['hathi_mono_overlap_file'] || 'final_hathi_mono_overlap.csv'
+  provide 'hathi_multi_overlap_file', indexer_settings['hathi_multi_overlap_file'] || 'final_hathi_multi_overlap.csv'
 
   if is_jruby
     provide 'marc4j_reader.permissive', true
@@ -202,11 +202,7 @@ to_field 'author_meeting_display_ssm', extract_marc('111abcdfgklnpqj'), trim_pun
 to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq'), trim_punctuation
 
 # HathiTrust fields
-to_field 'hathitrust_struct' do |_record, accumulator, context|
-  oclc_number = context.output_hash&.dig('oclc_number_ssim')&.first
-  ht_hash = HATHI_MULTI_OVERLAP&.dig(oclc_number)&.first || HATHI_MONO_OVERLAP&.dig(oclc_number)&.first
-  accumulator << ht_hash.to_json unless ht_hash.nil?
-end
+to_field 'hathitrust_struct', extract_hathi_data
 
 ## Access facet
 access_facet_processor = MarcAccessFacetProcessor.new
