@@ -25,12 +25,7 @@ class MarcAccessFacetProcessor
       end
     end
 
-    hathitrust_struct = context.output_hash&.dig('hathitrust_struct')
-    hathitrust_etas = context.settings['hathi_etas']
-    if hathitrust_struct
-      access << 'Online' if JSON.parse(hathitrust_struct&.first)['access'] == 'allow' && !hathitrust_etas
-      access << 'Online' if hathitrust_etas
-    end
+    access << 'Online' if hathi_access? context
     access.compact!
     access.uniq!
     access.delete 'On Order' if not_only_on_order? access
@@ -47,5 +42,13 @@ class MarcAccessFacetProcessor
     return 'In the Library' unless field['l'] == 'ON-ORDER'
 
     'On Order'
+  end
+
+  def hathi_access?(context)
+    hathitrust_struct = context.output_hash&.dig('hathitrust_struct')
+    hathitrust_etas = context.settings['hathi_etas']
+    return false unless hathitrust_struct
+
+    hathitrust_etas || (JSON.parse(hathitrust_struct&.first)['access'] == 'allow' && !hathitrust_etas)
   end
 end
