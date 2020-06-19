@@ -20,7 +20,7 @@ namespace :hathitrust do
     print `curl -s -O 'https://www.hathitrust.org/sites/www.hathitrust.org/files/hathifiles/hathi_full_#{args[:period]}.txt.gz'`
   end
 
-  desc 'Pare the monthly file down to just the needed data: OCLC number, Hathi Trust id, Hathi Trust bib_key and Hathi Turst access code'
+  desc 'Pare the monthly file down to just the needed data: OCLC number, HathiTrust id, HathiTrust bib_key and HathiTurst access code'
   task :pare_hathi_full, [:period] do |_task, args|
     print `gunzip -c hathi_full_#{args[:period]}.txt.gz | \
                csvcut -t -c 8,1,4,2 -z 1310720 | \
