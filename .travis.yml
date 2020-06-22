@@ -1,6 +1,6 @@
 language: ruby
 rvm:
-  - jruby-9.2.7.0
+  - jruby-9.2.9.0
 sudo: false
 
 env:
