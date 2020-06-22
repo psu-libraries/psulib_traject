@@ -27,6 +27,7 @@ cache:
   bundler: true
 
 script:
+  - set JRUBY_OPTS="--debug"
   - bundle exec rubocop
   - bundle exec rake
 

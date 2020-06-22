@@ -2,7 +2,6 @@
 
 require 'simplecov'
 SimpleCov.start do
-  @filters = []
   add_filter '/spec/'
 end
 
