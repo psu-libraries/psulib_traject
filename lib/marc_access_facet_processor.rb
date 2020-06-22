@@ -49,6 +49,6 @@ class MarcAccessFacetProcessor
     hathitrust_etas = context.settings['hathi_etas']
     return false unless hathitrust_struct
 
-    hathitrust_etas || (JSON.parse(hathitrust_struct&.first)['access'] == 'allow' && !hathitrust_etas)
+    hathitrust_etas || JSON.parse(hathitrust_struct&.first)['access'] == 'allow'
   end
 end
