@@ -219,4 +219,32 @@ RSpec.describe 'Macros spec:' do
       end
     end
   end
+
+  describe '#hathi_to_hash' do
+    let(:result) { @indexer.hathi_to_hash(ht_format) }
+
+    context 'for hathi records with mono item type' do
+      let(:ht_format) { 'mono' }
+
+      it 'produces hathi data ' do
+        expect(result['1000']).to match [{ ht_id: 'wu.89030498562', access: 'deny' }]
+      end
+
+      it 'prefers the record with allow access if there are multiple copies with same oclc' do
+        expect(result['1000021']).to match [{ ht_id: 'uc1.b3547182', access: 'allow' }]
+      end
+    end
+
+    context 'for hathi records with mono item type' do
+      let(:ht_format) { 'multi' }
+
+      it 'produces hathi data correctly' do
+        expect(result['100000391']).to match [{ ht_bib_key: '012292266', access: 'allow' }]
+      end
+
+      it 'prefers the record with allow access if there are multiple copies with same oclc' do
+        expect(result['1000061']).to match [{ ht_bib_key: '005893467', access: 'allow' }]
+      end
+    end
+  end
 end
