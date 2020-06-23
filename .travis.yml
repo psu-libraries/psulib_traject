@@ -6,6 +6,7 @@ sudo: false
 env:
   global:
     - CC_TEST_REPORTER_ID=07da8f2c9c45d37c15805939c790c778c49a170181ade9ad453ad6cb1f13bbfd
+    - GIT_COMMITTED_AT=$(git log -1 --pretty=format:%ct)
 
 branches:
   only:
