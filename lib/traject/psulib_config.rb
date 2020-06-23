@@ -40,7 +40,7 @@ settings do
   provide 'hathi_overlap_path', indexer_settings['hathi_overlap_path'] || '/data/hathitrust_data/'
   provide 'hathi_mono_overlap_file', indexer_settings['hathi_mono_overlap_file'] || 'final_hathi_mono_overlap.csv'
   provide 'hathi_multi_overlap_file', indexer_settings['hathi_multi_overlap_file'] || 'final_hathi_multi_overlap.csv'
-  provide 'hathi_etas', indexer_settings['hathi_etas'] || false
+  provide 'hathi_etas', indexer_settings['hathi_etas'] || true
 
   if is_jruby
     provide 'marc4j_reader.permissive', true

@@ -27,7 +27,7 @@ namespace :hathitrust do
                csvgrep -c 1,2,3,4 -r ".+" | \
                sort | uniq > hathi_full_dedupe.csv`
 
-    print `cat hathi_field_list.txt hathi_full_dedupe.csv > hathi_full_dedupe_with_headers.csv`
+    print `cat hathi_field_list.csv hathi_full_dedupe.csv > hathi_full_dedupe_with_headers.csv`
   end
 
   desc 'Extract the unique set of OCLC numbers and access code from the overlap report'

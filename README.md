@@ -73,7 +73,11 @@ To generate a synthesized HathiTrust overlap report locally, you can run
 RUBY_ENVIRONMENT=dev bundle exec rake hathitrust:process_hathi_etas`.
 ```
 
-You will need the overlap file provided by HathiTrust (`overlap_[date]_psu.tsv`) and [hathi_field_list.txt](https://www.hathitrust.org/filebrowser/download/269539) in your `ignorethis_hathi/` directory.
+You will need the overlap file provided by HathiTrust (`overlap_[date]_psu.tsv`) and `hathi_field_list.csv` with the content
+
+`oclc_num,htid,ht_bib_key,access`
+
+in your `ignorethis_hathi/` directory.
 
 Also make sure the below settings in your `indexer_settings_dev.yml` file are set with the correct info:
 
