@@ -77,7 +77,7 @@ You will need the overlap file provided by HathiTrust (`overlap_[date]_psu.tsv`)
 
 `oclc_num,htid,ht_bib_key,access`
 
-in your `ignorethis_hathi/` directory.
+in your `ignorethis_hathi/` directory (or whatever directory path you set in `hathi_overlap_path`).
 
 Also make sure the below settings in your `indexer_settings_dev.yml` file are set with the correct info:
 
