@@ -38,8 +38,6 @@ settings do
   provide 'reader_class_name', 'Traject::MarcCombiningReader'
   provide 'commit_timeout', '10000'
   provide 'hathi_overlap_path', indexer_settings['hathi_overlap_path'] || '/data/hathitrust_data/'
-  provide 'hathi_mono_overlap_file', indexer_settings['hathi_mono_overlap_file'] || 'final_hathi_mono_overlap.csv'
-  provide 'hathi_multi_overlap_file', indexer_settings['hathi_multi_overlap_file'] || 'final_hathi_multi_overlap.csv'
   provide 'hathi_etas', indexer_settings['hathi_etas'] || true
 
   if is_jruby

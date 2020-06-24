@@ -214,7 +214,7 @@ module Traject
       end
 
       def hathi_to_hash(ht_format)
-        hathi_overlap_csv = "#{settings['hathi_overlap_path']}#{settings["hathi_#{ht_format}_overlap_file"]}"
+        hathi_overlap_csv = "#{settings['hathi_overlap_path']}final_hathi_#{ht_format}_overlap.csv"
         CSV.read(hathi_overlap_csv)
            .group_by(&:shift)
            .each do |_oclc, ht_data|

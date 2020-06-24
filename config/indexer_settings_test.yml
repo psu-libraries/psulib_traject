@@ -2,5 +2,3 @@
 
 processing_thread_pool: 5
 hathi_overlap_path: spec/fixtures/hathitrust/
-hathi_mono_overlap_file: mock_mono_overlap.csv
-hathi_multi_overlap_file: mock_multi_overlap.csv
