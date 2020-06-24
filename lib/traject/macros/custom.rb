@@ -205,12 +205,22 @@ module Traject
           sf_a.include?('OCLC')
       end
 
-      # Extract ht_id
-      def extract_ht_id
+      def extract_hathi_data
         lambda do |_record, accumulator, context|
           oclc_number = context.output_hash&.dig('oclc_number_ssim')&.first
-          accumulator << HATHI_ETAS_OVERLAP[oclc_number]
-          accumulator.compact
+          ht_hash = HATHI_MULTI_OVERLAP&.dig(oclc_number)&.first || HATHI_MONO_OVERLAP&.dig(oclc_number)&.first
+          accumulator << ht_hash.to_json unless ht_hash.nil?
+        end
+      end
+
+      def hathi_to_hash(ht_format)
+        hathi_overlap_csv = "#{settings['hathi_overlap_path']}final_hathi_#{ht_format}_overlap.csv"
+        CSV.read(hathi_overlap_csv)
+           .group_by(&:shift)
+           .each do |_oclc, ht_data|
+          ht_key = ht_format == 'mono' ? :ht_id : :ht_bib_key
+          ht_data.map! { |data| [ht_key, :access].zip(data).to_h }
+          ht_data.reject! { |data| data[:access] == 'deny' } if ht_data.length > 1
         end
       end
     end

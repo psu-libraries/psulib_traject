@@ -192,22 +192,58 @@ RSpec.describe 'Macros spec:' do
     end
   end
 
-  describe '#extract_ht_id' do
+  describe '#extract_hathi_data' do
     let(:result) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [oclc], 'leader' => leader)) }
 
-    context 'when a record does not have a match in the overlap report' do
+    context 'when a record does not have a match in the overlap reports' do
       let(:oclc) { { '035' => { 'ind1' => '', 'ind2' => '', 'subfields' => [{ 'a' => '(OCLC)99999999' }] } } }
 
-      it 'does not produce an ht_id' do
-        expect(result['ht_id_ssim']).to be_nil
+      it 'does not produce a hathitrust_struct' do
+        expect(result['hathitrust_struct']).to be_nil
       end
     end
 
-    context 'when a record has a match in the overlap report' do
+    context 'when a record has a match in the overlap mono report' do
+      let(:oclc) { { '035' => { 'ind1' => '', 'ind2' => '', 'subfields' => [{ 'a' => '(OCLC)100000499' }] } } }
+
+      it 'does maps the ht_id' do
+        expect(result['hathitrust_struct']).to match ['{"ht_id":"mdp.39015069374455","access":"deny"}']
+      end
+    end
+
+    context 'when a record has a match in the overlap multi report' do
       let(:oclc) { { '035' => { 'ind1' => '', 'ind2' => '', 'subfields' => [{ 'a' => '(OCLC)100000391' }] } } }
 
       it 'does maps the ht_id' do
-        expect(result['ht_id_ssim']).to eq(['pst.000019102375'])
+        expect(result['hathitrust_struct']).to match ['{"ht_bib_key":"012292266","access":"allow"}']
+      end
+    end
+  end
+
+  describe '#hathi_to_hash' do
+    let(:result) { @indexer.hathi_to_hash(ht_format) }
+
+    context 'for hathi records with mono item type' do
+      let(:ht_format) { 'mono' }
+
+      it 'produces hathi data ' do
+        expect(result['1000']).to match [{ ht_id: 'wu.89030498562', access: 'deny' }]
+      end
+
+      it 'prefers the record with allow access if there are multiple copies with same oclc' do
+        expect(result['1000021']).to match [{ ht_id: 'uc1.b3547182', access: 'allow' }]
+      end
+    end
+
+    context 'for hathi records with mono item type' do
+      let(:ht_format) { 'multi' }
+
+      it 'produces hathi data correctly' do
+        expect(result['100000391']).to match [{ ht_bib_key: '012292266', access: 'allow' }]
+      end
+
+      it 'prefers the record with allow access if there are multiple copies with same oclc' do
+        expect(result['1000061']).to match [{ ht_bib_key: '005893467', access: 'allow' }]
       end
     end
   end

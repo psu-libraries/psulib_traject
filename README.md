@@ -65,15 +65,19 @@ display the output to the console (and not push the data to Solr).
 $ bundle exec traject --debug-mode -c lib/traject/psulib_config.rb solr/sample_data/sample_psucat.mrc
 ```
 
-## Hathi Trust ETAS data
+## HathiTrust ETAS data
 
-To generate a synthesized Hathi Trust overlap report locally, you can run 
+To generate a synthesized HathiTrust overlap report locally, you can run 
 
 ```
 RUBY_ENVIRONMENT=dev bundle exec rake hathitrust:process_hathi_etas`.
 ```
 
-You will need the overlap file provided by Hathi Trust (`overlap_[date]_psu.tsv`) in your `ignorethis_hathi/` directory.
+You will need the overlap file provided by HathiTrust (`overlap_[date]_psu.tsv`) and `hathi_field_list.csv` with the content
+
+`oclc_num,htid,ht_bib_key,access`
+
+in your `ignorethis_hathi/` directory (or whatever directory path you set in `hathi_overlap_path`).
 
 Also make sure the below settings in your `indexer_settings_dev.yml` file are set with the correct info:
 
