@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'CSV'
 namespace :hathitrust do
   desc 'Process overlap file for emergency access to restricted HathiTrust material'
   task :process_hathi_overlap do
@@ -9,6 +10,9 @@ namespace :hathitrust do
     Dir.chdir(indexer_settings['hathi_overlap_path']) do
       Rake::Task['hathitrust:load_hathi_full'].invoke(period)
       Rake::Task['hathitrust:pare_hathi_full'].invoke(period)
+      Rake::Task['hathitrust:extract_multi_oclc'].invoke
+      Rake::Task['hathitrust:split_multi_oclc'].invoke
+      Rake::Task['hathitrust:merge_split_oclc'].invoke
       Rake::Task['hathitrust:extract_overlap_oclc'].invoke(indexer_settings['overlap_file'])
       Rake::Task['hathitrust:split_overlap_oclc'].invoke
       Rake::Task['hathitrust:filter_overlap'].invoke
@@ -25,7 +29,40 @@ namespace :hathitrust do
     print `gunzip -c hathi_full_#{args[:period]}.txt.gz | \
                csvcut -t -c 8,1,4,2 -z 1310720 | \
                csvgrep -c 1,2,3,4 -r ".+" | \
-               sort | uniq > hathi_full_dedupe.csv`
+               sort | uniq > hathi_all_dedupe.csv`
+
+    print `cat hathi_field_list.csv hathi_all_dedupe.csv > hathi_all_dedupe_with_headers.csv`
+  end
+
+  desc 'Extract lines with multiple oclc\'s'
+  task :extract_multi_oclc do
+    print `csvgrep -c 1 -r "," hathi_all_dedupe_with_headers.csv > hathi_multi_oclc.csv`
+
+    print `cat hathi_field_list.csv hathi_multi_oclc.csv > hathi_multi_oclc_with_headers.csv`
+  end
+
+  desc 'Split multiple oclc\'s'
+  task :split_multi_oclc do
+    data = []
+
+    CSV.read('hathi_multi_oclc_with_headers.csv', headers: true, header_converters: :symbol).each do |row|
+      row[:oclc_num].split(',').each do |oclc|
+        data << [oclc, row[:htid], row[:ht_bib_key], row[:access]]
+      end
+    end
+
+    CSV.open('hathi_multi_oclc_split.csv', 'wb') do |csv|
+      data.each do |row|
+        csv << row
+      end
+    end
+  end
+
+  desc 'Merge splitted rows to deduped full file'
+  task :merge_split_oclc do
+    print `csvgrep -H -c 1 -r "," -i hathi_full_dedupe.csv > hathi_single_oclc.csv`
+
+    print `cat hathi_single_oclc.csv hathi_multi_oclc_split.csv > hathi_full_dedupe.csv`
 
     print `cat hathi_field_list.csv hathi_full_dedupe.csv > hathi_full_dedupe_with_headers.csv`
   end
