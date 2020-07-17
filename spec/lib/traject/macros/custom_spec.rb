@@ -233,9 +233,13 @@ RSpec.describe 'Macros spec:' do
       it 'prefers the record with allow access if there are multiple copies with same oclc' do
         expect(result['1000021']).to match [{ ht_id: 'uc1.b3547182', access: 'allow' }]
       end
+
+      it 'selects only one deny copy if there are multiple copies with same oclc' do
+        expect(result['155131850']).to match [{ ht_id: 'mdp.39076002651854', access: 'deny' }]
+      end
     end
 
-    context 'for hathi records with mono item type' do
+    context 'for hathi records with multi/serial item type' do
       let(:ht_format) { 'multi' }
 
       it 'produces hathi data correctly' do
@@ -244,6 +248,10 @@ RSpec.describe 'Macros spec:' do
 
       it 'prefers the record with allow access if there are multiple copies with same oclc' do
         expect(result['1000061']).to match [{ ht_bib_key: '005893467', access: 'allow' }]
+      end
+
+      it 'selects only one deny copy if there are multiple copies with same oclc' do
+        expect(result['1000310']).to match [{ ht_bib_key: '009911637', access: 'deny' }]
       end
     end
   end
