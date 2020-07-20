@@ -37,15 +37,13 @@ namespace :hathitrust do
   desc 'Extract lines with multiple oclc\'s'
   task :extract_multi_oclc do
     print `csvgrep -c 1 -r "," hathi_all_dedupe_with_headers.csv > hathi_multi_oclc.csv`
-
-    print `cat hathi_field_list.csv hathi_multi_oclc.csv > hathi_multi_oclc_with_headers.csv`
   end
 
   desc 'Split multiple oclc\'s'
   task :split_multi_oclc do
     data = []
 
-    CSV.read('hathi_multi_oclc_with_headers.csv', headers: true, header_converters: :symbol).each do |row|
+    CSV.read('hathi_multi_oclc.csv', headers: true, header_converters: :symbol).each do |row|
       row[:oclc_num].split(',').each do |oclc|
         data << [oclc, row[:htid], row[:ht_bib_key], row[:access]]
       end
@@ -62,9 +60,7 @@ namespace :hathitrust do
   task :merge_split_oclc do
     print `csvgrep -c 1 -r "," -i hathi_all_dedupe_with_headers.csv > hathi_single_oclc.csv`
 
-    print `cat hathi_single_oclc.csv hathi_multi_oclc_split.csv > hathi_full_dedupe.csv`
-
-    print `cat hathi_field_list.csv hathi_full_dedupe.csv > hathi_full_dedupe_with_headers.csv`
+    print `cat hathi_single_oclc.csv hathi_multi_oclc_split.csv > hathi_full_dedupe_with_headers.csv`
   end
 
   desc 'Extract the unique set of OCLC numbers and access code from the overlap report'
