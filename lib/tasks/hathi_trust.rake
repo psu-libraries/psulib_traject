@@ -60,7 +60,7 @@ namespace :hathitrust do
 
   desc 'Merge splitted rows to deduped full file'
   task :merge_split_oclc do
-    print `csvgrep -H -c 1 -r "," -i hathi_full_dedupe.csv > hathi_single_oclc.csv`
+    print `csvgrep -c 1 -r "," -i hathi_all_dedupe_with_headers.csv > hathi_single_oclc.csv`
 
     print `cat hathi_single_oclc.csv hathi_multi_oclc_split.csv > hathi_full_dedupe.csv`
 
