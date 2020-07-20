@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require 'CSV'
+require 'csv'
+
 namespace :hathitrust do
   desc 'Process overlap file for emergency access to restricted HathiTrust material'
   task :process_hathi_overlap do
