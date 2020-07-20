@@ -220,6 +220,7 @@ module Traject
            .each do |_oclc, ht_data|
           ht_key = ht_format == 'mono' ? :ht_id : :ht_bib_key
           ht_data.map! { |data| [ht_key, :access].zip(data).to_h }
+                 .uniq! { |data| data[:access] }
           ht_data.reject! { |data| data[:access] == 'deny' } if ht_data.length > 1
         end
       end
