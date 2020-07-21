@@ -32,7 +32,7 @@ namespace :hathitrust do
                csvgrep -c 1,2,3,4 -r ".+" | \
                sort | uniq > hathi_all_dedupe.csv`
 
-    print `cat hathi_field_list.csv hathi_all_dedupe.csv > hathi_all_dedupe_with_headers.csv`
+    print `{ echo "oclc_num,htid,ht_bib_key,access"; cat hathi_all_dedupe.csv; } > hathi_all_dedupe_with_headers.csv`
   end
 
   desc 'Extract lines with multiple oclc\'s'
