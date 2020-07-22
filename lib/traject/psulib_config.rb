@@ -172,7 +172,7 @@ each_record do |_record, context|
     context.output_hash.delete('title_vern')
   end
 end
-to_field 'uniform_title_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs:730ai'), trim_punctuation
+to_field 'uniform_title_display_ssm', extract_marc('130adfklmnoprs:240adfklmnoprs'), trim_punctuation
 to_field 'additional_title_display_ssm', extract_marc('210ab:246iabfgnp:247abcdefgnp'), trim_punctuation
 to_field 'related_title_display_ssm', extract_marc('730adfgiklmnoprst3:740anp'), trim_punctuation
 
