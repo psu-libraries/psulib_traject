@@ -207,7 +207,7 @@ module Traject
 
       def extract_hathi_data
         lambda do |_record, accumulator, context|
-          oclc_number = context.output_hash&.dig('oclc_number_ssim')&.first
+          oclc_number = context.output_hash&.dig('oclc_number_ssim')&.first.to_i.to_s
           ht_hash = HATHI_MULTI_OVERLAP&.dig(oclc_number)&.first || HATHI_MONO_OVERLAP&.dig(oclc_number)&.first
           accumulator << ht_hash.to_json unless ht_hash.nil?
         end
