@@ -218,6 +218,14 @@ RSpec.describe 'Macros spec:' do
         expect(result['hathitrust_struct']).to match ['{"ht_bib_key":"012292266","access":"allow"}']
       end
     end
+
+    context 'when a record has an oclc with leading zeros' do
+      let(:oclc) { { '035' => { 'ind1' => '', 'ind2' => '', 'subfields' => [{ 'a' => '(OCLC)00100000391' }] } } }
+
+      it 'finds a match after stripping the leading zeros' do
+        expect(result['hathitrust_struct']).to match ['{"ht_bib_key":"012292266","access":"allow"}']
+      end
+    end
   end
 
   describe '#hathi_to_hash' do
