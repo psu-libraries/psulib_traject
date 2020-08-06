@@ -219,9 +219,12 @@ module Traject
            .group_by(&:shift)
            .each do |_oclc, ht_data|
           ht_key = ht_format == 'mono' ? :ht_id : :ht_bib_key
+          # For multi-volume records that include a mix of ETAS and public domain,
+          # prefer deny to suppress I want It button
+          ht_reject = ht_format == 'mono' ? 'deny' : 'allow'
           ht_data.map! { |data| [ht_key, :access].zip(data).to_h }
                  .uniq! { |data| data[:access] }
-          ht_data.reject! { |data| data[:access] == 'deny' } if ht_data.length > 1
+          ht_data.reject! { |data| data[:access] == ht_reject } if ht_data.length > 1
         end
       end
     end

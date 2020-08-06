@@ -254,8 +254,8 @@ RSpec.describe 'Macros spec:' do
         expect(result['100000391']).to match [{ ht_bib_key: '012292266', access: 'allow' }]
       end
 
-      it 'prefers the record with allow access if there are multiple copies with same oclc' do
-        expect(result['1000061']).to match [{ ht_bib_key: '005893467', access: 'allow' }]
+      it 'prefers the record with deny access if there are multiple copies with same oclc' do
+        expect(result['1000061']).to match [{ ht_bib_key: '12345', access: 'deny' }]
       end
 
       it 'selects only one deny copy if there are multiple copies with same oclc' do
