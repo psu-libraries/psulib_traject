@@ -218,11 +218,20 @@ module Traject
         CSV.read(hathi_overlap_csv)
            .group_by(&:shift)
            .each do |_oclc, ht_data|
-          ht_key = ht_format == 'mono' ? :ht_id : :ht_bib_key
-          ht_data.map! { |data| [ht_key, :access].zip(data).to_h }
+          ht_data.map! { |data| [ht_key(ht_format), :access].zip(data).to_h }
                  .uniq! { |data| data[:access] }
-          ht_data.reject! { |data| data[:access] == 'deny' } if ht_data.length > 1
+          ht_data.reject! { |data| data[:access] == ht_reject(ht_format) } if ht_data.length > 1
         end
+      end
+
+      private
+
+      def ht_key(ht_format)
+        ht_format == 'mono' ? :ht_id : :ht_bib_key
+      end
+
+      def ht_reject(ht_format)
+        ht_format == 'mono' ? 'deny' : 'allow'
       end
     end
   end
