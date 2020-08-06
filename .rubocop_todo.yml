@@ -35,7 +35,7 @@ Metrics/MethodLength:
 # Offense count: 1
 # Configuration parameters: CountComments.
 Metrics/ModuleLength:
-  Max: 164
+  Max: 168
 
 # Offense count: 1
 # Configuration parameters: MinBodyLength.
