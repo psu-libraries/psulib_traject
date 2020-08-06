@@ -223,6 +223,7 @@ module Traject
           ht_data.reject! { |data| data[:access] == ht_reject(ht_format) } if ht_data.length > 1
         end
       end
+      private
 
       def ht_key(ht_format)
         ht_format == 'mono' ? :ht_id : :ht_bib_key
