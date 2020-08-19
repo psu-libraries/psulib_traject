@@ -1,6 +1,0 @@
----
-
-processing_thread_pool: 5
-hathi_overlap_path: ignorethis_hathi/
-hathi_load_period: 20200501
-overlap_file: overlap_20200518_psu.tsv

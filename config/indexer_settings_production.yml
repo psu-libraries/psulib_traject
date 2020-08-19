@@ -1,5 +1,0 @@
----
-
-log_file: /var/log/traject/traject_prod.log
-log_error_file: /var/log/traject/traject_error_prod.log
-commit_timeout: 900

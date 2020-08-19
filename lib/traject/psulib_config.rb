@@ -16,6 +16,7 @@ require 'traject/regex_split'
 require 'traject/readers/marc_combining_reader'
 require 'csv'
 require 'yaml'
+require 'config'
 
 extend Traject::Macros::Marc21
 extend Traject::Macros::Marc21Semantics
@@ -26,24 +27,28 @@ MarcExtractor = Traject::MarcExtractor
 require 'traject/macros/custom'
 extend Traject::Macros::Custom
 
-indexer_settings = YAML.load_file("config/indexer_settings_#{ENV['RUBY_ENVIRONMENT']}.yml")
+Config.setup do |config|
+  config.const_name = 'ConfigSettings'
+  config.use_env = true
+  config.load_and_set_settings(Config.setting_files('config', ENV['RUBY_ENVIRONMENT']))
+end
 
 settings do
-  provide 'solr.url', ENV['SOLR_URL'] || 'http://localhost:8983/solr/psul_blacklight'
-  provide 'log.batch_size', '100_000'
-  provide 'solr.version', '7.4'
-  provide 'log.file', indexer_settings['log_file'] || 'log/traject.log'
-  provide 'log.error_file', indexer_settings['log_error_file'] || 'log/traject_error.log'
-  provide 'solr_writer.commit_on_close', true
-  provide 'reader_class_name', 'Traject::MarcCombiningReader'
-  provide 'commit_timeout', '10000'
-  provide 'hathi_overlap_path', indexer_settings['hathi_overlap_path'] || '/data/hathitrust_data/'
-  provide 'hathi_etas', indexer_settings['hathi_etas'] || true
+  provide 'solr.url', ConfigSettings.solr.url
+  provide 'log.batch_size', ConfigSettings.log.batch_size
+  provide 'solr.version', ConfigSettings.solr.version
+  provide 'log.file', ConfigSettings.log.file
+  provide 'log.error_file', ConfigSettings.log.error_file
+  provide 'solr_writer.commit_on_close', ConfigSettings.solr_writer.commit_on_close
+  provide 'reader_class_name', ConfigSettings.reader_class_name
+  provide 'commit_timeout', ConfigSettings.commit_timeout
+  provide 'hathi_overlap_path', ConfigSettings.hathi_overlap_path
+  provide 'hathi_etas', ConfigSettings.hathi_etas
 
   if is_jruby
-    provide 'marc4j_reader.permissive', true
-    provide 'marc4j_reader.source_encoding', 'UTF-8'
-    provide 'processing_thread_pool', (indexer_settings['processing_thread_pool'] || '7').to_i
+    provide 'marc4j_reader.permissive', ConfigSettings.marc4j_reader.permissive
+    provide 'marc4j_reader.source_encoding', ConfigSettings.marc4j_reader.source_encoding
+    provide 'processing_thread_pool', ConfigSettings.processing_thread_pool
   end
 end
 
