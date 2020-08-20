@@ -1,0 +1,17 @@
+solr:
+  version: 7.4
+  url: http://localhost:8983/solr/psul_blacklight
+log:
+  error_file: log/traject_error.log
+  file: log/traject.log
+  batch_size: 100_000
+solr_writer:
+  commit_on_close: true
+reader_class_name: Traject::MarcCombiningReader
+commit_timeout: 10000
+hathi_overlap_path: /data/hathitrust_data/
+hathi_etas: true
+marc4j_reader:
+  permissive: true
+  source_encoding: 'UTF-8'
+processing_thread_pool: 7

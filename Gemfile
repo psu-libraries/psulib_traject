@@ -2,6 +2,7 @@
 
 source 'https://rubygems.org'
 
+gem 'config'
 gem 'library_stdnums'
 gem 'mail'
 gem 'marc'

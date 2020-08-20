@@ -1,4 +1,0 @@
----
-
-log_file: /var/log/traject/traject_qa.log
-log_error_file: /var/log/traject/traject_error_qa.log
