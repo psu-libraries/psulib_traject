@@ -32,19 +32,27 @@ namespace :incrementals do
 
   desc 'Deletes from the index'
   task :delete, [:period] do |_task, args|
-    require 'yaml'
-    indexer_settings = YAML.load_file("config/indexer_settings_#{ENV['RUBY_ENVIRONMENT']}.yml")
-    SOLR_URL = ENV['RUBY_ENVIRONMENT'] == 'production' ? ENV['SOLR_URL'] : indexer_settings['solr_url']
+    require 'config'
+    Config.setup do |config|
+      config.const_name = 'ConfigSettings'
+      config.use_env = true
+      config.load_and_set_settings(Config.setting_files('config', ENV['RUBY_ENVIRONMENT']))
+    end
 
     indexer = Traject::Indexer.new(
-      'solr.version' => indexer_settings['solr_version'],
-      'solr.url' => SOLR_URL,
-      'log.file' => indexer_settings['log_file'],
-      'log.error_file' => indexer_settings['log_error_file'],
-      'solr_writer.commit_on_close' => indexer_settings['solr_writer_commit_on_close'],
-      'marc4j_reader.permissive' => indexer_settings['marc4j_reader_permissive'],
-      'marc4j_reader.source_encoding' => indexer_settings['marc4j_reader_source_encoding'],
-      'processing_thread_pool' => indexer_settings['processing_thread_pool'].to_i
+      'solr.url': ConfigSettings.solr.url,
+      'log.batch_size': ConfigSettings.log.batch_size,
+      'solr.version': ConfigSettings.solr.version,
+      'log.file': ConfigSettings.log.file,
+      'log.error_file': ConfigSettings.log.error_file,
+      'solr_writer.commit_on_close': ConfigSettings.solr_writer.commit_on_close,
+      'reader_class_name': ConfigSettings.reader_class_name,
+      'commit_timeout': ConfigSettings.commit_timeout,
+      'hathi_overlap_path': ConfigSettings.hathi_overlap_path,
+      'hathi_etas': ConfigSettings.hathi_etas,
+      'marc4j_reader.permissive': ConfigSettings.marc4j_reader.permissive,
+      'marc4j_reader.source_encoding': ConfigSettings.marc4j_reader.source_encoding,
+      'processing_thread_pool': ConfigSettings.processing_thread_pool
     )
 
     Dir["#{SIRSI_DATA_HOME}/#{args[:period]}_#{ENV['RUBY_ENVIRONMENT']}/*.txt"].each do |file_name|
