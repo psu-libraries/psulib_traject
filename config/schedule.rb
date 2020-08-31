@@ -3,7 +3,7 @@
 set :environment_variable, 'RUBY_ENVIRONMENT'
 
 # Process incrementals (adds/deletes from Symphony) daily
-every :weekday, at: '04:10am' do
+every :day, at: '04:10am' do
   rake "incrementals:import['daily']"
   rake "incrementals:delete['daily']"
 end
