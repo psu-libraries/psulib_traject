@@ -1,20 +1,28 @@
 # frozen_string_literal: true
 
 require 'csv'
+require 'config'
 
 namespace :hathitrust do
   desc 'Process overlap file for emergency access to restricted HathiTrust material'
   task :process_hathi_overlap do
-    indexer_settings = YAML.load_file("config/indexer_settings_#{ENV['RUBY_ENVIRONMENT']}.yml")
-    period = indexer_settings['hathi_load_period']
 
-    Dir.chdir(indexer_settings['hathi_overlap_path']) do
+    Config.setup do |config|
+      config.const_name = 'ConfigSettings'
+      config.use_env = true
+      config.load_and_set_settings(Config.setting_files('config', ENV['RUBY_ENVIRONMENT']))
+    end
+
+    period = ConfigSettings.hathi_load_period
+    overlap_file = ConfigSettings.overlap_file
+
+    Dir.chdir(ConfigSettings.hathi_overlap_path) do
       Rake::Task['hathitrust:load_hathi_full'].invoke(period)
       Rake::Task['hathitrust:pare_hathi_full'].invoke(period)
       Rake::Task['hathitrust:extract_multi_oclc'].invoke
       Rake::Task['hathitrust:split_multi_oclc'].invoke
       Rake::Task['hathitrust:merge_split_oclc'].invoke
-      Rake::Task['hathitrust:extract_overlap_oclc'].invoke(indexer_settings['overlap_file'])
+      Rake::Task['hathitrust:extract_overlap_oclc'].invoke(overlap_file)
       Rake::Task['hathitrust:split_overlap_oclc'].invoke
       Rake::Task['hathitrust:filter_overlap'].invoke
     end
