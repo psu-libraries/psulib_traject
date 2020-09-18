@@ -6,7 +6,6 @@ require 'config'
 namespace :hathitrust do
   desc 'Process overlap file for emergency access to restricted HathiTrust material'
   task :process_hathi_overlap do
-
     Config.setup do |config|
       config.const_name = 'ConfigSettings'
       config.use_env = true
