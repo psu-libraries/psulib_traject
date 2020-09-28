@@ -11,7 +11,41 @@ class MarcAccessFacetProcessor
 
   # Extract 949m for access facet
   def extract_access_data(record, context)
-    access = Traject::MarcExtractor.cached('949m').collect_matching_lines(record) do |field, spec, extractor|
+    access = determine_access_label record
+
+    access << 'Online' if hathi_access? context
+    access << 'Open Access' if open_access? record
+
+    access.compact!
+    access.uniq!
+    access.delete 'On Order' if not_only_on_order? access
+    access
+  end
+
+  private
+
+  def open_access?(record)
+    conditions_on_access_indicate_oa?(record) && link_access_indicates_oa?(record)
+  end
+
+  def conditions_on_access_indicate_oa?(record)
+    conditions_on_access(record) == 'star'
+  end
+
+  def conditions_on_access(record)
+    record['506']&.subfields&.select { |s| s.code == '2' }&.first&.value
+  end
+
+  def link_access_indicates_oa?(record)
+    link_access_status(record) == '0'
+  end
+
+  def link_access_status(record)
+    record['856']&.subfields&.select { |s| s.code == '7' }&.first&.value
+  end
+
+  def determine_access_label(record)
+    Traject::MarcExtractor.cached('949m').collect_matching_lines(record) do |field, spec, extractor|
       library_code = extractor.collect_subfields(field, spec).first
       case library_code
       when 'ONLINE'
@@ -21,15 +55,9 @@ class MarcAccessFacetProcessor
       when 'ZREMOVED', 'XTERNAL'
         next
       else
-        resolve_library_code field, LIBRARIES_MAP[library_code]
+        other_possibilities field, LIBRARIES_MAP[library_code]
       end
     end
-
-    access << 'Online' if hathi_access? context
-    access.compact!
-    access.uniq!
-    access.delete 'On Order' if not_only_on_order? access
-    access
   end
 
   # If there is anything other than On Order, we DO NOT include On Order
@@ -37,11 +65,11 @@ class MarcAccessFacetProcessor
     access_data.include?('On Order') && access_data.length > 1
   end
 
-  def resolve_library_code(field, library)
+  def other_possibilities(field, library)
     return 'Other' if library.nil? # Something unexpected
-    return 'In the Library' unless field['l'] == 'ON-ORDER'
+    return 'On Order' if field['l'] == 'ON-ORDER'
 
-    'On Order'
+    'In the Library'
   end
 
   def hathi_access?(context)
