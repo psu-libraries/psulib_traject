@@ -77,4 +77,21 @@ RSpec.describe 'Psulib_config spec:' do
       expect(result['scan_sim']).to contain_exactly '09981'
     end
   end
+
+  describe 'Editions' do
+    it 'finds cartographic_mathematical_data' do
+      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'cartographic.mrc')).to_a.first)
+      expect(result['cartographic_mathematical_data_ssm']).to contain_exactly 'Scales differ.'
+    end
+
+    it 'finds other edition' do
+      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'other_editions.mrc')).to_a.first)
+      expect(result['other_edition_ssm']).to contain_exactly '1983-84', '1985'
+    end
+
+    it 'finds collection' do
+      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'collection.mrc')).to_a.first)
+      expect(result['collection_facet']).to contain_exactly 'Arthur O. Lewis Utopia Collection.'
+    end
+  end
 end
