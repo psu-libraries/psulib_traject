@@ -109,6 +109,9 @@ to_field 'oclc_number_ssim', extract_oclc_number
 # Library of Congress number
 to_field 'lccn_ssim', extract_marc('010a'), trim_punctuation
 
+# Special Collections Accessioning Number ("scan")
+to_field 'scan_sim', extract_marc('099a')
+
 # Title fields
 #
 ## Title Search Fields
