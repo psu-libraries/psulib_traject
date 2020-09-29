@@ -42,6 +42,11 @@ RSpec.describe 'Formats spec:' do
       expect(result['format']).to contain_exactly 'Government Document'
     end
 
+    it 'correctly sets format as Book if 260b or 264b contain variations of "University Press"' do
+      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_university_press.mrc')).to_a.first)
+      expect(result['format']).to contain_exactly 'Book'
+    end
+
     it 'correctly sets formats checking leader byte 6 and byte 7' do
       result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_leader6_book.mrc')).to_a.first)
       expect(result['format']).to contain_exactly 'Book'
