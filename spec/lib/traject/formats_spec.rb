@@ -48,6 +48,9 @@ RSpec.describe 'Formats spec:' do
     end
 
     it 'correctly sets formats checking leader byte 6 and byte 7' do
+      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_article.mrc')).to_a.first)
+      expect(result['format']).to contain_exactly 'Article'
+
       result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_leader6_book.mrc')).to_a.first)
       expect(result['format']).to contain_exactly 'Book'
 

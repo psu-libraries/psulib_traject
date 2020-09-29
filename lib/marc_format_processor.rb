@@ -56,17 +56,25 @@ class MarcFormatProcessor
   end
 
   def resolve_leader6a(record)
-    format = ''
-
-    format = 'Book' if %w[a d m].include? record.leader[7]
-    format = 'Journal/Periodical' if %w[b s].include? record.leader[7]
-    format = 'Archives/Manuscripts' if record.leader[7] == 'c'
-    if record.leader[7] == 'm' && record['008'] && record['008'].value[24..27].include?('m')
-      # If decided that it is a Thesis/Dissertation, it is NOT a Book
-      format = 'Thesis/Dissertation'
+    case record.leader[7]
+    when 'a'
+      'Article'
+    when 'b', 's'
+      'Journal/Periodical'
+    when 'c'
+      'Archives/Manuscripts'
+    when 'd'
+      'Book'
+    when 'm'
+      if record['008'] && record['008'].value[24..27].include?('m')
+        # If decided that it is a Thesis/Dissertation, it is NOT a Book
+        'Thesis/Dissertation'
+      else
+        'Book'
+      end
+    else
+      ''
     end
-
-    format
   end
 
   # Check 008 byte 33 for video
