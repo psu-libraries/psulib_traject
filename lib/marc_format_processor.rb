@@ -45,9 +45,9 @@ class MarcFormatProcessor
 
     case record.leader[6]
     when 'a'
-      format = resolve_leader6a record
+      format = resolve_leader_byte_7 record
     when 'g'
-      format = resolve_leader6g record
+      format = resolve_008_byte_33 record
     when 't'
       format = 'Archives/Manuscripts' if %w[a m].include? record.leader[7]
     end
@@ -55,7 +55,7 @@ class MarcFormatProcessor
     format.nil? ? '' : format
   end
 
-  def resolve_leader6a(record)
+  def resolve_leader_byte_7(record)
     case record.leader[7]
     when 'a'
       'Article'
@@ -78,7 +78,7 @@ class MarcFormatProcessor
   end
 
   # Check 008 byte 33 for video
-  def resolve_leader6g(record)
+  def resolve_008_byte_33(record)
     'Video' if record['008'] && %w[m v].include?(record['008'].value[33])
   end
 
