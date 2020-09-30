@@ -3,6 +3,7 @@
 $LOAD_PATH << File.expand_path('../', __dir__)
 
 ENV['RUBY_ENVIRONMENT'] = 'dev' if ENV['RUBY_ENVIRONMENT'].nil?
+
 require 'bundler/setup'
 require 'library_stdnums'
 require 'traject'
@@ -17,6 +18,16 @@ require 'traject/readers/marc_combining_reader'
 require 'csv'
 require 'yaml'
 require 'config'
+
+unless ENV['RUBY_ENVIRONMENT'] == 'dev'
+  require 'ddtrace'
+  Datadog.configure do |c|
+    c.service = 'psulib_traject'
+    c.env = ENV['RUBY_ENVIRONMENT']
+    c.use :faraday, service_name: 'psulib_traject-faraday'
+    c.use :httprb, service_name: 'psulib_traject-http'
+  end
+end
 
 extend Traject::Macros::Marc21
 extend Traject::Macros::Marc21Semantics
