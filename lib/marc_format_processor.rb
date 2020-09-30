@@ -13,13 +13,13 @@ class MarcFormatProcessor
   def resolve_formats(record)
     # Check 949t before other formats to avoid overlapping formats,
     # eg. prefer Juvenile Book vs Book, Statute vs Government Document
-    formats = resolve_949t record
+    formats = holdings_formats record
 
     overlaps = avoid_overlaps record
     formats = overlaps if !overlaps.empty? && formats.empty?
 
-    formats = resolve_leader(record) if formats.empty?
-    formats = resolve_007(record) if formats.empty?
+    formats = type_of_record(record) if formats.empty?
+    formats = physical_description(record) if formats.empty?
 
     overrides = resolve_overrides record
     formats = overrides unless overrides.empty?
@@ -38,16 +38,16 @@ class MarcFormatProcessor
     format
   end
 
-  # Check leader byte 6 and byte 7
-  def resolve_leader(record)
+  # Resolve leader byte 6
+  def type_of_record(record)
     formats_leader6_map = Traject::TranslationMap.new('formats_leader6')
     format = formats_leader6_map.translate_array([record.leader[6]])[0]
 
     case record.leader[6]
     when 'a'
-      format = resolve_leader_byte_7 record
+      format = bibliographic_level record
     when 'g'
-      format = resolve_008_byte_33 record
+      format = type_of_visual_material record
     when 't'
       format = 'Archives/Manuscripts' if %w[a m].include? record.leader[7]
     end
@@ -55,7 +55,8 @@ class MarcFormatProcessor
     format.nil? ? '' : format
   end
 
-  def resolve_leader_byte_7(record)
+  # Resolve leader byte 7
+  def bibliographic_level(record)
     case record.leader[7]
     when 'a'
       'Article'
@@ -78,12 +79,12 @@ class MarcFormatProcessor
   end
 
   # Check 008 byte 33 for video
-  def resolve_008_byte_33(record)
+  def type_of_visual_material(record)
     'Video' if record['008'] && %w[m v].include?(record['008'].value[33])
   end
 
   # Check 007 formats, a record may have multiple 007s
-  def resolve_007(record)
+  def physical_description(record)
     formats = []
     formats_007_map = Traject::TranslationMap.new('formats_007')
 
@@ -96,7 +97,7 @@ class MarcFormatProcessor
   end
 
   # Check 949t formats, a record may have multiple 949s with different 949ts
-  def resolve_949t(record)
+  def holdings_formats(record)
     formats = []
     formats_949t_map = Traject::TranslationMap.new('formats_949t')
 
@@ -168,6 +169,6 @@ class MarcFormatProcessor
 
   # Override for Book when leader(6-7) is 'am' - issue#172
   def book?(record)
-    record.leader[6] == 'a' && record.leader[7] == 'm' && resolve_949t(record).include?('Archives/Manuscripts')
+    record.leader[6] == 'a' && record.leader[7] == 'm' && holdings_formats(record).include?('Archives/Manuscripts')
   end
 end
