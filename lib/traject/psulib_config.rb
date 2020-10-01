@@ -247,7 +247,7 @@ to_field 'overall_imprint_display_ssm', extract_marc('260abcefg3:264|*0|abc3:264
 to_field 'copyright_display_ssm', extract_marc('264|*4|c')
 to_field 'edition_display_ssm', extract_marc('250ab3')
 to_field 'cartographic_mathematical_data_ssm', extract_marc('255abcdefg')
-to_field 'other_edition_ssm', extract_marc('775|0*|iabcdefghikmnor')
+to_field 'other_edition_ssm', extract_marc('775|0*|iabcdefghkmnor')
 to_field 'collection_facet', extract_marc('793a')
 
 ## Publication fields for Illiad and Aeon
