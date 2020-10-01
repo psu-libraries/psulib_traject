@@ -129,7 +129,7 @@ class MarcFormatProcessor
   # Check if 260b OR 264b contain variations of "University Press"
   def university_press?(record)
     field_260b_264b = Traject::MarcExtractor.cached('260b:264b', separator: nil).extract(record)
-    field_260b_264b.grep(/\buniversity\b.*\bpress\b/i).any?
+    field_260b_264b.grep(/\buniversity\b/i).any?
   end
 
   # Check if newspaper using leader byte 7 and 008
