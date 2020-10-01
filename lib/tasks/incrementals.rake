@@ -2,31 +2,37 @@
 
 require 'traject'
 
-SIRSI_DATA_HOME = '/data/symphony_data'
-
 # This job, and :delete_daily expect there to be file to add and delete, it is not responsible for getting those files
 # from the catalog.
 namespace :incrementals do
   desc 'Adds to the index'
   task :import, [:period] do |_task, args|
-    require 'mail'
     indexer = Traject::Indexer::MarcIndexer.new
+    indexer.logger.info "name=Sirsi Incremental message=Indexing operation beginning task=#{args[:period]} import progress=start"
     indexer.load_config_file('lib/traject/psulib_config.rb')
-    target = Dir["#{SIRSI_DATA_HOME}/#{args[:period]}_#{ENV['RUBY_ENVIRONMENT']}/*.mrc"]
-    indexer.logger.info "   Processing incremental import_#{args[:period]} rake task on #{target}"
+    target = Dir["#{ConfigSettings.symphony_data_path}#{args[:period]}_#{ENV['RUBY_ENVIRONMENT']}/*.mrc"]
+
+    if target.empty?
+      indexer.logger.info 'name=Sirsi Incremental '\
+                          'message=Nothing to index '\
+                          "task=#{args[:period]} import "\
+                          'progress=done'
+    end
+
+    indexer.logger.info 'name=Sirsi Incremental '\
+                        "message=Indexing #{target} "\
+                        "task=#{args[:period]} import "\
+                        'progress=in progress'
+
     array_of_files = target.collect { |file| File.new(file) }
 
     if indexer.process array_of_files
-      indexer.logger.info "   #{target} has been indexed"
+      indexed_files = target.join ','
+      indexer.logger.info 'name=Sirsi Incremental '\
+                          "message=Indexed #{indexed_files} "\
+                          "task=#{args[:period]} import "\
+                          'progress=done'
       target.each { |file_name| File.delete file_name }
-    else
-      # This is here mostly as a test.
-      Mail.deliver do
-        from    'noreply@psu.edu'
-        to      'cdm32@psu.edu,bzk60@psu.edu'
-        subject 'The daily import to BlackCat failed'
-        body    "Traject failed to import the marc file #{file_name}."
-      end
     end
   end
 
@@ -55,16 +61,36 @@ namespace :incrementals do
       'processing_thread_pool': ConfigSettings.processing_thread_pool
     )
 
-    Dir["#{SIRSI_DATA_HOME}/#{args[:period]}_#{ENV['RUBY_ENVIRONMENT']}/*.txt"].each do |file_name|
+    indexer.logger.info 'name=Sirsi Incremental '\
+                        'message=Deleting operation beginning '\
+                        "task=#{args[:period]} delete "\
+                        'progress=start'
+
+    ids = []
+
+    Dir["#{ConfigSettings.symphony_data_path}#{args[:period]}_#{ENV['RUBY_ENVIRONMENT']}/*.txt"].each do |file_name|
       File.open(file_name, 'r') do |file|
         file.each_line do |line|
           id = line.chomp
+          ids << id
           indexer.writer.delete(id)
-          indexer.logger.info "   Deleted #{id} as part of incremental delete_#{args[:period]} rake task"
         end
 
         File.delete(file)
       end
+    end
+
+    if ids.any?
+      deleted_ids = ids.join ','
+      indexer.logger.info 'name=Sirsi Incremental '\
+                          "message=Deleted #{deleted_ids} "\
+                          "task=#{args[:period]} delete "\
+                          'progress=done'
+    else
+      indexer.logger.info 'name=Sirsi Incremental '\
+                          'message=Nothing to delete '\
+                          "task=#{args[:period]} delete "\
+                          'progress=done'
     end
   end
 end
