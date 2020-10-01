@@ -13,7 +13,7 @@ class MarcFormatProcessor
   def resolve_formats(record)
     # Check 949t before other formats to avoid overlapping formats,
     # eg. prefer Juvenile Book vs Book, Statute vs Government Document
-    formats = holdings_formats record
+    formats = local_formats record
 
     overlaps = avoid_overlaps record
     formats = overlaps if !overlaps.empty? && formats.empty?
@@ -97,7 +97,7 @@ class MarcFormatProcessor
   end
 
   # Check 949t formats, a record may have multiple 949s with different 949ts
-  def holdings_formats(record)
+  def local_formats(record)
     formats = []
     formats_949t_map = Traject::TranslationMap.new('formats_949t')
 
@@ -169,6 +169,6 @@ class MarcFormatProcessor
 
   # Override for Book when leader(6-7) is 'am' - issue#172
   def book?(record)
-    record.leader[6] == 'a' && record.leader[7] == 'm' && holdings_formats(record).include?('Archives/Manuscripts')
+    record.leader[6] == 'a' && record.leader[7] == 'm' && local_formats(record).include?('Archives/Manuscripts')
   end
 end
