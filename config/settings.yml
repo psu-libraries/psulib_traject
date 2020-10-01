@@ -9,6 +9,7 @@ solr_writer:
   commit_on_close: true
 reader_class_name: Traject::MarcCombiningReader
 commit_timeout: 10000
+symphony_data_path: /data/symphony_data/
 hathi_overlap_path: /data/hathitrust_data/
 hathi_etas: true
 marc4j_reader:
