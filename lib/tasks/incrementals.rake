@@ -8,29 +8,32 @@ namespace :incrementals do
   desc 'Adds to the index'
   task :import, [:period] do |_task, args|
     indexer = Traject::Indexer::MarcIndexer.new
-    indexer.logger.info "name=Sirsi Incremental message=Indexing operation beginning task=#{args[:period]} import progress=start"
+    indexer.logger.info 'name="Sirsi Incremental" '\
+                        'message="Indexing operation beginning" '\
+                        "task=\"#{args[:period]} import\" "\
+                        'progress=start'
     indexer.load_config_file('lib/traject/psulib_config.rb')
     target = Dir["#{ConfigSettings.symphony_data_path}#{args[:period]}_#{ENV['RUBY_ENVIRONMENT']}/*.mrc"]
 
     if target.empty?
-      indexer.logger.info 'name=Sirsi Incremental '\
-                          'message=Nothing to index '\
-                          "task=#{args[:period]} import "\
+      indexer.logger.info 'name="Sirsi Incremental" '\
+                          'message="Nothing to index" '\
+                          "task=\"#{args[:period]} import\" "\
                           'progress=done'
     end
 
-    indexer.logger.info 'name=Sirsi Incremental '\
-                        "message=Indexing #{target} "\
-                        "task=#{args[:period]} import "\
-                        'progress=in progress'
+    indexer.logger.info 'name="Sirsi Incremental" '\
+                        "message=\"Indexing #{target}\" "\
+                        "task=\"#{args[:period]} import\" "\
+                        'progress="in progress"'
 
     array_of_files = target.collect { |file| File.new(file) }
 
     if indexer.process array_of_files
       indexed_files = target.join ','
-      indexer.logger.info 'name=Sirsi Incremental '\
-                          "message=Indexed #{indexed_files} "\
-                          "task=#{args[:period]} import "\
+      indexer.logger.info 'name="Sirsi Incremental" '\
+                          "message=\"Indexed #{indexed_files}\" "\
+                          "task=\"#{args[:period]} import\" "\
                           'progress=done'
       target.each { |file_name| File.delete file_name }
     end
@@ -61,9 +64,9 @@ namespace :incrementals do
       'processing_thread_pool': ConfigSettings.processing_thread_pool
     )
 
-    indexer.logger.info 'name=Sirsi Incremental '\
-                        'message=Deleting operation beginning '\
-                        "task=#{args[:period]} delete "\
+    indexer.logger.info 'name="Sirsi Incremental" '\
+                        'message="Deleting operation beginning" '\
+                        "task=\"#{args[:period]} delete\" "\
                         'progress=start'
 
     ids = []
@@ -82,14 +85,14 @@ namespace :incrementals do
 
     if ids.any?
       deleted_ids = ids.join ','
-      indexer.logger.info 'name=Sirsi Incremental '\
-                          "message=Deleted #{deleted_ids} "\
-                          "task=#{args[:period]} delete "\
+      indexer.logger.info 'name="Sirsi Incremental" '\
+                          "message=\"Deleted #{deleted_ids}\" "\
+                          "task=\"#{args[:period]} delete\" "\
                           'progress=done'
     else
-      indexer.logger.info 'name=Sirsi Incremental '\
-                          'message=Nothing to delete '\
-                          "task=#{args[:period]} delete "\
+      indexer.logger.info 'name="Sirsi Incremental" '\
+                          'message="Nothing to delete" '\
+                          "task=\"#{args[:period]} delete\" "\
                           'progress=done'
     end
   end
