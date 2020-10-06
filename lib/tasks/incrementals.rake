@@ -20,6 +20,7 @@ namespace :incrementals do
                           'message="Nothing to index" '\
                           "task=\"#{args[:period]} import\" "\
                           'progress=done'
+      return
     end
 
     indexer.logger.info 'name="Sirsi Incremental" '\
