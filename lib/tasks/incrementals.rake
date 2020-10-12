@@ -20,23 +20,22 @@ namespace :incrementals do
                           'message="Nothing to index" '\
                           "task=\"#{args[:period]} import\" "\
                           'progress=done'
-      return
-    end
-
-    indexer.logger.info 'name="Sirsi Incremental" '\
-                        "message=\"Indexing #{target}\" "\
-                        "task=\"#{args[:period]} import\" "\
-                        'progress="in progress"'
-
-    array_of_files = target.collect { |file| File.new(file) }
-
-    if indexer.process array_of_files
-      indexed_files = target.join ','
+    else
       indexer.logger.info 'name="Sirsi Incremental" '\
-                          "message=\"Indexed #{indexed_files}\" "\
+                          "message=\"Indexing #{target}\" "\
                           "task=\"#{args[:period]} import\" "\
-                          'progress=done'
-      target.each { |file_name| File.delete file_name }
+                          'progress="in progress"'
+
+      array_of_files = target.collect { |file| File.new(file) }
+
+      if indexer.process array_of_files
+        indexed_files = target.join ','
+        indexer.logger.info 'name="Sirsi Incremental" '\
+                            "message=\"Indexed #{indexed_files}\" "\
+                            "task=\"#{args[:period]} import\" "\
+                            'progress=done'
+        target.each { |file_name| File.delete file_name }
+      end
     end
   end
 
