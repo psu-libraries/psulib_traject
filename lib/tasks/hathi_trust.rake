@@ -21,7 +21,8 @@ namespace :hathitrust do
       Rake::Task['hathitrust:extract_multi_oclc'].invoke
       Rake::Task['hathitrust:split_multi_oclc'].invoke
       Rake::Task['hathitrust:merge_split_oclc'].invoke
-      Rake::Task['hathitrust:extract_overlap_oclc'].invoke(overlap_file)
+      Rake::Task['hathitrust:process_excludes'].invoke(overlap_file)
+      Rake::Task['hathitrust:extract_overlap_oclc'].invoke
       Rake::Task['hathitrust:split_overlap_oclc'].invoke
       Rake::Task['hathitrust:filter_overlap'].invoke
     end
@@ -71,9 +72,25 @@ namespace :hathitrust do
     print `cat hathi_single_oclc.csv hathi_multi_oclc_split.csv > hathi_full_dedupe_with_headers.csv`
   end
 
+  desc 'Process exclude list'
+  task :process_excludes, [:overlap_file] do |_task, args|
+    excludes = ['2168941']
+    data = []
+
+    CSV.read(args[:overlap_file], { col_sep: "\t", headers: true, header_converters: :symbol }).each do |row|
+      data << row unless excludes.include? row[:local_id]
+    end
+
+    CSV.open('overlap_filtered.csv', 'wb') do |csv|
+      data.each do |row|
+        csv << row
+      end
+    end
+  end
+
   desc 'Extract the unique set of OCLC numbers and access code from the overlap report'
-  task :extract_overlap_oclc, [:overlap_file] do |_task, args|
-    print `csvgrep -t -c 4 -r ".+" #{args[:overlap_file]} | \
+  task :extract_overlap_oclc do
+    print `csvgrep -H -c 4 -r ".+" overlap_filtered.csv | \
                csvcut -c 1,3 | \
                sort | uniq  > overlap_all_unique.csv`
   end
