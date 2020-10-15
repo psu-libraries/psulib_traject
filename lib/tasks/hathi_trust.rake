@@ -74,7 +74,7 @@ namespace :hathitrust do
 
   desc 'Process exclude list'
   task :process_excludes, [:overlap_file] do |_task, args|
-    # This is a list of catkeys that we've been asked for one reason or another to not show a HathiTrust link for at all   
+    # This is a list of catkeys that we've been asked for one reason or another to not show a HathiTrust link for at all
     excludes = ['2168941']
     data = []
 
