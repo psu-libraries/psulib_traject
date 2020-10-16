@@ -76,16 +76,12 @@ namespace :hathitrust do
   task :process_excludes, [:overlap_file] do |_task, args|
     # This is a list of catkeys that we've been asked for one reason or another to not show a HathiTrust link for at all
     excludes = ['2168941']
-    data = []
 
-    CSV.read(args[:overlap_file], { col_sep: "\t", headers: true, header_converters: :symbol }).each do |row|
-      data << row unless excludes.include? row[:local_id]
-    end
+    overlaps_csv = CSV.read(args[:overlap_file], col_sep: "\t", headers: true, header_converters: :symbol)
+                      .delete_if { |row| excludes.include? row[:local_id] }
 
-    CSV.open('overlap_filtered.csv', 'wb') do |csv|
-      data.each do |row|
-        csv << row
-      end
+    CSV.open 'overlap_filtered.csv', 'wb' do |csv|
+      overlaps_csv.each { |row| csv << row }
     end
   end
 
