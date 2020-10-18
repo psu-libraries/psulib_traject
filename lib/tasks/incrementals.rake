@@ -85,9 +85,9 @@ namespace :incrementals do
     end
 
     if ids.any?
-      deleted_ids = ids.join ','
+      formatted_count = ids.count.to_s.chars.reverse.each_slice(3).map(&:join).join(',').reverse
       indexer.logger.info 'name="Sirsi Incremental" '\
-                          "message=\"Deleted #{deleted_ids}\" "\
+                          "message=\"Processed #{formatted_count} deletes\" "\
                           "task=\"#{args[:period]} delete\" "\
                           'progress=done'
     else
