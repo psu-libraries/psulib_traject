@@ -22,7 +22,7 @@ module Traject
       end
     end
 
-    def combinable_records
+    def combinable_records(&block)
       return enum_for(:combinable_records) unless block_given?
 
       # See https://github.com/jruby/jruby/issues/5275;
@@ -36,9 +36,7 @@ module Traject
                    else
                      marc_reader
                    end
-      enumerable.each.slice_when { |i, j| i['001'].value != j['001'].value }.each do |records_to_combine|
-        yield records_to_combine
-      end
+      enumerable.each.slice_when { |i, j| i['001'].value != j['001'].value }.each(&block)
     end
 
     def each

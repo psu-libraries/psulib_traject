@@ -66,5 +66,15 @@ RSpec.describe 'Media types spec:' do
       result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'media_300.mrc')).to_a.first)
       expect(result['media_type_facet']).to contain_exactly 'MPEG-4', 'Piano/Organ roll', 'Video CD', 'Microfilm/Microfiche'
     end
+
+    it 'maps CD based on 300' do
+      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, '300_cd.mrc')).to_a.first)
+      expect(result['media_type_facet']).to contain_exactly 'CD'
+    end
+
+    it 'maps vinyl based on 300' do
+      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, '300_vinyl.mrc')).to_a.first)
+      expect(result['media_type_facet']).to contain_exactly 'Vinyl disc'
+    end
   end
 end
