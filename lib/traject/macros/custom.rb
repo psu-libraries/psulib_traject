@@ -77,7 +77,9 @@ module Traject
             genre = extractor.collect_subfields(field, spec).first
             include_genre = true
             unless genre.nil?
-              include_genre = vocabulary.include?(field['2'].to_s.downcase) if (field.tag == '655') && (field.indicator2 == '7')
+              if (field.tag == '655') && (field.indicator2 == '7')
+                include_genre = vocabulary.include?(field['2'].to_s.downcase)
+              end
               genres << Traject::Macros::Marc21.trim_punctuation(genre) if include_genre
             end
           end
@@ -99,7 +101,7 @@ module Traject
             link_data << collect_subfield_values(field: field, code: 'u')
           end
           link_data.flatten.compact.each do |link|
-            url_match = regex_split link, %r{https*://([\w*|\.*]*)}
+            url_match = regex_split link, %r{https*://([\w.]*)}
             next if url_match[1].nil?
 
             domain = serial_solutions_link?(url_match[1]) ? 'serialssolutions.com' : url_match[1]
@@ -187,11 +189,11 @@ module Traject
       def extract_oclc_number
         lambda do |record, accumulator|
           record.fields(['035']).each do |field|
-            unless field.nil?
-              unless field['a'].nil?
-                subfield = regex_split(field['a'], //).map { |x| x[/\d+/] }.compact.join('') if Custom.includes_oclc_indicators?(field['a'])
-                accumulator << subfield
+            unless field&.[]('a').nil?
+              if Custom.includes_oclc_indicators?(field['a'])
+                subfield = regex_split(field['a'], //).map { |x| x[/\d+/] }.compact.join('')
               end
+              accumulator << subfield
             end
             accumulator.uniq!
           end
@@ -208,7 +210,7 @@ module Traject
       def extract_hathi_data
         lambda do |_record, accumulator, context|
           oclc_number = context.output_hash&.dig('oclc_number_ssim')&.first.to_i.to_s
-          ht_hash = HATHI_MULTI_OVERLAP&.dig(oclc_number)&.first || HATHI_MONO_OVERLAP&.dig(oclc_number)&.first
+          ht_hash = ht_find oclc_number
           accumulator << ht_hash.to_json unless ht_hash.nil?
         end
       end
@@ -225,6 +227,10 @@ module Traject
       end
 
       private
+
+      def ht_find(oclc_number)
+        HATHI_MULTI_OVERLAP&.dig(oclc_number)&.first || HATHI_MONO_OVERLAP&.dig(oclc_number)&.first
+      end
 
       def ht_key(ht_format)
         ht_format == 'mono' ? :ht_id : :ht_bib_key

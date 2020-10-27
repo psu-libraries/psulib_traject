@@ -2,3 +2,13 @@ inherit_from: .rubocop_todo.yml
 
 AllCops:
   NewCops: enable
+
+# lib/traject/readers/marc_combining_reader.rb was borrowed from Stanford, see
+# https://github.com/sul-dlss/searchworks_traject_indexer/blob/master/lib/traject/readers/marc_combining_reader.rb
+Metrics/AbcSize:
+  Exclude:
+      - 'lib/traject/readers/marc_combining_reader.rb'
+
+Metrics/PerceivedComplexity:
+  Exclude:
+      - 'lib/traject/readers/marc_combining_reader.rb'
