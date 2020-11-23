@@ -571,7 +571,7 @@ to_field 'campus_facet', extract_marc('949m'), translation_map('campuses')
 # All libraries (in psulib_blacklight this is used only in advanced search)
 to_field 'library_facet', extract_marc('949m'), translation_map('libraries')
 # All locations (in psulib_blacklight this is used only in advanced search)
-to_field 'location_facet', extract_marc('949l'), translation_map('locations')
+to_field 'location_facet', extract_marc('949l'), exclude_locations, translation_map('locations')
 
 # Serials fields
 #
