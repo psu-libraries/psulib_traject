@@ -67,22 +67,4 @@ $ bundle exec traject --debug-mode -c lib/traject/psulib_config.rb solr/sample_d
 
 ## HathiTrust ETAS data
 
-To generate a synthesized HathiTrust overlap report locally, you can run 
-
-```
-RUBY_ENVIRONMENT=dev bundle exec rake hathitrust:process_hathi_overlap
-```
-
-You will need the overlap file provided by HathiTrust (`overlap_[date]_psu.tsv`) in your `ignorethis_hathi/` directory (or whatever directory path you set in `hathi_overlap_path`).
-
-Also make sure the below settings in your `indexer_settings_dev.yml` file are set with the correct info:
-
-
-```
-hathi_load_period: 20200501
-overlap_file: overlap_20200518_psu.tsv
-```
-
-The generated file is used during the import process to index `ht_id` by checking 
-on an existing match to OCLC number and also for "Access Online". For more info, see
-[Synthesizing-overlap-data-from-HathiTrust](https://github.com/psu-libraries/psulib_blacklight/wiki/Synthesizing-overlap-data-from-HathiTrust)
+HathiTrust access level can be recorded in `ht_access_ss`. It will expect to have an overlap report tsv from HathiTrust at `ConfigSettings.hathi_overlap_path`. This file should be the latest overlap report from HathiTrust.

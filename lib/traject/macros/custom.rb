@@ -207,44 +207,11 @@ module Traject
           sf_a.include?('OCLC')
       end
 
-      def extract_hathi_data
-        lambda do |_record, accumulator, context|
-          oclc_number = context.output_hash&.dig('oclc_number_ssim')&.first.to_i.to_s
-          ht_hash = ht_find oclc_number
-          accumulator << ht_hash.to_json unless ht_hash.nil?
-        end
-      end
-
-      def hathi_to_hash(ht_format)
-        hathi_overlap_csv = "#{settings['hathi_overlap_path']}final_hathi_#{ht_format}_overlap.csv"
-        CSV.read(hathi_overlap_csv)
-           .group_by(&:shift)
-           .each do |_oclc, ht_data|
-          ht_data.map! { |data| [ht_key(ht_format), :access].zip(data).to_h }
-                 .uniq! { |data| data[:access] }
-          ht_data.reject! { |data| data[:access] == ht_reject(ht_format) } if ht_data.length > 1
-        end
-      end
-
       def exclude_locations
         lambda do |_record, accumulator|
           accumulator.reject! { |value| ConfigSettings.location_excludes.include?(value) }
           accumulator.compact!
         end
-      end
-
-      private
-
-      def ht_find(oclc_number)
-        HATHI_MULTI_OVERLAP&.dig(oclc_number)&.first || HATHI_MONO_OVERLAP&.dig(oclc_number)&.first
-      end
-
-      def ht_key(ht_format)
-        ht_format == 'mono' ? :ht_id : :ht_bib_key
-      end
-
-      def ht_reject(ht_format)
-        ht_format == 'mono' ? 'deny' : 'allow'
       end
     end
   end

@@ -52,36 +52,10 @@ RSpec.describe 'Subjects spec:' do
       expect(result['access_facet']).to contain_exactly 'Online', 'Open Access'
     end
 
-    context 'when hathitrust etas is enabled' do
-      before do
-        @indexer.settings['hathi_etas'] = true
-      end
-
-      it 'produces Online when a record has a hathitrust copy with allow access' do
-        result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'access_hathi_allow.mrc')).to_a.first)
-        expect(result['access_facet']).to contain_exactly 'Online'
-      end
-
-      it 'empty when a record has a hathitrust copy with deny access' do
-        result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'access_hathi_deny.mrc')).to_a.first)
-        expect(result['access_facet']).to contain_exactly 'Online'
-      end
-    end
-
-    context 'when hathitrust etas is not enabled' do
-      before do
-        @indexer.settings['hathi_etas'] = false
-      end
-
-      it 'produces Online when a record has a hathitrust copy with allow access' do
-        result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'access_hathi_allow.mrc')).to_a.first)
-        expect(result['access_facet']).to contain_exactly 'Online'
-      end
-
-      it 'empty when record has a hathitrust copy with deny access' do
-        result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'access_hathi_deny.mrc')).to_a.first)
-        expect(result['access_facet']).to be_nil
-      end
+    it 'produces Online when a record has a hathitrust copy of any kind' do
+      id = { '001' => '1000065' }
+      result = @indexer.map_record(MARC::Record.new_from_hash('fields' => [id], 'leader' => '1234567890'))
+      expect(result['access_facet']).to contain_exactly 'Online'
     end
   end
 end
