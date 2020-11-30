@@ -132,7 +132,7 @@ module Traject
       end
 
       def fulltext_link_available?(ind1, ind2, url_label)
-        (ind2 == '0' || ind1 == '4') && !NOT_FULLTEXT.match?(url_label)
+        (ind2 == '0' || ind1 == '4' || (ind1.strip.empty? && ind2.strip.empty?)) && !NOT_FULLTEXT.match?(url_label)
       end
 
       def partial_link_available?(ind1, ind2, url_label)
