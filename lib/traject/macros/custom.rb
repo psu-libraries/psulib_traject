@@ -229,7 +229,7 @@ module Traject
       def exclude_locations
         lambda do |_record, accumulator|
           accumulator.reject! { |value| ConfigSettings.location_excludes.include?(value) }
-          accumulator.reject!(&:empty?)
+          accumulator.compact!
         end
       end
 
