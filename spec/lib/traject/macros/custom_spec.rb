@@ -42,7 +42,7 @@ RSpec.describe 'Macros spec:' do
 
     context 'A record where indicator 1 and 2 is blank and magic word is not in one of the label subfields' do
       let(:url_856_2) do
-        { '856' => { 'ind1' => '', 'ind2' => '', 'subfields' => [{ 'u' => 'https://scholarsphere.psu.edu/files/02870v8'\
+        { '856' => { 'ind1' => ' ', 'ind2' => ' ', 'subfields' => [{ 'u' => 'https://scholarsphere.psu.edu/files/02870v8'\
                                                                             '5d' }] } }
       end
       let(:result_1) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_2], 'leader' => leader)) }
