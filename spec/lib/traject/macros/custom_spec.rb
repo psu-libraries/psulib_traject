@@ -266,9 +266,9 @@ RSpec.describe 'Macros spec:' do
 
   describe '#exclude_locations' do
     it 'filters excluded locations out' do
-      location1 = { '949' => { 'ind1' => ' ', 'ind2' => ' ', 'subfields' => [{ 'l' => 'DOCUSMF-DN' }] } }
-      location2 = { '949' => { 'ind1' => ' ', 'ind2' => ' ', 'subfields' => [{ 'l' => 'RESERVE-HN' }] } }
-      location3 = { '949' => { 'ind1' => ' ', 'ind2' => ' ', 'subfields' => [{ 'l' => 'AVAIL_SOON' }] } }
+      location1 = { '949' => { 'ind1' => '', 'ind2' => '', 'subfields' => [{ 'l' => 'DOCUSMF-DN' }] } }
+      location2 = { '949' => { 'ind1' => '', 'ind2' => '', 'subfields' => [{ 'l' => 'RESERVE-HN' }] } }
+      location3 = { '949' => { 'ind1' => '', 'ind2' => '', 'subfields' => [{ 'l' => 'AVAIL_SOON' }] } }
       result = @indexer.map_record(MARC::Record.new_from_hash('fields' => [location1, location2, location3], 'leader' => leader))
 
       expect(result['location_facet']).to eq ['Dickinson Law (Carlisle) - Lower Level - Gov Doc MF', 'on course reserve at Hazleton']
