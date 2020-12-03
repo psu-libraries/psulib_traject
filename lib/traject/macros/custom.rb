@@ -226,6 +226,13 @@ module Traject
         end
       end
 
+      def exclude_locations
+        lambda do |_record, accumulator|
+          accumulator.reject! { |value| ConfigSettings.location_excludes.include?(value) }
+          accumulator.compact!
+        end
+      end
+
       private
 
       def ht_find(oclc_number)
