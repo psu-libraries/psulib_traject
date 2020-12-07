@@ -52,10 +52,52 @@ RSpec.describe 'Subjects spec:' do
       expect(result['access_facet']).to contain_exactly 'Online', 'Open Access'
     end
 
-    it 'produces Online when a record has a hathitrust copy of any kind' do
+    it 'produces Online when a record has a HathiTrust copy with only "allow" permissions' do
+      id = { '001' => '1000103' }
+      result = @indexer.map_record(MARC::Record.new_from_hash('fields' => [id], 'leader' => '1234567890'))
+
+      expect(result['access_facet']).to contain_exactly 'Online'
+    end
+
+    it 'produces Online when a record has a HathiTrust copy with "deny" and "allow" permissions' do
       id = { '001' => '1000065' }
       result = @indexer.map_record(MARC::Record.new_from_hash('fields' => [id], 'leader' => '1234567890'))
+
       expect(result['access_facet']).to contain_exactly 'Online'
+    end
+
+    it 'skips when a record has a HathiTrust copy with "deny" permissions' do
+      id = { '001' => '10' }
+      result = @indexer.map_record(MARC::Record.new_from_hash('fields' => [id], 'leader' => '1234567890'))
+
+      expect(result['access_facet']).to be_nil
+    end
+
+    context 'in the time of HathiTrust Emergency Temporary Access Service (ETAS)' do
+      before do
+        ConfigSettings.hathi_etas = true
+      end
+
+      it 'produces Online when a record has a HathiTrust copy with only "allow" permissions' do
+        id = { '001' => '1000103' }
+        result = @indexer.map_record(MARC::Record.new_from_hash('fields' => [id], 'leader' => '1234567890'))
+
+        expect(result['access_facet']).to contain_exactly 'Online'
+      end
+
+      it 'produces Online when a record has a HathiTrust copy with "deny" and "allow" permissions' do
+        id = { '001' => '1000065' }
+        result = @indexer.map_record(MARC::Record.new_from_hash('fields' => [id], 'leader' => '1234567890'))
+
+        expect(result['access_facet']).to contain_exactly 'Online'
+      end
+
+      it 'produces Online when a record has a HathiTrust copy with "deny" permissions' do
+        id = { '001' => '10' }
+        result = @indexer.map_record(MARC::Record.new_from_hash('fields' => [id], 'leader' => '1234567890'))
+
+        expect(result['access_facet']).to contain_exactly 'Online'
+      end
     end
   end
 end

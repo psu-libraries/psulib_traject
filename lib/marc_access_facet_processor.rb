@@ -73,6 +73,8 @@ class MarcAccessFacetProcessor
   end
 
   def hathi_access?(context)
-    context.output_hash&.dig('ht_access_ss')&.any?
+    return context.output_hash&.dig('ht_access_ss')&.any? if ConfigSettings&.hathi_etas
+
+    context.output_hash&.dig('ht_access_ss')&.include? 'allow'
   end
 end

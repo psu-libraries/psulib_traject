@@ -111,6 +111,22 @@ RSpec.describe 'Psulib_config spec:' do
       expect(result['ht_access_ss']).to contain_exactly 'allow'
     end
 
+    it 'returns "deny" when duplicates are all multi or serial and the access level is mixed' do
+      id = { '001' => '10015944' }
+      result = @indexer.map_record(MARC::Record.new_from_hash('fields' => [id], 'leader' => leader))
+
+      expect(result['ht_access_ss']).to contain_exactly 'deny'
+    end
+
+    # This applies for a lot of scenarios. The salient piece is that the records all have a consistent access level
+    # whether that's deny or allow
+    it 'when there is only one access level present on the record it returns that value' do
+      id = { '001' => '10' }
+      result = @indexer.map_record(MARC::Record.new_from_hash('fields' => [id], 'leader' => leader))
+
+      expect(result['ht_access_ss']).to contain_exactly 'deny'
+    end
+
     it 'returns "allow" when duplicates are both mono and multi/serial and the access level is mixed' do
       id = { '001' => '1099502' }
       result = @indexer.map_record(MARC::Record.new_from_hash('fields' => [id], 'leader' => leader))
