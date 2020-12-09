@@ -1,0 +1,14 @@
+oclc	local_id	item_type	access	rights
+20621467	1	mono		
+1319801	10	mono	deny	ic
+223322513	1000065	mono	deny	ic
+223322513	1000065	mono	allow	und
+318366827	1000103	mono	allow	pd
+2384942	1099502	mono	deny	ic
+2384942	1099502	mono	allow	pd
+2384942	1099502	multi	deny	ic
+2384942	1099502	multi	allow	pd
+1778727	10015944	multi	allow	pdus
+1778727	10015944	multi	allow	pd
+1778727	10015944	multi	deny	und
+1778727	10015944	multi	deny	ic

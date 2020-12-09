@@ -23,6 +23,7 @@ RSpec.describe 'Psulib_config spec:' do
         expect(result['id']).to eq ['2']
       end
     end
+
     context 'one record with two 001 values' do
       let(:id1) do
         { '001' => '2' }
@@ -92,6 +93,45 @@ RSpec.describe 'Psulib_config spec:' do
     it 'finds collection' do
       result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'collection.mrc')).to_a.first)
       expect(result['collection_facet']).to contain_exactly 'Arthur O. Lewis Utopia Collection.'
+    end
+  end
+
+  describe 'HathiTrust access' do
+    it 'returns nil when the access field is blank' do
+      id = { '001' => '1' }
+      result = @indexer.map_record(MARC::Record.new_from_hash('fields' => [id], 'leader' => leader))
+
+      expect(result['ht_access_ss']).to be_nil
+    end
+
+    it 'returns "allow" when duplicates are all mono and the access level is mixed' do
+      id = { '001' => '1000065' }
+      result = @indexer.map_record(MARC::Record.new_from_hash('fields' => [id], 'leader' => leader))
+
+      expect(result['ht_access_ss']).to contain_exactly 'allow'
+    end
+
+    it 'returns "deny" when duplicates are all multi or serial and the access level is mixed' do
+      id = { '001' => '10015944' }
+      result = @indexer.map_record(MARC::Record.new_from_hash('fields' => [id], 'leader' => leader))
+
+      expect(result['ht_access_ss']).to contain_exactly 'deny'
+    end
+
+    # This applies for a lot of scenarios. The salient piece is that the records all have a consistent access level
+    # whether that's deny or allow
+    it 'when there is only one access level present on the record it returns that value' do
+      id = { '001' => '10' }
+      result = @indexer.map_record(MARC::Record.new_from_hash('fields' => [id], 'leader' => leader))
+
+      expect(result['ht_access_ss']).to contain_exactly 'deny'
+    end
+
+    it 'returns "allow" when duplicates are both mono and multi/serial and the access level is mixed' do
+      id = { '001' => '1099502' }
+      result = @indexer.map_record(MARC::Record.new_from_hash('fields' => [id], 'leader' => leader))
+
+      expect(result['ht_access_ss']).to contain_exactly 'allow'
     end
   end
 end

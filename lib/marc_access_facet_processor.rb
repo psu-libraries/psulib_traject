@@ -73,10 +73,8 @@ class MarcAccessFacetProcessor
   end
 
   def hathi_access?(context)
-    hathitrust_struct = context.output_hash&.dig('hathitrust_struct')
-    hathitrust_etas = context.settings['hathi_etas']
-    return false unless hathitrust_struct
+    return context.output_hash&.dig('ht_access_ss')&.any? if ConfigSettings&.hathi_etas
 
-    hathitrust_etas || JSON.parse(hathitrust_struct&.first)['access'] == 'allow'
+    context.output_hash&.dig('ht_access_ss')&.include? 'allow'
   end
 end
