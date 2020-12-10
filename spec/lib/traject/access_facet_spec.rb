@@ -42,7 +42,7 @@ RSpec.describe 'Subjects spec:' do
       expect(result['access_facet']).to contain_exactly 'Other'
     end
 
-    it 'empty when a record has a 949m library code ZREMOVED or XTERNAL' do
+    it 'empty when a record has a 949m library code ZREMOVED, XTERNAL or UP-OFFICE' do
       result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'access_zremoved.mrc')).to_a.first)
       expect(result['access_facet']).to be_nil
     end
