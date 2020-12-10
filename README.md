@@ -68,3 +68,5 @@ $ bundle exec traject --debug-mode -c lib/traject/psulib_config.rb solr/sample_d
 ## HathiTrust ETAS data
 
 HathiTrust access level can be recorded in `ht_access_ss`. It will expect to have an overlap report tsv from HathiTrust at `ConfigSettings.hathi_overlap_path`. This file should be the latest overlap report from HathiTrust.
+
+Because the monthly overlap file lives in a restricted area that can only be accessed by signing in to Box at UMich, we will need to manually set the overlap.tsv prior to indexing operations when there is a new overlap. This can be done by `scp`ing the file up to the location specified in `ConfigSettings.hathi_overlap_path`.
