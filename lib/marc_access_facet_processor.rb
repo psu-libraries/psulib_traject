@@ -52,7 +52,7 @@ class MarcAccessFacetProcessor
         'Online'
       when 'ACQ_DSL', 'ACQUISTNS', 'SERIAL-SRV'
         'On Order'
-      when 'ZREMOVED', 'XTERNAL'
+      when 'ZREMOVED', 'XTERNAL', 'UP-OFFICE'
         next
       else
         other_possibilities field, LIBRARIES_MAP[library_code]
