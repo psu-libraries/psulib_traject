@@ -1,6 +1,6 @@
 solr:
   version: 7.4
-  url: http://localhost:8983/solr/psul_blacklight
+  url: http://localhost:8983/solr/psul_catalog
 log:
   error_file: log/traject_error.log
   file: log/traject.log
