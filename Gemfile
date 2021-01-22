@@ -12,6 +12,10 @@ gem 'traject'
 gem 'traject-marc4j_reader', platform: :jruby
 gem 'whenever', require: false
 
+group :test do
+  gem 'webmock'
+end
+
 group :development, :test do
   gem 'byebug', platform: :mri
   gem 'pry', platform: :mri

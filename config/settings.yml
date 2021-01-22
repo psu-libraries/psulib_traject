@@ -1,6 +1,7 @@
 solr:
   version: 7.4
-  url: http://localhost:8983/solr/psul_catalog
+  url: http://localhost:8983/solr/
+  collection_name: psul_catalog
 log:
   error_file: log/traject_error.log
   file: log/traject.log
