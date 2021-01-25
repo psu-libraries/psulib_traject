@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'faraday'
-
 namespace :solr do
   desc 'Updates solr config files from psulib_blacklight'
   task :conf do
@@ -13,6 +11,12 @@ namespace :solr do
       response = Faraday.get url_for_file("solr/conf/#{file}")
       File.open("#{solr_conf_dir}/#{file}", 'w+') { |f| f.write(response.body) }
     end
+  end
+
+  task :last_incremented_collection do
+    require './lib/psulib_traject/solr_manager'
+    solr_manager = PsulibTraject::SolrManager.new
+    puts solr_manager.last_incremented_collection
   end
 
   def url_for_file(file)

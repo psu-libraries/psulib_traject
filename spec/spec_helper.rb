@@ -8,6 +8,7 @@ end
 ENV['RUBY_ENVIRONMENT'] = 'test'
 
 require 'rspec'
+require 'webmock/rspec'
 require 'traject'
 require_relative '../lib/traject/readers/marc_combining_reader'
 require_relative '../lib/marc_pub_date_processor'
