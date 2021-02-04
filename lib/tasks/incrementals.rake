@@ -49,7 +49,7 @@ namespace :incrementals do
     end
 
     indexer = Traject::Indexer.new(
-      'solr.url': ConfigSettings.solr.url,
+      'solr.url': "#{ConfigSettings.solr.url}#{ConfigSettings.solr.collection_name}",
       'log.batch_size': ConfigSettings.log.batch_size,
       'solr.version': ConfigSettings.solr.version,
       'log.file': ConfigSettings.log.file,
