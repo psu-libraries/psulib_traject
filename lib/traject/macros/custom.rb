@@ -93,21 +93,48 @@ module Traject
         lambda do |record, accumulator, _context|
           return unless record.fields('856').any?
 
-          link_data = []
-
+          link_data_all = []
           record.fields('856').each do |field|
             next unless sought_link_data_exists?(link_type, field)
 
-            link_data << collect_subfield_values(field: field, code: 'u')
+            link_data_all << collect_link_data(field)
           end
-          link_data.flatten.compact.each do |link|
-            url_match = regex_split link, %r{https*://([\w.]*)}
-            next if url_match[1].nil?
 
-            domain = serial_solutions_link?(url_match[1]) ? 'serialssolutions.com' : url_match[1]
-            accumulator << { text: domain, url: link }.to_json
+          link_data_all.each do |link_data|
+            link_data[:url].flatten.compact.each do |link|
+              url_match = url_match(link)
+              next if url_match.nil?
+
+              accumulator << generate_link(link, link_data, url_match)
+            end
           end
         end
+      end
+
+      def generate_link(link, link_data, url_match)
+        {
+          prefix: link_data[:prefix] || '',
+          text: link_data[:text] || link_domain(url_match),
+          url: link, notes: link_data[:notes]
+        }.to_json
+      end
+
+      def url_match(link)
+        url_match = regex_split link, %r{https*://([\w.]*)}
+        url_match[1]
+      end
+
+      def link_domain(link)
+        serial_solutions_link?(link) ? 'serialssolutions.com' : link
+      end
+
+      def collect_link_data(field)
+        {
+          url: collect_subfield_values(field: field, code: 'u'),
+          prefix: collect_subfield_values(field: field, code: '3').first,
+          text: collect_subfield_values(field: field, code: 'y').first,
+          notes: collect_subfield_values(field: field, code: 'z').join(' ')
+        }
       end
 
       def sought_link_data_exists?(link_type, field)
