@@ -18,6 +18,7 @@ require 'traject/hathi_overlap_reducer'
 require 'csv'
 require 'yaml'
 require 'config'
+require 'pry'
 
 extend Traject::Macros::Marc21
 extend Traject::Macros::Marc21Semantics
