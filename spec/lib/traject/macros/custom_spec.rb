@@ -16,13 +16,13 @@ RSpec.describe 'Macros spec:' do
       let(:url_856_1) do
         { '856' => { 'ind1' => '0', 'ind2' => '0', 'subfields' => [{ 'u' => 'https://scholarsphere.psu.edu/files/02870v8'\
                                                                             '5d' },
-                                                                   { 'z' => 'This text is irrelevant' }] } }
+                                                                   { 'z' => 'This is a note' }] } }
       end
       let(:result_1) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_1], 'leader' => leader)) }
 
       it 'produces a fulltext link' do
-        expect(result_1['full_links_struct']).to match ['{"text":"scholarsphere.psu.edu","url":"https://scholarsphere.ps'\
-                                                        'u.edu/files/02870v85d"}']
+        expect(result_1['full_links_struct']).to match ['{"prefix":"","text":"scholarsphere.psu.edu","url":"https://scholarsphere.ps'\
+                                                        'u.edu/files/02870v85d","notes":"This is a note"}']
       end
     end
 
@@ -30,13 +30,13 @@ RSpec.describe 'Macros spec:' do
       let(:url_856_2) do
         { '856' => { 'ind1' => '4', 'ind2' => '', 'subfields' => [{ 'u' => 'https://scholarsphere.psu.edu/files/02870v8'\
                                                                             '5d' },
-                                                                  { 'z' => 'This text is irrelevant' }] } }
+                                                                  { 'z' => 'This is a note' }] } }
       end
       let(:result_1) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_2], 'leader' => leader)) }
 
       it 'produces a fulltext link' do
-        expect(result_1['full_links_struct']).to match ['{"text":"scholarsphere.psu.edu","url":"https://scholarsphere.ps'\
-                                                        'u.edu/files/02870v85d"}']
+        expect(result_1['full_links_struct']).to match ['{"prefix":"","text":"scholarsphere.psu.edu","url":"https://scholarsphere.ps'\
+                                                        'u.edu/files/02870v85d","notes":"This is a note"}']
       end
     end
 
@@ -48,8 +48,8 @@ RSpec.describe 'Macros spec:' do
       let(:result_1) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_2], 'leader' => leader)) }
 
       it 'produces a fulltext link' do
-        expect(result_1['full_links_struct']).to match ['{"text":"scholarsphere.psu.edu","url":"https://scholarsphere.ps'\
-                                                        'u.edu/files/02870v85d"}']
+        expect(result_1['full_links_struct']).to match ['{"prefix":"","text":"scholarsphere.psu.edu","url":"https://scholarsphere.ps'\
+                                                        'u.edu/files/02870v85d","notes":""}']
       end
     end
 
@@ -63,9 +63,9 @@ RSpec.describe 'Macros spec:' do
       let(:result_3) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_3], 'leader' => leader)) }
 
       it 'produces a partial link' do
-        expect(result_3['partial_links_struct']).to match ['{"text":"library.columbia.edu","url":"http://library.columbi'\
+        expect(result_3['partial_links_struct']).to match ['{"prefix":"Carrots executive summary peas","text":"library.columbia.edu","url":"http://library.columbi'\
                                                            'a.edu/content/libraryweb/indiv/ccoh/our_work/how_to_use_the_'\
-                                                           'archives.html"}']
+                                                           'archives.html","notes":""}']
       end
     end
 
@@ -79,9 +79,9 @@ RSpec.describe 'Macros spec:' do
       let(:result_3) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_7], 'leader' => leader)) }
 
       it 'produces a partial link' do
-        expect(result_3['partial_links_struct']).to match ['{"text":"library.columbia.edu","url":"http://library.columbia.'\
+        expect(result_3['partial_links_struct']).to match ['{"prefix":"Carrots executive summary peas","text":"library.columbia.edu","url":"http://library.columbia.'\
                                                          'edu/content/libraryweb/indiv/ccoh/our_work/how_to_use_the_arch'\
-                                                         'ives.html"}']
+                                                         'ives.html","notes":""}']
       end
     end
 
@@ -103,10 +103,10 @@ RSpec.describe 'Macros spec:' do
       let(:result_5) { @indexer.map_record(MARC::Record.new_from_hash('fields' => url_856_5, 'leader' => leader)) }
 
       it 'produces 1 supplemental link and 1 partial link' do
-        expect(result_5['partial_links_struct']).to match ['{"text":"usacac.army.mil","url":"http://usacac.army.mil/CAC2'\
-                                                           '/MilitaryReview/mrpast2.asp"}']
-        expect(result_5['suppl_links_struct']).to match ['{"text":"calldp.leavenworth.army.mil","url":"http://calldp.lea'\
-                                                         'venworth.army.mil/"}']
+        expect(result_5['partial_links_struct']).to match ['{"prefix":"","text":"usacac.army.mil","url":"http://usacac.army.mil/CAC2'\
+                                                           '/MilitaryReview/mrpast2.asp","notes":""}']
+        expect(result_5['suppl_links_struct']).to match ['{"prefix":"","text":"calldp.leavenworth.army.mil","url":"http://calldp.lea'\
+                                                         'venworth.army.mil/","notes":"Gateway to archives. URL does not work, Feb. 3, 2016."}']
       end
     end
 
@@ -120,10 +120,10 @@ RSpec.describe 'Macros spec:' do
       let(:result_6) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_6], 'leader' => leader)) }
 
       it 'produces a fulltext link with text that drops summon\'s sub-domains' do
-        expect(result_6['full_links_struct']).to match ['{"text":"serialssolutions.com","url":"http://SK8ES4MC2L.search.'\
+        expect(result_6['full_links_struct']).to match ['{"prefix":"","text":"serialssolutions.com","url":"http://SK8ES4MC2L.search.'\
                                           'serialssolutions.com/?sid=sersol&SS_jc=TC0001341523&title=11th%20Working%20Co'\
                                           'nference%20on%20Mining%20Software%20Repositories%20%3A%20proceedings%20%3A%20'\
-                                          'May%2031%20-%20June%201%2C%202014%2C%20Hyderabad%2C%20India"}']
+                                          'May%2031%20-%20June%201%2C%202014%2C%20Hyderabad%2C%20India","notes":""}']
       end
     end
 
@@ -140,6 +140,24 @@ RSpec.describe 'Macros spec:' do
         expect(result_4['full_links_struct']).to be_nil
         expect(result_4['partial_links_struct']).to be_nil
         expect(result_4['suppl_links_struct']).to be_nil
+      end
+    end
+
+    context 'A record with a url that has all subfields for a prefix, label and notes' do
+      let(:url_856_8) do
+        { '856' => { 'ind1' => '4', 'ind2' => '1', 'subfields' => [{ 'u' => 'http://purl.access.gpo.gov/GPO/LPS47374' },
+                                                                   { '3' => 'v.7' },
+                                                                   { 'y' => 'Electronic resource (PDF)' },
+                                                                   { 'y' => 'Electronic resource (PDF) 2' },
+                                                                   { 'z' => 'Adobe Acrobat Reader required' },
+                                                                   { 'z' => 'Another note' }] } }
+      end
+
+      let(:result_8) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_8], 'leader' => leader)) }
+
+      it 'produce a link struct with a label, prefix and notes' do
+        expect(result_8['full_links_struct']).to match ['{"prefix":"v.7","text":"Electronic resource (PDF)","url":"http://purl.access.gpo.gov/GPO/LPS47374",'\
+                                          '"notes":"Adobe Acrobat Reader required Another note"}']
       end
     end
   end
