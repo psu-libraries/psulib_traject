@@ -1,25 +1,25 @@
 # frozen_string_literal: true
 
-require 'traject'
+require "traject"
 
 # This job, and :delete_daily expect there to be file to add and delete, it is not responsible for getting those files
 # from the catalog.
 namespace :incrementals do
-  desc 'Adds to the index'
+  desc "Adds to the index"
   task :import, [:period] do |_task, args|
     indexer = Traject::Indexer::MarcIndexer.new
-    indexer.load_config_file('lib/traject/psulib_config.rb')
+    indexer.load_config_file("lib/traject/psulib_config.rb")
     indexer.logger.info 'name="Sirsi Incremental" '\
                         'message="Indexing operation beginning" '\
                         "task=\"#{args[:period]} import\" "\
-                        'progress=start'
-    target = Dir["#{ConfigSettings.symphony_data_path}#{args[:period]}_#{ENV['RUBY_ENVIRONMENT']}/*.mrc"]
+                        "progress=start"
+    target = Dir["#{ConfigSettings.symphony_data_path}#{args[:period]}_#{ENV["RUBY_ENVIRONMENT"]}/*.mrc"]
 
     if target.empty?
       indexer.logger.info 'name="Sirsi Incremental" '\
                           'message="Nothing to index" '\
                           "task=\"#{args[:period]} import\" "\
-                          'progress=done'
+                          "progress=done"
     else
       indexer.logger.info 'name="Sirsi Incremental" '\
                           "message=\"Indexing #{target}\" "\
@@ -29,23 +29,23 @@ namespace :incrementals do
       array_of_files = target.collect { |file| File.new(file) }
 
       if indexer.process array_of_files
-        indexed_files = target.join ','
+        indexed_files = target.join ","
         indexer.logger.info 'name="Sirsi Incremental" '\
                             "message=\"Indexed #{indexed_files}\" "\
                             "task=\"#{args[:period]} import\" "\
-                            'progress=done'
+                            "progress=done"
         target.each { |file_name| File.delete file_name }
       end
     end
   end
 
-  desc 'Deletes from the index'
+  desc "Deletes from the index"
   task :delete, [:period] do |_task, args|
-    require 'config'
+    require "config"
     Config.setup do |config|
-      config.const_name = 'ConfigSettings'
+      config.const_name = "ConfigSettings"
       config.use_env = true
-      config.load_and_set_settings(Config.setting_files('config', ENV['RUBY_ENVIRONMENT']))
+      config.load_and_set_settings(Config.setting_files("config", ENV["RUBY_ENVIRONMENT"]))
     end
 
     indexer = Traject::Indexer.new(
@@ -67,12 +67,12 @@ namespace :incrementals do
     indexer.logger.info 'name="Sirsi Incremental" '\
                         'message="Deleting operation beginning" '\
                         "task=\"#{args[:period]} delete\" "\
-                        'progress=start'
+                        "progress=start"
 
     ids = []
 
-    Dir["#{ConfigSettings.symphony_data_path}#{args[:period]}_#{ENV['RUBY_ENVIRONMENT']}/*.txt"].each do |file_name|
-      File.open(file_name, 'r') do |file|
+    Dir["#{ConfigSettings.symphony_data_path}#{args[:period]}_#{ENV["RUBY_ENVIRONMENT"]}/*.txt"].each do |file_name|
+      File.open(file_name, "r") do |file|
         file.each_line do |line|
           id = line.chomp
           ids << id
@@ -84,16 +84,16 @@ namespace :incrementals do
     end
 
     if ids.any?
-      formatted_count = ids.count.to_s.chars.reverse.each_slice(3).map(&:join).join(',').reverse
+      formatted_count = ids.count.to_s.chars.reverse.each_slice(3).map(&:join).join(",").reverse
       indexer.logger.info 'name="Sirsi Incremental" '\
                           "message=\"Processed #{formatted_count} deletes\" "\
                           "task=\"#{args[:period]} delete\" "\
-                          'progress=done'
+                          "progress=done"
     else
       indexer.logger.info 'name="Sirsi Incremental" '\
                           'message="Nothing to delete" '\
                           "task=\"#{args[:period]} delete\" "\
-                          'progress=done'
+                          "progress=done"
     end
   end
 end

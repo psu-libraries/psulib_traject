@@ -23,10 +23,10 @@ class MarcPubDateProcessor
     date1_str, date2_str = dates_str(field008)
 
     case date_type
-    when 'p', 'r'
+    when "p", "r"
       # Reissue/reprint/re-recording, etc.
       resolve_date date_to_resolve(date1_str, date2_str)
-    when 'q'
+    when "q"
       # Questionable
       resolve_range(date1_str, date2_str)
     else
@@ -37,12 +37,12 @@ class MarcPubDateProcessor
 
   def date_type(field008)
     date_type = field008.slice(6)
-    date_type unless date_type.nil? || date_type == 'n'
+    date_type unless date_type.nil? || date_type == "n"
   end
 
   def dates_str(field008)
     date1_str = field008.slice(7, 4)
-    date2_str = field008.length > 15 ? field008.slice(11, 4) : ''
+    date2_str = field008.length > 15 ? field008.slice(11, 4) : ""
     [date1_str, date2_str]
   end
 
@@ -53,8 +53,8 @@ class MarcPubDateProcessor
   # For when we are dealing with ranges.
   def resolve_range(date1_str, date2_str)
     # Make unknown digits at the beginning or end of range
-    date1 = date1_str.tr('u', '0').to_i
-    date2 = date2_str.tr('u', '9').to_i
+    date1 = date1_str.tr("u", "0").to_i
+    date2 = date2_str.tr("u", "9").to_i
 
     # Do we have a range we can use?
     return unless (date2 > date1) && ((date2 - date1) <= ESTIMATE_TOLERANCE)
@@ -64,9 +64,9 @@ class MarcPubDateProcessor
 
   # Resolve single date u's means range, find midpoint and check tolerance
   def resolve_date(date_str)
-    u_count = date_str.count 'u'
+    u_count = date_str.count "u"
     # Replace unknown digits with 0.
-    date = date_str.tr('u', '0').to_i
+    date = date_str.tr("u", "0").to_i
     if u_count.positive? && date != 0
       delta = 10**u_count # 10^u_count, exponent
       date + (delta / 2) if delta <= ESTIMATE_TOLERANCE

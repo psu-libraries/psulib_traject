@@ -2,36 +2,36 @@
 
 namespace :docker do
   task :up do
-    Rake::Task['docker:pull'].invoke
+    Rake::Task["docker:pull"].invoke
     container_status = `docker inspect felix`
     container_status.strip!
 
-    if container_status == '[]'
-      Rake::Task['docker:first_start'].invoke
+    if container_status == "[]"
+      Rake::Task["docker:first_start"].invoke
     else
-      Rake::Task['docker:start'].invoke
-      Rake::Task['docker:conf'].invoke
-      Rake::Task['docker:down'].invoke
-      Rake::Task['docker:start'].invoke
+      Rake::Task["docker:start"].invoke
+      Rake::Task["docker:conf"].invoke
+      Rake::Task["docker:down"].invoke
+      Rake::Task["docker:start"].invoke
     end
 
-    Rake::Task['docker:ps'].invoke
+    Rake::Task["docker:ps"].invoke
   end
 
   task :clean do
-    print `docker exec -it felix \
+    print %x(docker exec -it felix \
             post -c psul_blacklight \
-                 -d '<delete><query>*:*</query></delete>' -out 'yes'`
+                 -d '<delete><query>*:*</query></delete>' -out 'yes')
   end
 
   task :first_start do
-    print `docker run \
+    print %x(docker run \
             --name felix \
             -a STDOUT \
             -p 8983:8983 \
             -v "$(pwd)"/solr/conf:/myconfig \
             solr:7.4.0 \
-            solr-create -c psul_blacklight -d /myconfig`
+            solr-create -c psul_blacklight -d /myconfig)
   end
 
   task :pull do
@@ -43,8 +43,8 @@ namespace :docker do
   end
 
   task :conf do
-    print `docker exec -it felix \
-            cp -R /myconfig/. /opt/solr/server/solr/psul_blacklight/conf/`
+    print %x(docker exec -it felix \
+            cp -R /myconfig/. /opt/solr/server/solr/psul_blacklight/conf/)
   end
 
   task :down do

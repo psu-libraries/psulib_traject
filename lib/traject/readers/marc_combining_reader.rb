@@ -15,7 +15,7 @@ module Traject
 
     def initialize(input_stream, settings)
       if defined?(JRUBY_VERSION)
-        require 'traject/marc4j_reader'
+        require "traject/marc4j_reader"
         @marc_reader = Traject::Marc4JReader.new(input_stream, settings)
       else
         @marc_reader = Traject::MarcReader.new(input_stream, settings)
@@ -23,20 +23,20 @@ module Traject
     end
 
     def combinable_records(&block)
-      return enum_for(:combinable_records) unless block_given?
+      return enum_for(:combinable_records) unless block
 
       # See https://github.com/jruby/jruby/issues/5275;
       enumerable = if defined?(JRUBY_VERSION)
-                     peek = marc_reader.each.first(2)
-                     if peek.length == 1
-                       peek
-                     else
-                       CombiningEnumerable.new(peek, marc_reader)
-                     end
-                   else
-                     marc_reader
-                   end
-      enumerable.each.slice_when { |i, j| i['001'].value != j['001'].value }.each(&block)
+        peek = marc_reader.each.first(2)
+        if peek.length == 1
+          peek
+        else
+          CombiningEnumerable.new(peek, marc_reader)
+        end
+      else
+        marc_reader
+      end
+      enumerable.each.slice_when { |i, j| i["001"].value != j["001"].value }.each(&block)
     end
 
     def each
@@ -84,7 +84,7 @@ module Traject
     end
 
     def each(*args, &block)
-      return to_enum(:each, *args) unless block_given?
+      return to_enum(:each, *args) unless block
 
       @left.each(*args, &block)
       @right.each(*args, &block)

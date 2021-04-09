@@ -1,25 +1,25 @@
 # frozen_string_literal: true
 
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-gem 'config'
-gem 'library_stdnums'
-gem 'mail'
-gem 'marc'
-gem 'rake'
-gem 'rsolr'
-gem 'traject'
-gem 'traject-marc4j_reader', platform: :jruby
-gem 'whenever', require: false
+gem "config"
+gem "library_stdnums"
+gem "mail"
+gem "marc"
+gem "rake"
+gem "rsolr"
+gem "traject"
+gem "traject-marc4j_reader", platform: :jruby
+gem "whenever", require: false
 
 group :test do
-  gem 'webmock'
+  gem "webmock"
 end
 
 group :development, :test do
-  gem 'pry'
-  gem 'pry-debugger-jruby'
-  gem 'rspec'
-  gem 'rubocop'
-  gem 'simplecov', '< 0.18' # CodeClimate does not work with .18 or later
+  gem "pry"
+  gem "pry-debugger-jruby"
+  gem "rspec"
+  gem "simplecov", "< 0.18" # CodeClimate does not work with .18 or later
+  gem "standard"
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-SEPARATOR = '—'
+SEPARATOR = "—"
 NOT_FULLTEXT = /addendum|appendices|appendix|appendixes|cover|excerpt|executive summary|index/i.freeze
 ESTIMATE_TOLERANCE = 15
 MIN_YEAR = 500
@@ -77,8 +77,8 @@ module Traject
             genre = extractor.collect_subfields(field, spec).first
             include_genre = true
             unless genre.nil?
-              if (field.tag == '655') && (field.indicator2 == '7')
-                include_genre = vocabulary.include?(field['2'].to_s.downcase)
+              if (field.tag == "655") && (field.indicator2 == "7")
+                include_genre = vocabulary.include?(field["2"].to_s.downcase)
               end
               genres << Traject::Macros::Marc21.trim_punctuation(genre) if include_genre
             end
@@ -89,12 +89,12 @@ module Traject
       end
 
       # Extract fulltext links
-      def extract_link_data(link_type: 'full')
+      def extract_link_data(link_type: "full")
         lambda do |record, accumulator, _context|
-          return unless record.fields('856').any?
+          return unless record.fields("856").any?
 
           link_data_all = []
-          record.fields('856').each do |field|
+          record.fields("856").each do |field|
             next unless sought_link_data_exists?(link_type, field)
 
             link_data_all << collect_link_data(field)
@@ -113,7 +113,7 @@ module Traject
 
       def generate_link(link, link_data, url_match)
         {
-          prefix: link_data[:prefix] || '',
+          prefix: link_data[:prefix] || "",
           text: link_data[:text] || link_domain(url_match),
           url: link, notes: link_data[:notes]
         }.to_json
@@ -125,33 +125,33 @@ module Traject
       end
 
       def link_domain(link)
-        serial_solutions_link?(link) ? 'serialssolutions.com' : link
+        serial_solutions_link?(link) ? "serialssolutions.com" : link
       end
 
       def collect_link_data(field)
         {
-          url: collect_subfield_values(field: field, code: 'u'),
-          prefix: collect_subfield_values(field: field, code: '3').first,
-          text: collect_subfield_values(field: field, code: 'y').first,
-          notes: collect_subfield_values(field: field, code: 'z').join(' ')
+          url: collect_subfield_values(field: field, code: "u"),
+          prefix: collect_subfield_values(field: field, code: "3").first,
+          text: collect_subfield_values(field: field, code: "y").first,
+          notes: collect_subfield_values(field: field, code: "z").join(" ")
         }
       end
 
       def sought_link_data_exists?(link_type, field)
-        url_label = ''
+        url_label = ""
 
         if %w[full partial].include? link_type
-          sfz = collect_subfield_values(field: field, code: 'z').join ' '
-          sf3 = collect_subfield_values(field: field, code: '3').join ' '
+          sfz = collect_subfield_values(field: field, code: "z").join " "
+          sf3 = collect_subfield_values(field: field, code: "3").join " "
           url_label = url_label(sfz, sf3)
         end
 
         case link_type
-        when 'full'
+        when "full"
           fulltext_link_available?(field.indicator1, field.indicator2, url_label)
-        when 'partial'
+        when "partial"
           partial_link_available?(field.indicator1, field.indicator2, url_label)
-        when 'suppl'
+        when "suppl"
           suppl_link_available?(field.indicator2)
         else
           false
@@ -159,24 +159,24 @@ module Traject
       end
 
       def fulltext_link_available?(ind1, ind2, url_label)
-        (ind2 == '0' || ind1 == '4' || (ind1.strip.empty? && ind2.strip.empty?)) && !NOT_FULLTEXT.match?(url_label)
+        (ind2 == "0" || ind1 == "4" || (ind1.strip.empty? && ind2.strip.empty?)) && !NOT_FULLTEXT.match?(url_label)
       end
 
       def partial_link_available?(ind1, ind2, url_label)
-        ind2 == '1' || ((ind2 == '0' || ind1 == '4') && NOT_FULLTEXT.match?(url_label))
+        ind2 == "1" || ((ind2 == "0" || ind1 == "4") && NOT_FULLTEXT.match?(url_label))
       end
 
       def suppl_link_available?(ind2)
-        ind2 == '2'
+        ind2 == "2"
       end
 
       def serial_solutions_link?(link)
-        link.casecmp('sk8es4mc2l.search.serialssolutions.com').zero?
+        link.casecmp("sk8es4mc2l.search.serialssolutions.com").zero?
       end
 
       # The label information present in the catalog.
       def url_label(sfz, sf3)
-        [sfz, sf3].join(' ')
+        [sfz, sf3].join(" ")
       end
 
       # Extract subfield values.
@@ -192,13 +192,13 @@ module Traject
         lambda do |record, accumulator|
           return nil unless record.is_a? MARC::Record
 
-          field008 = Traject::MarcExtractor.cached('008').extract(record).first
+          field008 = Traject::MarcExtractor.cached("008").extract(record).first
           pub_date = PubDateProcessor.find_date(field008)
 
           if pub_date.nil?
             # Nothing from 008, try 264 and 260
-            field264c = Traject::MarcExtractor.cached('264|*1|c', separator: nil).extract(record).first
-            field260c = Traject::MarcExtractor.cached('260c', separator: nil).extract(record).first
+            field264c = Traject::MarcExtractor.cached("264|*1|c", separator: nil).extract(record).first
+            field260c = Traject::MarcExtractor.cached("260c", separator: nil).extract(record).first
             pub_date = PubDateProcessor.check_elsewhere field264c, field260c
           end
 
@@ -215,10 +215,10 @@ module Traject
       # Extract OCLC number
       def extract_oclc_number
         lambda do |record, accumulator|
-          record.fields(['035']).each do |field|
-            unless field&.[]('a').nil?
-              if Custom.includes_oclc_indicators?(field['a'])
-                subfield = regex_split(field['a'], //).map { |x| x[/\d+/] }.compact.join('')
+          record.fields(["035"]).each do |field|
+            unless field&.[]("a").nil?
+              if Custom.includes_oclc_indicators?(field["a"])
+                subfield = regex_split(field["a"], //).map { |x| x[/\d+/] }.compact.join("")
               end
               accumulator << subfield
             end
@@ -228,10 +228,10 @@ module Traject
       end
 
       def self.includes_oclc_indicators?(sf_a)
-        sf_a.include?('OCoLC') ||
-          sf_a.include?('ocn') ||
-          sf_a.include?('ocm') ||
-          sf_a.include?('OCLC')
+        sf_a.include?("OCoLC") ||
+          sf_a.include?("ocn") ||
+          sf_a.include?("ocm") ||
+          sf_a.include?("OCLC")
       end
 
       def exclude_locations

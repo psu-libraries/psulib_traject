@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'traject/regex_split'
+require "traject/regex_split"
 
 # A tool for classifying MARC records using a combination of data from the
 # record's leader and some 949ts to assign format types to records
@@ -25,70 +25,70 @@ class MarcFormatProcessor
     formats = overrides unless overrides.empty?
 
     # If no other values are present, use the default value "Other"
-    formats = 'Other' if formats.empty?
+    formats = "Other" if formats.empty?
 
     Array(formats).flatten.compact.uniq
   end
 
   def avoid_overlaps(record)
-    format = ''
-    format = 'Instructional Material' if instructional_material?(record)
+    format = ""
+    format = "Instructional Material" if instructional_material?(record)
     # Check Government Document earlier to avoid overlapping with 007 and leader6-7 formats
-    format = 'Government Document' if government_document?(record) && format.empty?
+    format = "Government Document" if government_document?(record) && format.empty?
     format
   end
 
   # Resolve leader byte 6
   def type_of_record(record)
-    formats_leader6_map = Traject::TranslationMap.new('formats_leader6')
+    formats_leader6_map = Traject::TranslationMap.new("formats_leader6")
     format = formats_leader6_map.translate_array([record.leader[6]])[0]
 
     case record.leader[6]
-    when 'a'
+    when "a"
       format = bibliographic_level record
-    when 'g'
+    when "g"
       format = type_of_visual_material record
-    when 't'
-      format = 'Archives/Manuscripts' if %w[a m].include? record.leader[7]
+    when "t"
+      format = "Archives/Manuscripts" if %w[a m].include? record.leader[7]
     end
 
-    format.nil? ? '' : format
+    format.nil? ? "" : format
   end
 
   # Resolve leader byte 7
   def bibliographic_level(record)
     case record.leader[7]
-    when 'a'
-      'Article'
-    when 'b', 's'
-      'Journal/Periodical'
-    when 'c'
-      'Archives/Manuscripts'
-    when 'd'
-      'Book'
-    when 'm'
-      if record['008'] && record['008'].value[24..27].include?('m')
+    when "a"
+      "Article"
+    when "b", "s"
+      "Journal/Periodical"
+    when "c"
+      "Archives/Manuscripts"
+    when "d"
+      "Book"
+    when "m"
+      if record["008"] && record["008"].value[24..27].include?("m")
         # If decided that it is a Thesis/Dissertation, it is NOT a Book
-        'Thesis/Dissertation'
+        "Thesis/Dissertation"
       else
-        'Book'
+        "Book"
       end
     else
-      ''
+      ""
     end
   end
 
   # Check 008 byte 33 for video
   def type_of_visual_material(record)
-    'Video' if record['008'] && %w[m v].include?(record['008'].value[33])
+    "Video" if record["008"] && %w[m v].include?(record["008"].value[33])
   end
 
   # Check 007 formats, a record may have multiple 007s
   def physical_description(record)
     formats = []
-    formats_007_map = Traject::TranslationMap.new('formats_007')
+    formats_007_map = Traject::TranslationMap.new("formats_007")
 
-    Traject::MarcExtractor.cached('007').collect_matching_lines(record) do |field, _spec, _extractor|
+    Traject::MarcExtractor.cached("007").collect_matching_lines(record) do |field, _spec, _extractor|
       format = formats_007_map.translate_array([field.value[0]])[0]
       formats << format unless format.nil?
     end
@@ -99,9 +99,9 @@ class MarcFormatProcessor
   # Check 949t formats, a record may have multiple 949s with different 949ts
   def local_formats(record)
     formats = []
-    formats_949t_map = Traject::TranslationMap.new('formats_949t')
+    formats_949t_map = Traject::TranslationMap.new("formats_949t")
 
-    Traject::MarcExtractor.cached('949t').collect_matching_lines(record) do |field, spec, extractor|
+    Traject::MarcExtractor.cached("949t").collect_matching_lines(record) do |field, spec, extractor|
       field_949t = extractor.collect_subfields(field, spec).first
       format = formats_949t_map.translate_array([field_949t])[0]
       formats << format unless format.nil?
@@ -112,47 +112,47 @@ class MarcFormatProcessor
 
   # Check other possible formats and prefer over 949t, leader6 and 007 formats
   def resolve_overrides(record)
-    format = ''
-    format = 'Thesis/Dissertation' if thesis? record
-    format = 'Newspaper' if newspaper? record
-    format = 'Games/Toys' if games? record
-    format = 'Proceeding/Congress' if proceeding?(record) || congress?(record)
-    format = 'Book' if book? record
+    format = ""
+    format = "Thesis/Dissertation" if thesis? record
+    format = "Newspaper" if newspaper? record
+    format = "Games/Toys" if games? record
+    format = "Proceeding/Congress" if proceeding?(record) || congress?(record)
+    format = "Book" if book? record
     format
   end
 
   # Check if government document using leader byte 6 and 008 also not university_press?
   def government_document?(record)
     unless university_press? record
-      record.leader[6] == 'a' && record['008'] && /[acfilmosz]/.match?(record['008'].value[28])
+      record.leader[6] == "a" && record["008"] && /[acfilmosz]/.match?(record["008"].value[28])
     end
   end
 
   # Check if 260b OR 264b contain variations of "University Press"
   def university_press?(record)
-    field_260b_264b = Traject::MarcExtractor.cached('260b:264b', separator: nil).extract(record)
+    field_260b_264b = Traject::MarcExtractor.cached("260b:264b", separator: nil).extract(record)
     field_260b_264b.grep(/\buniversity\b/i).any?
   end
 
   # Check if newspaper using leader byte 7 and 008
   def newspaper?(record)
-    record.leader[7] == 's' && record['008'] && record['008'].value[21] == 'n'
+    record.leader[7] == "s" && record["008"] && record["008"].value[21] == "n"
   end
 
   # Checks if it has a 502, if it does it's considered a thesis
   def thesis?(record)
-    !record.find { |a| a.tag == '502' }.nil?
+    !record.find { |a| a.tag == "502" }.nil?
   end
 
   # Check leader byte 12 and 008 byte 29 for proceeding/congress
   def proceeding?(record)
-    record.leader[12] == '1' || (record['008'] && record['008'].value[29] == '1')
+    record.leader[12] == "1" || (record["008"] && record["008"].value[29] == "1")
   end
 
   # Checks all $6xx for a $v "congress"
   def congress?(record)
     !record.find do |field|
-      field.tag.slice(0) == '6' && field.subfields.find { |sf| sf.code == 'v' && regex_to_extract_data_from_a_string(sf.value, /Congress/i) }
+      field.tag.slice(0) == "6" && field.subfields.find { |sf| sf.code == "v" && regex_to_extract_data_from_a_string(sf.value, /Congress/i) }
     end.nil?
   end
 
@@ -160,17 +160,17 @@ class MarcFormatProcessor
   def games?(record)
     %w[r m].include?(record.leader[6]) &&
       (%w[g w].include?(record.leader[16]) ||
-      record['006'] && record['006'].value[9] == 'g' ||
-      record['008'] && (%w[g w].include?(record['008'].value[33]) || record['008'].value[26] == 'g'))
+      record["006"] && record["006"].value[9] == "g" ||
+      record["008"] && (%w[g w].include?(record["008"].value[33]) || record["008"].value[26] == "g"))
   end
 
   # Checks 006 and 008 for instructional material
   def instructional_material?(record)
-    record['006'] && record['006'].value[16] == 'q' || record['008'] && record['008'].value[33] == 'q'
+    record["006"] && record["006"].value[16] == "q" || record["008"] && record["008"].value[33] == "q"
   end
 
   # Override for Book when leader(6-7) is 'am' - issue#172
   def book?(record)
-    record.leader[6] == 'a' && record.leader[7] == 'm' && local_formats(record).include?('Archives/Manuscripts')
+    record.leader[6] == "a" && record.leader[7] == "m" && local_formats(record).include?("Archives/Manuscripts")
   end
 end
