@@ -23,4 +23,3 @@ group :development, :test do
   gem 'rubocop'
   gem 'simplecov', '< 0.18' # CodeClimate does not work with .18 or later
 end
-
