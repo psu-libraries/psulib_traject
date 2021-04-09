@@ -3,7 +3,7 @@
 set :environment_variable, 'RUBY_ENVIRONMENT'
 # Overrides the default :rake job type of
 # job_type :rake,    "cd :path && :environment_variable=:environment bundle exec rake :task --silent :output"
-job_type :rake,    "cd :path && JRUBY_OPTS=\"-J-Xmx4028m\" :environment_variable=:environment bundle exec rake :task --silent :output"
+job_type :rake, 'cd :path && JRUBY_OPTS="-J-Xmx4028m" :environment_variable=:environment bundle exec rake :task --silent :output'
 
 # Process incrementals (adds/deletes from Symphony) daily
 # Changes to this schedule should be reflected in the "Traject Incrementals (daily)" alert in splunk
