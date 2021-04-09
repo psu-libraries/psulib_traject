@@ -1,0 +1,35 @@
+name: CI Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+    CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+    JRUBY_OPTS: --debug
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+      
+    - name: Install Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true
+        ruby-version: jruby-9.2
+    
+    - name: Check Rubocop
+      run: bundle exec rubocop
+          
+    - name: Run RSpec with coverage reporting
+      uses: paambaati/codeclimate-action@v2.7.5
+      with:
+        coverageCommand: bundle exec rspec
+
