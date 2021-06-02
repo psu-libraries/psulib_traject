@@ -47,8 +47,6 @@ class MarcMediaTypeProcessor
         results << case field.value[0]
                    when 'g'
                      'Slide' if field.value[1] == 's'
-                   when 'h'
-                     'Microfilm/Microfiche'
                    when 'k'
                      'Photo' if field.value[1] == 'h'
                    when 'm'
@@ -100,7 +98,6 @@ class MarcMediaTypeProcessor
     [].tap do |results|
       Traject::MarcExtractor.cached('300a', alternate_script: false).collect_matching_lines(record) do |field, spec, extractor|
         field300a = extractor.collect_subfields(field, spec).first
-        results << 'Microfilm/Microfiche' if field300a =~ Regexp.union(/microfilm/i, /microfiche/i)
         results << 'Photo' if field300a =~ /photograph/i
         if field300a =~ Regexp.union(/remote-sensing image/i, /remote sensing image/i)
           results << 'Remote-sensing image'

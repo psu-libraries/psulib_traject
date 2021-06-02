@@ -22,9 +22,9 @@ RSpec.describe 'Media types spec:' do
       expect(result['media_type_facet']).to contain_exactly 'Blu-ray', 'DVD'
     end
 
-    it 'correctly sets media type as Microfilm/Microfiche from 007' do
+    it 'does NOT set the media type as Microfilm/Microfiche from 007' do
       result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'media_007_0.mrc')).to_a.first)
-      expect(result['media_type_facet']).to contain_exactly 'Microfilm/Microfiche'
+      expect(result['media_type_facet']).to be_nil
     end
 
     it 'correctly sets media type as Photo from 007' do
@@ -64,7 +64,7 @@ RSpec.describe 'Media types spec:' do
 
     it 'correctly sets media types from 300' do
       result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'media_300.mrc')).to_a.first)
-      expect(result['media_type_facet']).to contain_exactly 'MPEG-4', 'Piano/Organ roll', 'Video CD', 'Microfilm/Microfiche'
+      expect(result['media_type_facet']).to contain_exactly 'MPEG-4', 'Piano/Organ roll', 'Video CD'
     end
 
     it 'maps CD based on 300' do
