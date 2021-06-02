@@ -23,21 +23,21 @@ module PsulibTraject
 
     private
 
-    def collections_with_prefix
-      collections.select { |c| c.name.scan(/#{ConfigSettings.solr.collection_name}/) }
-    end
-
-    def collections
-      resp = connection.get(COLLECTION_PATH, action: 'LIST')
-      JSON.parse(resp.body)['collections'].map { |collection| SolrCollection.new(collection) }
-    end
-
-    def connection
-      @connection ||= Faraday.new(ConfigSettings.solr.url) do |faraday|
-        faraday.request :multipart
-        faraday.adapter :net_http
+      def collections_with_prefix
+        collections.select { |c| c.name.scan(/#{ConfigSettings.solr.collection_name}/) }
       end
-    end
+
+      def collections
+        resp = connection.get(COLLECTION_PATH, action: 'LIST')
+        JSON.parse(resp.body)['collections'].map { |collection| SolrCollection.new(collection) }
+      end
+
+      def connection
+        @connection ||= Faraday.new(ConfigSettings.solr.url) do |faraday|
+          faraday.request :multipart
+          faraday.adapter :net_http
+        end
+      end
   end
 
   # Lightweight Solr collection abstraction
