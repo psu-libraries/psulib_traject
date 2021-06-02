@@ -12,3 +12,7 @@ Metrics/AbcSize:
 Metrics/PerceivedComplexity:
   Exclude:
       - 'lib/traject/readers/marc_combining_reader.rb'
+
+Layout/IndentationConsistency:
+  EnforcedStyle: indented_internal_methods
+

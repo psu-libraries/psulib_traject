@@ -228,10 +228,9 @@ to_field 'format' do |record, accumulator|
 end
 
 # Media Types Facet
-media_type_processor = MarcMediaTypeProcessor.new
 to_field 'media_type_facet' do |record, accumulator, context|
   access_facet = context.output_hash['access_facet']
-  media_types = media_type_processor.resolve_media_types(record, access_facet)
+  media_types = MarcMediaTypeProcessor.call(record: record, access_facet: access_facet)
   accumulator.replace(media_types)
 end
 
