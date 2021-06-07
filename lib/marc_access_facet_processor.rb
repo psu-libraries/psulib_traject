@@ -14,7 +14,7 @@ class MarcAccessFacetProcessor
     access = determine_access_label record
 
     access << 'Online' if hathi_access? context
-    access << 'Open Access' if open_access? record
+    access << 'Free to Read' if open_access? record
 
     access.compact!
     access.uniq!
