@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'faraday'
+
 namespace :solr do
   desc 'Updates solr config files from psulib_blacklight'
   task :conf do
