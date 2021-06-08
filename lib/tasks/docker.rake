@@ -20,8 +20,8 @@ namespace :docker do
 
   task :clean do
     print `docker exec -it felix \
-            post -c psul_blacklight \
-                 -d '<delete><query>*:*</query></delete>' -out 'yes'`
+            post -c psul_catalog \
+                 -d '<delete><query>*:*</query></delete>'`
   end
 
   task :first_start do
@@ -31,7 +31,7 @@ namespace :docker do
             -p 8983:8983 \
             -v "$(pwd)"/solr/conf:/myconfig \
             solr:7.4.0 \
-            solr-create -c psul_blacklight -d /myconfig`
+            solr-create -c psul_catalog -d /myconfig`
   end
 
   task :pull do
@@ -44,7 +44,7 @@ namespace :docker do
 
   task :conf do
     print `docker exec -it felix \
-            cp -R /myconfig/. /opt/solr/server/solr/psul_blacklight/conf/`
+            cp -R /myconfig/. /opt/solr/server/solr/psul_catalog/conf/`
   end
 
   task :down do
