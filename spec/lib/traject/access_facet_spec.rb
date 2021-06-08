@@ -47,9 +47,9 @@ RSpec.describe 'Subjects spec:' do
       expect(result['access_facet']).to be_nil
     end
 
-    it 'produces Open Access when a record has a copy that appears to be "open accessy"' do
+    it 'produces "Free to Read" when a record has a copy that appears to be "open accessy"' do
       result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'access_open_access.mrc')).to_a.first)
-      expect(result['access_facet']).to contain_exactly 'Online', 'Open Access'
+      expect(result['access_facet']).to contain_exactly 'Online', 'Free to Read'
     end
 
     it 'produces Online when a record has a HathiTrust copy with only "allow" permissions' do
