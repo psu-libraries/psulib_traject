@@ -5,12 +5,6 @@ RSpec::Matchers.define_negated_matcher :not_include, :include
 RSpec.describe 'Macros spec:' do
   let(:leader) { '1234567890' }
 
-  before(:all) do
-    c = './lib/traject/psulib_config.rb'
-    @indexer = Traject::Indexer.new
-    @indexer.load_config_file(c)
-  end
-
   describe '#extract_link_data' do
     context 'A record where indicator 2 is 0 and magic word is not in one of the label subfields' do
       let(:url_856_1) do
@@ -18,7 +12,7 @@ RSpec.describe 'Macros spec:' do
                                                                             '5d' },
                                                                    { 'z' => 'This is a note' }] } }
       end
-      let(:result_1) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_1], 'leader' => leader)) }
+      let(:result_1) { indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_1], 'leader' => leader)) }
 
       it 'produces a fulltext link' do
         expect(result_1['full_links_struct']).to match ['{"prefix":"","text":"scholarsphere.psu.edu","url":"https://scholarsphere.ps'\
@@ -32,7 +26,7 @@ RSpec.describe 'Macros spec:' do
                                                                             '5d' },
                                                                   { 'z' => 'This is a note' }] } }
       end
-      let(:result_1) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_2], 'leader' => leader)) }
+      let(:result_1) { indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_2], 'leader' => leader)) }
 
       it 'produces a fulltext link' do
         expect(result_1['full_links_struct']).to match ['{"prefix":"","text":"scholarsphere.psu.edu","url":"https://scholarsphere.ps'\
@@ -45,7 +39,7 @@ RSpec.describe 'Macros spec:' do
         { '856' => { 'ind1' => ' ', 'ind2' => ' ', 'subfields' => [{ 'u' => 'https://scholarsphere.psu.edu/files/02870v8'\
                                                                             '5d' }] } }
       end
-      let(:result_1) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_2], 'leader' => leader)) }
+      let(:result_1) { indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_2], 'leader' => leader)) }
 
       it 'produces a fulltext link' do
         expect(result_1['full_links_struct']).to match ['{"prefix":"","text":"scholarsphere.psu.edu","url":"https://scholarsphere.ps'\
@@ -60,7 +54,7 @@ RSpec.describe 'Macros spec:' do
                                                                      'ml' },
                                                                    { '3' => 'Carrots executive summary peas' }] } }
       end
-      let(:result_3) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_3], 'leader' => leader)) }
+      let(:result_3) { indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_3], 'leader' => leader)) }
 
       it 'produces a partial link' do
         expect(result_3['partial_links_struct']).to match ['{"prefix":"Carrots executive summary peas","text":"library.columbia.edu","url":"http://library.columbi'\
@@ -76,7 +70,7 @@ RSpec.describe 'Macros spec:' do
                                                                      'ml' },
                                                                   { '3' => 'Carrots executive summary peas' }] } }
       end
-      let(:result_3) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_7], 'leader' => leader)) }
+      let(:result_3) { indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_7], 'leader' => leader)) }
 
       it 'produces a partial link' do
         expect(result_3['partial_links_struct']).to match ['{"prefix":"Carrots executive summary peas","text":"library.columbia.edu","url":"http://library.columbia.'\
@@ -100,7 +94,7 @@ RSpec.describe 'Macros spec:' do
                ] } }
         ]
       end
-      let(:result_5) { @indexer.map_record(MARC::Record.new_from_hash('fields' => url_856_5, 'leader' => leader)) }
+      let(:result_5) { indexer.map_record(MARC::Record.new_from_hash('fields' => url_856_5, 'leader' => leader)) }
 
       it 'produces 1 supplemental link and 1 partial link' do
         expect(result_5['partial_links_struct']).to match ['{"prefix":"","text":"usacac.army.mil","url":"http://usacac.army.mil/CAC2'\
@@ -117,7 +111,7 @@ RSpec.describe 'Macros spec:' do
                               'are%20Repositories%20%3A%20proceedings%20%3A%20May%2031%20-%20June%201%2C%202014%2C%20Hyd'\
                               'erabad%2C%20India' }] } }
       end
-      let(:result_6) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_6], 'leader' => leader)) }
+      let(:result_6) { indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_6], 'leader' => leader)) }
 
       it 'produces a fulltext link with text that drops summon\'s sub-domains' do
         expect(result_6['full_links_struct']).to match ['{"prefix":"","text":"serialssolutions.com","url":"http://SK8ES4MC2L.search.'\
@@ -134,7 +128,7 @@ RSpec.describe 'Macros spec:' do
                                                                      's/9780525953951.jpg' },
                                                                    { '3' => 'Cover image' }] } }
       end
-      let(:result_4) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_4], 'leader' => leader)) }
+      let(:result_4) { indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_4], 'leader' => leader)) }
 
       it 'doesn\'t produce any URL' do
         expect(result_4['full_links_struct']).to be_nil
@@ -153,7 +147,7 @@ RSpec.describe 'Macros spec:' do
                                                                    { 'z' => 'Another note' }] } }
       end
 
-      let(:result_8) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_8], 'leader' => leader)) }
+      let(:result_8) { indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_8], 'leader' => leader)) }
 
       it 'produce a link struct with a label, prefix and notes' do
         expect(result_8['full_links_struct']).to match ['{"prefix":"v.7","text":"Electronic resource (PDF)","url":"http://purl.access.gpo.gov/GPO/LPS47374",'\
@@ -167,7 +161,7 @@ RSpec.describe 'Macros spec:' do
     let(:genre655_fast) { { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Fiction films' }, { 'b' => '1900' }, { '2' => 'fast' }, { 'z' => 'Germany' }] } } }
     let(:genre655_lcgft) { { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Drama.' }, { '2' => 'lcgft' }] } } }
     let(:genre655_aat) { { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Novels' }, { '2' => 'aat' }] } } }
-    let(:result) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [genre650, genre655_fast, genre655_lcgft, genre655_aat], 'leader' => leader)) }
+    let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => [genre650, genre655_fast, genre655_lcgft, genre655_aat], 'leader' => leader)) }
 
     it 'limits 655 to fast and lcgft genres' do
       expect(result['genre_display_ssm']).to include('Fiction films 1900 Germany')
@@ -181,13 +175,13 @@ RSpec.describe 'Macros spec:' do
     let(:oclc_no_035_3) { { '035' => { 'ind1' => '', 'ind2' => '', 'subfields' => [{ 'a' => '(ocm)40777018' }] } } }
     let(:oclc_no_035_4) { { '035' => { 'ind1' => '', 'ind2' => '', 'subfields' => [{ 'a' => '(OCLC)70197573' }] } } }
     let(:oclc_no_035_5) { { '035' => { 'ind1' => '', 'ind2' => '', 'subfields' => [{ 'a' => 'LIAS92' }] } } }
-    let(:result) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [oclc_no_035_1, oclc_no_035_2, oclc_no_035_3, oclc_no_035_4, oclc_no_035_5], 'leader' => leader)) }
+    let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => [oclc_no_035_1, oclc_no_035_2, oclc_no_035_3, oclc_no_035_4, oclc_no_035_5], 'leader' => leader)) }
 
     context 'when there is no 035' do
       it 'does not map record' do
         @empty_record = MARC::Record.new
         @empty_record.append(MARC::ControlField.new('001', '000000000'))
-        result = @indexer.map_record(@empty_record)
+        result = indexer.map_record(@empty_record)
         expect(result['oclc_number_ssim']).to be_nil
       end
     end

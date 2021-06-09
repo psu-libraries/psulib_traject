@@ -7,12 +7,15 @@ AllCops:
 # https://github.com/sul-dlss/searchworks_traject_indexer/blob/master/lib/traject/readers/marc_combining_reader.rb
 Metrics/AbcSize:
   Exclude:
-      - 'lib/traject/readers/marc_combining_reader.rb'
+    - 'lib/traject/readers/marc_combining_reader.rb'
 
 Metrics/PerceivedComplexity:
   Exclude:
-      - 'lib/traject/readers/marc_combining_reader.rb'
+    - 'lib/traject/readers/marc_combining_reader.rb'
 
 Layout/IndentationConsistency:
   EnforcedStyle: indented_internal_methods
 
+Style/TrivialAccessors:
+  Exclude:
+    - 'spec/spec_helper.rb'
