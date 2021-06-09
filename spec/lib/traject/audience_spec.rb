@@ -26,14 +26,8 @@ RSpec.describe 'Audience spec:' do
     ] } }
   end
   let(:audience_qual_marc) do
-    @indexer.map_record(MARC::Record.new_from_hash('fields' => [audience_qual1, audience_qual2, audience_qual3],
-                                                   'leader' => leader))
-  end
-
-  before(:all) do
-    c = './lib/traject/psulib_config.rb'
-    @indexer = Traject::Indexer.new
-    @indexer.load_config_file(c)
+    indexer.map_record(MARC::Record.new_from_hash('fields' => [audience_qual1, audience_qual2, audience_qual3],
+                                                  'leader' => leader))
   end
 
   describe 'Record with qualifying audience data' do

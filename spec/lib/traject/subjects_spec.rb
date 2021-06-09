@@ -1,12 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe 'Subjects spec:' do
-  before(:all) do
-    c = './lib/traject/psulib_config.rb'
-    @indexer = Traject::Indexer.new
-    @indexer.load_config_file(c)
-  end
-
   describe 'process_subject_hierarchy' do
     before(:all) do
       @subject610 = { '610' => { 'ind1' => '', 'ind2' => '5', 'subfields' => [{ 'a' => 'Include' }] } }
@@ -16,7 +10,7 @@ RSpec.describe 'Subjects spec:' do
     end
 
     it 'only separates v,x,y,z with em dash, strips punctuation' do
-      result = @indexer.map_record(@sample_marc)
+      result = indexer.map_record(@sample_marc)
       expect(result['subject_display_ssm']).to include('Include')
       expect(result['subject_display_ssm']).to include("John. Title#{SEPARATOR}split genre 2015")
       expect(result['subject_display_ssm']).to include("Fiction#{SEPARATOR}1492#{SEPARATOR}don't ignore TITLE")
@@ -31,7 +25,7 @@ RSpec.describe 'Subjects spec:' do
     end
 
     it 'includes subjects split along v, x, y and z, strips punctuation' do
-      result = @indexer.map_record(@sample_marc)
+      result = indexer.map_record(@sample_marc)
       expect(result['subject_topic_facet']).to include('John. Title 2015')
       expect(result['subject_topic_facet']).to include('Fiction')
     end

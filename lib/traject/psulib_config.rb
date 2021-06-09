@@ -221,17 +221,15 @@ to_field 'access_facet' do |record, accumulator, context|
 end
 
 # Formats
-format_processor = MarcFormatProcessor.new
 to_field 'format' do |record, accumulator|
-  formats = format_processor.resolve_formats record
+  formats = MarcFormatProcessor.call(record: record)
   accumulator.replace(formats)
 end
 
 # Media Types Facet
-media_type_processor = MarcMediaTypeProcessor.new
 to_field 'media_type_facet' do |record, accumulator, context|
   access_facet = context.output_hash['access_facet']
-  media_types = media_type_processor.resolve_media_types(record, access_facet)
+  media_types = MarcMediaTypeProcessor.call(record: record, access_facet: access_facet)
   accumulator.replace(media_types)
 end
 

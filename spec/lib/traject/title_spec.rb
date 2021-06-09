@@ -5,12 +5,6 @@ RSpec::Matchers.define_negated_matcher :not_include, :include
 RSpec.describe 'Title spec:' do
   let(:leader) { '1234567890' }
 
-  before(:all) do
-    c = './lib/traject/psulib_config.rb'
-    @indexer = Traject::Indexer.new
-    @indexer.load_config_file(c)
-  end
-
   describe 'Record with a vernacular title' do
     let(:field) { 'title_display_ssm' }
     let(:subfield) { 'title_latin_display_ssm' }
@@ -24,7 +18,7 @@ RSpec.describe 'Title spec:' do
                                                                  { 'a' => '小說ワンダフルライフ /' },
                                                                  { 'c' => '是枝裕和.' }] } }
     end
-    let(:result) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [title_245, title_vern_245], 'leader' => leader)) }
+    let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => [title_245, title_vern_245], 'leader' => leader)) }
 
     it 'has the vernacular title as the title statement' do
       expect(result[field]).to eq ['小說ワンダフルライフ / 是枝裕和']
@@ -49,7 +43,7 @@ RSpec.describe 'Title spec:' do
                                                                  { 'b' => 'suivi de la feintise, Jeff Edmunds /' },
                                                                  { 'c' => 'Jean Lahougue, Jeff Edmunds' }] } }
     end
-    let(:result) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [title_245], 'leader' => leader)) }
+    let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => [title_245], 'leader' => leader)) }
 
     it 'has the latin title as the title statement' do
       expect(result[field]).to eq ['La ressemblance : suivi de la feintise, Jeff Edmunds / Jean Lahougue, Jeff Edmunds']
@@ -72,7 +66,7 @@ RSpec.describe 'Title spec:' do
                                                              { 't' => 'International organizations and competition law : diverging rationale? --' },
                                                              { 't' => 'Market governance in China --' }] } }
     end
-    let(:result) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [fields], 'leader' => leader)) }
+    let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => [fields], 'leader' => leader)) }
 
     it 'returns with trailing -- chomped' do
       expect(result[field]).not_to eq nil

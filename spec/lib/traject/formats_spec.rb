@@ -1,110 +1,167 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Formats spec:' do
-  before(:all) do
-    c = './lib/traject/psulib_config.rb'
-    @indexer = Traject::Indexer.new
-    @indexer.load_config_file(c)
+RSpec.describe MarcFormatProcessor do
+  subject { result['format'] }
+
+  let(:result) { indexer.map_record(MARC::Reader.new(File.join('./spec/fixtures', record)).to_a.first) }
+
+  describe '#resolve_formats' do
+    context 'with an empty record' do
+      let(:empty_record) do
+        MARC::Record.new.tap do |record|
+          record.append(MARC::ControlField.new('001', '000000000'))
+        end
+      end
+      let(:result) { indexer.map_record(empty_record) }
+
+      it { is_expected.to contain_exactly('Other') }
+    end
+
+    context 'with the record as no 008' do
+      let(:record) { 'format_no_008.mrc' }
+
+      it { is_expected.to contain_exactly('Microfilm/Microfiche') }
+    end
+
+    context 'with multiple 949s' do
+      let(:record) { 'format_949t_juvenile_book.mrc' }
+
+      it { is_expected.to contain_exactly 'Instructional Material', 'Juvenile Book', 'Microfilm/Microfiche' }
+    end
+
+    context 'with both Statute and Microfilm/Microfiche in 949t' do
+      let(:record) { 'format_949t_statute.mrc' }
+
+      it { is_expected.to contain_exactly 'Statute', 'Microfilm/Microfiche' }
+    end
+
+    context 'with Microfilm/Microfiche from 006' do
+      let(:record) { 'format_006_instructional_material.mrc' }
+
+      it { is_expected.to contain_exactly 'Microfilm/Microfiche' }
+    end
+
+    context 'with Microfilm/Microfiche in government docs' do
+      let(:record) { 'format_gov_doc.mrc' }
+
+      it { is_expected.to contain_exactly 'Microfilm/Microfiche' }
+    end
+
+    context 'with 260b or 264b contain variations of "University Press"' do
+      let(:record) { 'format_university_press.mrc' }
+
+      it { is_expected.to contain_exactly 'Book' }
+    end
+
+    context 'with Article in leader byte 6 and byte 7' do
+      let(:record) { 'format_article.mrc' }
+
+      it { is_expected.to contain_exactly 'Article' }
+    end
+
+    context 'when overriding Book in leader byte 6 and byte 7' do
+      let(:record) { 'format_leader6_book_override.mrc' }
+
+      it { is_expected.to contain_exactly 'Book' }
+    end
+
+    context 'with Thesis/Dissertation if the record has a 502' do
+      let(:record) { 'format_502_thesis.mrc' }
+
+      it { is_expected.to contain_exactly 'Thesis/Dissertation' }
+    end
+
+    context 'with Newspaper' do
+      let(:record) { 'format_newspaper.mrc' }
+
+      it { is_expected.to contain_exactly 'Newspaper' }
+    end
+
+    context 'with Games/Toys from 006' do
+      let(:record) { 'format_006_games.mrc' }
+
+      it { is_expected.to contain_exactly 'Games/Toys' }
+    end
+
+    context 'with Games/Toys from 008' do
+      let(:record) { 'format_games.mrc' }
+
+      it { is_expected.to contain_exactly 'Games/Toys' }
+    end
+
+    context 'with Proceeding/Congress' do
+      let(:record) { 'format_proceeding.mrc' }
+
+      it { is_expected.to contain_exactly 'Proceeding/Congress' }
+    end
+
+    context 'with Proceeding/Congress from $6xx' do
+      let(:record) { 'format_congress.mrc' }
+
+      it { is_expected.to contain_exactly 'Proceeding/Congress' }
+    end
+
+    context 'with Other when no other format found' do
+      # A fake marc record to ensure no formats are detected
+      record = '00085cxm a2200049Ii 45000010005000000080030000051234150224t21052015cau dq x eng d'
+      let(:result) { indexer.map_record(MARC::Reader.new(StringIO.new(record)).to_a.first) }
+
+      it { is_expected.to contain_exactly 'Other' }
+    end
   end
 
-  describe 'process_formats' do
-    let(:fixture_path) { './spec/fixtures' }
+  describe '#type_of_record' do
+    subject { described_class.new(record).type_of_record }
 
-    it 'works with empty record, returns format as Other' do
-      @empty_record = MARC::Record.new
-      @empty_record.append(MARC::ControlField.new('001', '000000000'))
-      result = @indexer.map_record(@empty_record)
-      expect(result['format']).to contain_exactly 'Other'
+    let(:record) { OpenStruct.new(leader: '      ta') }
+
+    it { is_expected.to eq('Archives/Manuscripts') }
+  end
+
+  describe '#bibliographic_level' do
+    subject { described_class.new(record).bibliographic_level }
+
+    context 'with b leader' do
+      let(:record) { OpenStruct.new(leader: '       b') }
+
+      it { is_expected.to eq('Journal/Periodical') }
     end
 
-    it 'correctly sets formats when record has no 008' do
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_no_008.mrc')).to_a.first)
-      expect(result['format']).to contain_exactly 'Book'
+    context 'with s leader' do
+      let(:record) { OpenStruct.new(leader: '       s') }
+
+      it { is_expected.to eq('Journal/Periodical') }
     end
 
-    it 'correctly sets format for multiple 949s' do
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_949t_juvenile_book.mrc')).to_a.first)
-      expect(result['format']).to contain_exactly 'Instructional Material', 'Juvenile Book'
+    context 'with c leader' do
+      let(:record) { OpenStruct.new(leader: '       c') }
+
+      it { is_expected.to eq('Archives/Manuscripts') }
     end
 
-    it 'prefers format as Statute by checking 949t over Government Document' do
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_949t_statute.mrc')).to_a.first)
-      expect(result['format']).to contain_exactly 'Statute'
+    context 'with d leader' do
+      let(:record) { OpenStruct.new(leader: '       d') }
+
+      it { is_expected.to eq('Book') }
     end
 
-    it 'correctly sets format as Instructional Material from 006' do
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_006_instructional_material.mrc')).to_a.first)
-      expect(result['format']).to contain_exactly 'Instructional Material'
+    context 'with empty leader' do
+      let(:record) { OpenStruct.new(leader: '        ') }
+
+      it { is_expected.to eq('') }
     end
+  end
 
-    it 'correctly sets format as Government Document' do
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_gov_doc.mrc')).to_a.first)
-      expect(result['format']).to contain_exactly 'Government Document'
-    end
+  describe '#thesis_or_book' do
+    subject { described_class.new(record).thesis_or_book }
 
-    it 'correctly sets format as Book if 260b or 264b contain variations of "University Press"' do
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_university_press.mrc')).to_a.first)
-      expect(result['format']).to contain_exactly 'Book'
-    end
+    context 'with a matchin 008 field' do
+      let(:record) do
+        record = '00085cxm a2200049Ii 45000010005000000080030000051234150224t21052015cau dq x engmd'
+        MARC::Reader.new(StringIO.new(record)).first
+      end
 
-    it 'correctly sets formats checking leader byte 6 and byte 7' do
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_article.mrc')).to_a.first)
-      expect(result['format']).to contain_exactly 'Article'
-
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_leader6_book.mrc')).to_a.first)
-      expect(result['format']).to contain_exactly 'Book'
-
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_leader6_book_override.mrc')).to_a.first)
-      expect(result['format']).to contain_exactly 'Book'
-
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_leader6_video.mrc')).to_a.first)
-      expect(result['format']).to contain_exactly 'Video'
-
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_leader6_thesis.mrc')).to_a.first)
-      expect(result['format']).to contain_exactly 'Thesis/Dissertation'
-
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_leader6_archives.mrc')).to_a.first)
-      expect(result['format']).to contain_exactly 'Archives/Manuscripts'
-    end
-
-    it 'correctly sets 007 formats' do
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_007_maps.mrc')).to_a.first)
-      expect(result['format']).to contain_exactly 'Maps, Atlases, Globes', 'Musical Score'
-    end
-
-    it 'correctly sets format as Thesis/Dissertation if the record has a 502' do
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_502_thesis.mrc')).to_a.first)
-      expect(result['format']).to contain_exactly 'Thesis/Dissertation'
-    end
-
-    it 'correctly sets format as Newspaper' do
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_newspaper.mrc')).to_a.first)
-      expect(result['format']).to contain_exactly 'Newspaper'
-    end
-
-    it 'correctly sets format as Games/Toys from 006' do
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_006_games.mrc')).to_a.first)
-      expect(result['format']).to contain_exactly 'Games/Toys'
-    end
-
-    it 'correctly sets format as Games/Toys from 008' do
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_games.mrc')).to_a.first)
-      expect(result['format']).to contain_exactly 'Games/Toys'
-    end
-
-    it 'correctly sets format as Proceeding/Congress' do
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_proceeding.mrc')).to_a.first)
-      expect(result['format']).to contain_exactly 'Proceeding/Congress'
-    end
-
-    it 'correctly sets format as Proceeding/Congress from $6xx' do
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_congress.mrc')).to_a.first)
-      expect(result['format']).to contain_exactly 'Proceeding/Congress'
-    end
-
-    it 'correctly sets format as Other when no other format found' do
-      result = @indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'format_other.mrc')).to_a.first)
-      expect(result['format']).to contain_exactly 'Other'
+      it { is_expected.to eq('Thesis/Dissertation') }
     end
   end
 end

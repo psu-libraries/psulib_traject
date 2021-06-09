@@ -3,12 +3,6 @@
 RSpec.describe 'Bound with spec:' do
   let(:leader) { '1234567890' }
 
-  before(:all) do
-    c = './lib/traject/psulib_config.rb'
-    @indexer = Traject::Indexer.new
-    @indexer.load_config_file(c)
-  end
-
   describe 'Child items bound in' do
     let(:bound_with_catkey) do
       { '591' => { 'ind1' => ' ', 'ind2' => ' ', 'subfields' => [
@@ -24,10 +18,10 @@ RSpec.describe 'Bound with spec:' do
       ] } }
     end
     let(:bound_with_marc) do
-      @indexer.map_record(MARC::Record.new_from_hash('fields' => [bound_with_catkey],
-                                                     'leader' => leader))
+      indexer.map_record(MARC::Record.new_from_hash('fields' => [bound_with_catkey],
+                                                    'leader' => leader))
     end
-    let(:bound_with_multi_marc) { @indexer.map_record(MARC::Record.new_from_hash('fields' => [bound_with_catkey, bound_with_multi], 'leader' => leader)) }
+    let(:bound_with_multi_marc) { indexer.map_record(MARC::Record.new_from_hash('fields' => [bound_with_catkey, bound_with_multi], 'leader' => leader)) }
 
     it 'shows the parent title' do
       expect(bound_with_marc['bound_with_struct']).to match ['{"bound_title":"The high-caste Hindu woman / With '\
