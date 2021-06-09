@@ -221,9 +221,8 @@ to_field 'access_facet' do |record, accumulator, context|
 end
 
 # Formats
-format_processor = MarcFormatProcessor.new
 to_field 'format' do |record, accumulator|
-  formats = format_processor.resolve_formats record
+  formats = MarcFormatProcessor.call(record: record)
   accumulator.replace(formats)
 end
 
