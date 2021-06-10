@@ -1,74 +1,156 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Media types spec:' do
-  describe 'process_media_types' do
-    let(:fixture_path) { './spec/fixtures' }
+RSpec.describe MarcMediaTypeProcessor do
+  subject { result['media_type_facet'] }
 
-    it 'works with empty record, return empty media type' do
-      @empty_record = MARC::Record.new
-      @empty_record.append(MARC::ControlField.new('001', '000000000'))
-      result = indexer.map_record(@empty_record)
-      expect(result['media_type_facet']).to be_nil
+  let(:result) { indexer.map_record(MARC::Reader.new(File.join('./spec/fixtures', record)).to_a.first) }
+
+  describe '#resolve' do
+    context 'with an empty record' do
+      let(:empty_record) do
+        MARC::Record.new.tap do |record|
+          record.append(MARC::ControlField.new('001', '000000000'))
+        end
+      end
+      let(:result) { indexer.map_record(empty_record) }
+
+      it { is_expected.to be_nil }
     end
 
-    it 'correctly sets 949a media types' do
-      result = indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'media_949a.mrc')).to_a.first)
-      expect(result['media_type_facet']).to contain_exactly 'Blu-ray', 'DVD'
+    context 'with 949a media types' do
+      let(:record) { 'media_949a.mrc' }
+
+      it { is_expected.to contain_exactly('Blu-ray', 'DVD') }
     end
 
-    it 'does NOT set the media type as Microfilm/Microfiche from 007' do
-      result = indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'media_007_0.mrc')).to_a.first)
-      expect(result['media_type_facet']).to be_nil
+    context 'with media type as Microfilm/Microfiche from 007' do
+      let(:record) { 'media_007_0.mrc' }
+
+      it { is_expected.to be_nil }
     end
 
-    it 'correctly sets media type as Photo from 007' do
-      @record = MARC::Reader.new(File.join(fixture_path, 'media_007_1.mrc')).to_a.first
-      val = @record['007'].value
-      val[0] = 'k'
-      val[1] = 'h'
-      @record['007'].value = val
-      result = indexer.map_record(@record)
-      expect(result['media_type_facet']).to contain_exactly 'Photo'
+    context 'with media type as Wire recording from 007' do
+      let(:record) { 'media_007_1.mrc' }
+
+      it { is_expected.to contain_exactly 'Wire recording' }
     end
 
-    it 'correctly sets media type as Wire recording from 007' do
-      result = indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'media_007_1.mrc')).to_a.first)
-      expect(result['media_type_facet']).to contain_exactly 'Wire recording'
+    context 'with media type as 78 rpm disc from 007' do
+      let(:record) { 'media_007_3.mrc' }
+
+      it { is_expected.to contain_exactly '78 rpm disc' }
     end
 
-    it 'correctly sets media type as 78 rpm disc from 007' do
-      result = indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'media_007_3.mrc')).to_a.first)
-      expect(result['media_type_facet']).to contain_exactly '78 rpm disc'
+    context 'with media type as Videocassette (Beta) from 007' do
+      let(:record) { 'media_007_4.mrc' }
+
+      it { is_expected.to contain_exactly 'Videocassette (Beta)' }
     end
 
-    it 'correctly sets media type as Videocassette (Beta) from 007' do
-      result = indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'media_007_4.mrc')).to_a.first)
-      expect(result['media_type_facet']).to contain_exactly 'Videocassette (Beta)'
+    context 'with media type as Other video from 007' do
+      let(:record) { 'media_007_other.mrc' }
+
+      it { is_expected.to contain_exactly 'Other video' }
     end
 
-    it 'correctly sets media type as Other video from 007' do
-      result = indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'media_007_other.mrc')).to_a.first)
-      expect(result['media_type_facet']).to contain_exactly 'Other video'
+    context 'with media type as DVD from 538a' do
+      let(:record) { 'media_538a.mrc' }
+
+      it { is_expected.to contain_exactly 'DVD', 'Blu-ray' }
     end
 
-    it 'correctly sets media type as DVD from 538a' do
-      result = indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'media_538a.mrc')).to_a.first)
-      expect(result['media_type_facet']).to contain_exactly 'DVD', 'Blu-ray'
+    context 'with media types from 300' do
+      let(:record) { 'media_300.mrc' }
+
+      it { is_expected.to contain_exactly 'MPEG-4', 'Piano/Organ roll', 'Video CD' }
     end
 
-    it 'correctly sets media types from 300' do
-      result = indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'media_300.mrc')).to_a.first)
-      expect(result['media_type_facet']).to contain_exactly 'MPEG-4', 'Piano/Organ roll', 'Video CD'
+    context 'with a CD based on 300' do
+      let(:record) { '300_cd.mrc' }
+
+      it { is_expected.to contain_exactly 'CD' }
     end
 
-    it 'maps CD based on 300' do
-      result = indexer.map_record(MARC::Reader.new(File.join(fixture_path, '300_cd.mrc')).to_a.first)
-      expect(result['media_type_facet']).to contain_exactly 'CD'
+    context 'with vinyl based on 300' do
+      let(:record) { '300_vinyl.mrc' }
+
+      it { is_expected.to contain_exactly 'Vinyl disc' }
+    end
+  end
+
+  describe '#resolve_007' do
+    subject { described_class.new(record, access_facet).resolve_007 }
+
+    let(:record) do
+      MARC::Record.new.tap do |record|
+        record.append(MARC::ControlField.new('007', value))
+      end
     end
 
-    it 'maps vinyl based on 300' do
-      result = indexer.map_record(MARC::Reader.new(File.join(fixture_path, '300_vinyl.mrc')).to_a.first)
-      expect(result['media_type_facet']).to contain_exactly 'Vinyl disc'
+    let(:access_facet) { [] }
+
+    context 'when Slide' do
+      let(:value) { 'gs' }
+
+      it { is_expected.to contain_exactly('Slide') }
     end
+
+    context 'when Photo' do
+      let(:value) { 'kh' }
+
+      it { is_expected.to contain_exactly('Photo') }
+    end
+
+    context 'when Film' do
+      let(:value) { 'm' }
+
+      it { is_expected.to contain_exactly('Film') }
+    end
+
+    context 'when Remote-sensing image' do
+      let(:value) { 'r' }
+
+      it { is_expected.to contain_exactly('Remote-sensing image') }
+    end
+
+    context 'when Cylinder' do
+      let(:value) { 'se' }
+      let(:access_facet) { ['In the Library'] }
+
+      it { is_expected.to contain_exactly('Cylinder') }
+    end
+
+    context 'when Audiocassette' do
+      let(:value) { 's     j' }
+      let(:access_facet) { ['In the Library'] }
+
+      it { is_expected.to contain_exactly('Audiocassette') }
+    end
+
+    context 'when Piano/Organ roll' do
+      let(:value) { 'sq' }
+      let(:access_facet) { ['In the Library'] }
+
+      it { is_expected.to contain_exactly('Piano/Organ roll') }
+    end
+
+    context 'when we cannot determine' do
+      let(:value) { 'sx' }
+      let(:access_facet) { ['In the Library'] }
+
+      it { is_expected.to contain_exactly(nil) }
+    end
+  end
+
+  describe '#resolve_300a' do
+    subject { described_class.new(record, []).resolve_300a }
+
+    let(:record) do
+      MARC::Record.new.tap do |record|
+        record.append(MARC::DataField.new('300', '', '', ['a', 'remote-sensing image']))
+      end
+    end
+
+    it { is_expected.to contain_exactly('Remote-sensing image') }
   end
 end
