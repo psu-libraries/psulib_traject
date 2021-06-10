@@ -10,7 +10,7 @@ class HathiOverlapReducer
     hathi_csv.delete('oclc')
     hathi_csv.delete('rights')
     @hathi_report_filtered = hathi_csv.reject { |overlap_record| overlap_record['access'].nil? }
-                                      .reject { |overlap_record| EXCLUDE_FROM_HATHI.include?(overlap_record['local_id']) }
+      .reject { |overlap_record| EXCLUDE_FROM_HATHI.include?(overlap_record['local_id']) }
   end
 
   def hashify
@@ -37,7 +37,7 @@ class HathiOverlapReducer
       dupes.map.with_index do |record, index|
         next if record['local_id'] == dupes.at(index - 1)['local_id']
 
-        dupe_rows = dupes[index...index + MAX_POSSIBLE_DUPES].find_all { |r| r['local_id'] == record['local_id'] }
+        dupe_rows = dupes[index...index + MAX_POSSIBLE_DUPES].select { |r| r['local_id'] == record['local_id'] }
         reduce_dupe_rows dupe_rows
       end.compact
     end

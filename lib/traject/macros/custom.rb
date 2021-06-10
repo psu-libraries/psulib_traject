@@ -181,7 +181,7 @@ module Traject
 
       # Extract subfield values.
       def collect_subfield_values(field:, code:)
-        field.subfields.select { |sf| sf.code == code }.collect(&:value)
+        field.subfields.select { |sf| sf.code == code }.map(&:value)
       end
 
       # Feed the record to the MarcPubDateProcessor class to find the publication year.

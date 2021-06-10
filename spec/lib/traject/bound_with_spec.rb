@@ -28,6 +28,7 @@ RSpec.describe 'Bound with spec:' do
             'introduction by Rachel L. Bodley","bound_catkey":"355035","bound_format":"Microfilm, Microfiche, '\
             'etc.","bound_callnumber":"AY67.N5W7 1922-24"}']
     end
+
     it 'shows the binding notes when there are more than one 591' do
       expect(bound_with_multi_marc['bound_with_struct']).to include('{"bound_title":"blah blah blah"}')
     end
