@@ -32,11 +32,17 @@ extend Traject::Macros::Custom
 Config.setup do |config|
   config.const_name = 'ConfigSettings'
   config.use_env = true
+  config.env_prefix = 'SETTINGS'
+  config.env_separator = '__'
   config.load_and_set_settings(Config.setting_files('config', ENV['RUBY_ENVIRONMENT']))
 end
 
 settings do
-  provide 'solr.url', "#{ConfigSettings.solr.url}#{ConfigSettings.solr.collection_name}"
+  if ConfigSettings.solr.username && ConfigSettings.solr.password
+    provide 'solr.url', "#{ConfigSettings.solr.protocol}://#{ConfigSettings.solr.username}:#{ConfigSettings.solr.password}@#{ConfigSettings.solr.host}:#{ConfigSettings.solr.port}/solr/#{ConfigSettings.solr.collection_name}"
+  else
+    provide 'solr.url', "#{ConfigSettings.solr.protocol}://#{ConfigSettings.solr.host}:#{ConfigSettings.solr.port}/solr/#{ConfigSettings.solr.collection_name}"
+  end
   provide 'log.batch_size', ConfigSettings.log.batch_size
   provide 'solr.version', ConfigSettings.solr.version
   provide 'log.file', ConfigSettings.log.file
