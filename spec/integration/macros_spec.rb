@@ -2,7 +2,7 @@
 
 RSpec::Matchers.define_negated_matcher :not_include, :include
 
-RSpec.describe 'Macros spec:' do
+RSpec.describe 'Macros' do
   let(:leader) { '1234567890' }
 
   describe '#extract_link_data' do

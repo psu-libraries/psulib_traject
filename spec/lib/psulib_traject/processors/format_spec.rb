@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe MarcFormatProcessor do
+RSpec.describe PsulibTraject::Processors::Format do
   subject { result['format'] }
 
   let(:result) { indexer.map_record(MARC::Reader.new(File.join('./spec/fixtures', record)).to_a.first) }

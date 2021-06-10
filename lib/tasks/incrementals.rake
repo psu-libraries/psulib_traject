@@ -8,7 +8,7 @@ namespace :incrementals do
   desc 'Adds to the index'
   task :import, [:period] do |_task, args|
     indexer = Traject::Indexer::MarcIndexer.new
-    indexer.load_config_file('lib/traject/psulib_config.rb')
+    indexer.load_config_file('config/traject.rb')
     indexer.logger.info 'name="Sirsi Incremental" '\
                         'message="Indexing operation beginning" '\
                         "task=\"#{args[:period]} import\" "\

@@ -2,7 +2,7 @@
 
 RSpec::Matchers.define_negated_matcher :not_include, :include
 
-RSpec.describe 'Title spec:' do
+RSpec.describe 'Title' do
   let(:leader) { '1234567890' }
 
   describe 'Record with a vernacular title' do

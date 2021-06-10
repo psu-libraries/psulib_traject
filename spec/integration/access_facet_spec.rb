@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Subjects spec:' do
+RSpec.describe 'Access facet' do
   describe 'access_facet' do
     let(:fixture_path) { './spec/fixtures' }
 

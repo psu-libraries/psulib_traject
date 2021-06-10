@@ -2,7 +2,7 @@
 
 RSpec::Matchers.define_negated_matcher :not_include, :include
 
-RSpec.describe 'Psulib_config spec:' do
+RSpec.describe 'Config' do
   let(:leader) { '1234567890' }
   let(:fixture_path) { './spec/fixtures' }
 

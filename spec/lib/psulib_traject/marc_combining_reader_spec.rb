@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Traject::MarcCombiningReader do
+RSpec.describe PsulibTraject::MarcCombiningReader do
   subject(:reader) { described_class.new(File.open(File.join(fixture_path, 'split_items_test.mrc').to_s, 'r'), 'marc_source.type' => 'binary') }
 
   let(:fixture_path) { './spec/fixtures' }

@@ -51,7 +51,7 @@ $ ruby --version
 1. Convert marc records and import into Solr
 
    ```
-   $ bundle exec traject -c lib/traject/psulib_config.rb solr/sample_data/sample_psucat.mrc 
+   $ bundle exec traject -c config/traject.rb solr/sample_data/sample_psucat.mrc 
    ```
    
    You can download [other sample files from Box](https://psu.app.box.com/folder/53004724072).
@@ -62,7 +62,7 @@ For testing purposes you can run traject with the `--debug-mode` flag to
 display the output to the console (and not push the data to Solr).
 
 ```
-$ bundle exec traject --debug-mode -c lib/traject/psulib_config.rb solr/sample_data/sample_psucat.mrc
+$ bundle exec traject --debug-mode -c config/traject.rb solr/sample_data/sample_psucat.mrc
 ```
 
 ## HathiTrust ETAS data

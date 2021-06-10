@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'From psulib_marc.rb' do
+RSpec.describe PsulibTraject::Processors::PubDate do
   describe 'process_publication_date' do
     let(:fixture_path) { './spec/fixtures' }
 
