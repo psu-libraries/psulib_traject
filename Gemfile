@@ -20,6 +20,8 @@ group :development, :test do
   gem 'pry'
   gem 'pry-debugger-jruby'
   gem 'rspec'
-  gem 'rubocop'
+  gem 'rubocop', '~> 0.79'
+  gem 'rubocop-performance', '~> 1.1'
+  gem 'rubocop-rspec', '~> 1.3'
   gem 'simplecov', '< 0.18' # CodeClimate does not work with .18 or later
 end

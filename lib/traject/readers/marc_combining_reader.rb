@@ -23,7 +23,7 @@ module Traject
     end
 
     def combinable_records(&block)
-      return enum_for(:combinable_records) unless block_given?
+      return enum_for(:combinable_records) unless block
 
       # See https://github.com/jruby/jruby/issues/5275;
       enumerable = if defined?(JRUBY_VERSION)
@@ -84,7 +84,7 @@ module Traject
     end
 
     def each(*args, &block)
-      return to_enum(:each, *args) unless block_given?
+      return to_enum(:each, *args) unless block
 
       @left.each(*args, &block)
       @right.each(*args, &block)

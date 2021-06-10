@@ -13,7 +13,7 @@ RSpec.describe 'Psulib_config spec:' do
       end
       let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => [id], 'leader' => leader)) }
 
-      it 'should strip off white space at the end' do
+      it 'strips off white space at the end' do
         expect(result['id']).to eq ['2']
       end
     end
@@ -27,7 +27,7 @@ RSpec.describe 'Psulib_config spec:' do
       end
       let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => [id1, id2], 'leader' => leader)) }
 
-      it 'should only take the first match' do
+      it 'only takes the first match' do
         expect(result['id']).to eq ['2']
       end
     end

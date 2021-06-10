@@ -1,21 +1,15 @@
-inherit_from: .rubocop_todo.yml
+---
+inherit_from:
+  - .niftany/layout.yml
+  - .niftany/lint.yml
+  - .niftany/metrics.yml
+  - .niftany/naming.yml
+  - .niftany/niftany_rubocop_rspec.yml
+  - .niftany/performance.yml
+  - .niftany/style.yml
+  - .rubocop_todo.yml
 
 AllCops:
+  DisplayCopNames: true
   NewCops: enable
 
-# lib/traject/readers/marc_combining_reader.rb was borrowed from Stanford, see
-# https://github.com/sul-dlss/searchworks_traject_indexer/blob/master/lib/traject/readers/marc_combining_reader.rb
-Metrics/AbcSize:
-  Exclude:
-    - 'lib/traject/readers/marc_combining_reader.rb'
-
-Metrics/PerceivedComplexity:
-  Exclude:
-    - 'lib/traject/readers/marc_combining_reader.rb'
-
-Layout/IndentationConsistency:
-  EnforcedStyle: indented_internal_methods
-
-Style/TrivialAccessors:
-  Exclude:
-    - 'spec/spec_helper.rb'

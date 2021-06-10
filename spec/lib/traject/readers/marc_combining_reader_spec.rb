@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Traject::MarcCombiningReader do
-  let(:fixture_path) { './spec/fixtures' }
   subject(:reader) { described_class.new(File.open(File.join(fixture_path, 'split_items_test.mrc').to_s, 'r'), 'marc_source.type' => 'binary') }
+
+  let(:fixture_path) { './spec/fixtures' }
   let(:results) { reader.each.to_a }
 
   describe '#each' do

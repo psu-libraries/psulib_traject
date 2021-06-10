@@ -26,7 +26,7 @@ namespace :incrementals do
                           "task=\"#{args[:period]} import\" "\
                           'progress="in progress"'
 
-      array_of_files = target.collect { |file| File.new(file) }
+      array_of_files = target.map { |file| File.new(file) }
 
       if indexer.process array_of_files
         indexed_files = target.join ','

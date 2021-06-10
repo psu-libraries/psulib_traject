@@ -32,10 +32,10 @@ class MarcMediaTypeProcessor
     [].tap do |results|
       Traject::MarcExtractor.cached('949a').collect_matching_lines(record) do |field, spec, extractor|
         field_949a = extractor.collect_subfields(field, spec).first
-        results << 'Blu-ray' if field_949a =~ /BLU-RAY/i
-        results << 'Videocassette (VHS)' if field_949a =~ Regexp.union(/ZVC/i, /ARTVC/i, /MVC/i)
-        results << 'DVD' if field_949a =~ Regexp.union(/ZDVD/i, /ARTDVD/i, /MDVD/i, /ADVD/i, /DVD/i)
-        results << 'Laser disc' if field_949a =~ Regexp.union(/ZVD/i, /MVD/i)
+        results << 'Blu-ray' if /BLU-RAY/i.match?(field_949a)
+        results << 'Videocassette (VHS)' if field_949a&.match?(Regexp.union(/ZVC/i, /ARTVC/i, /MVC/i))
+        results << 'DVD' if field_949a&.match?(Regexp.union(/ZDVD/i, /ARTDVD/i, /MDVD/i, /ADVD/i, /DVD/i))
+        results << 'Laser disc' if field_949a&.match?(Regexp.union(/ZVD/i, /MVD/i))
       end
     end
   end
@@ -66,11 +66,11 @@ class MarcMediaTypeProcessor
     [].tap do |results|
       Traject::MarcExtractor.cached('538a', alternate_script: false).collect_matching_lines(record) do |field, spec, extractor|
         field_538a = extractor.collect_subfields(field, spec).first
-        results << 'Blu-ray' if field_538a =~ Regexp.union(/Bluray/i, /Blu-ray/i, /Blu ray/i)
-        results << 'Videocassette (VHS)' if field_538a =~ /VHS/i
-        results << 'DVD' if field_538a =~ /DVD/i
-        results << 'Laser disc' if field_538a =~ Regexp.union(/CAV/i, /CLV/i)
-        results << 'Video CD' if field_538a =~ Regexp.union(/VCD/i, /Video CD/i, /VideoCD/i)
+        results << 'Blu-ray' if field_538a&.match?(Regexp.union(/Bluray/i, /Blu-ray/i, /Blu ray/i))
+        results << 'Videocassette (VHS)' if /VHS/i.match?(field_538a)
+        results << 'DVD' if /DVD/i.match?(field_538a)
+        results << 'Laser disc' if field_538a&.match?(Regexp.union(/CAV/i, /CLV/i))
+        results << 'Video CD' if field_538a&.match?(Regexp.union(/VCD/i, /Video CD/i, /VideoCD/i))
       end
     end
   end
@@ -79,8 +79,8 @@ class MarcMediaTypeProcessor
     [].tap do |results|
       Traject::MarcExtractor.cached('300b:347b', alternate_script: false).collect_matching_lines(record) do |field, spec, extractor|
         field_300b_347b = extractor.collect_subfields(field, spec).first
-        results << 'MPEG-4' if field_300b_347b =~ /MP4/i
-        results << 'Video CD' if field_300b_347b =~ Regexp.union(/VCD/i, /Video CD/i, /VideoCD/i)
+        results << 'MPEG-4' if /MP4/i.match?(field_300b_347b)
+        results << 'Video CD' if field_300b_347b&.match?(Regexp.union(/VCD/i, /Video CD/i, /VideoCD/i))
       end
     end
   end
@@ -89,7 +89,7 @@ class MarcMediaTypeProcessor
     [].tap do |results|
       Traject::MarcExtractor.cached('300a:338a', alternate_script: false).collect_matching_lines(record) do |field, spec, extractor|
         field_300a_338a = extractor.collect_subfields(field, spec).first
-        results << 'Piano/Organ roll' if field_300a_338a =~ Regexp.union(/audio roll/i, /piano roll/i, /organ roll/i)
+        results << 'Piano/Organ roll' if field_300a_338a&.match?(Regexp.union(/audio roll/i, /piano roll/i, /organ roll/i))
       end
     end
   end
@@ -98,11 +98,11 @@ class MarcMediaTypeProcessor
     [].tap do |results|
       Traject::MarcExtractor.cached('300a', alternate_script: false).collect_matching_lines(record) do |field, spec, extractor|
         field300a = extractor.collect_subfields(field, spec).first
-        results << 'Photo' if field300a =~ /photograph/i
-        if field300a =~ Regexp.union(/remote-sensing image/i, /remote sensing image/i)
+        results << 'Photo' if /photograph/i.match?(field300a)
+        if field300a&.match?(Regexp.union(/remote-sensing image/i, /remote sensing image/i))
           results << 'Remote-sensing image'
         end
-        results << 'Slide' if field300a =~ /slide/i
+        results << 'Slide' if /slide/i.match?(field300a)
       end
     end
   end
@@ -110,7 +110,7 @@ class MarcMediaTypeProcessor
   def resolve_300
     [].tap do |results|
       Traject::MarcExtractor.cached('300abcdefghijklmnopqrstuvwxyz', alternate_script: false)
-                            .collect_matching_lines(record) do |field, spec, extractor|
+        .collect_matching_lines(record) do |field, spec, extractor|
         field300 = extractor.collect_subfields(field, spec).first
 
         if %r{(sound|audio) discs? (\((ca. )?\d+.*\))?\D+((digital|CD audio)\D*[,;.])? (c )?(4 3/4|12 c)}.match?(field300) && field300 !~ /(DVD|SACD|blu[- ]?ray)/
