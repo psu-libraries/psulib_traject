@@ -18,7 +18,7 @@ end
 
 group :development, :test do
   gem 'pry'
-  gem 'pry-debugger-jruby'
+  gem 'pry-debugger-jruby', platform: :jruby
   gem 'rspec'
   gem 'rubocop', '~> 0.79'
   gem 'rubocop-performance', '~> 1.1'
