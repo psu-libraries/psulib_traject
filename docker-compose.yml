@@ -1,0 +1,15 @@
+version: '3.5'
+x-web_env: &web_env
+services:
+  traject:
+    tty: true
+    stdin_open: true
+    environment:
+      RUBY_ENV: dev
+    build: 
+      context: . 
+    command: ["sleep", "999999"]
+    volumes:
+    - type: bind
+      source: ./
+      target: /app/
