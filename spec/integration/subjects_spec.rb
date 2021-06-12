@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Subjects spec:' do
+RSpec.describe 'Subjects' do
   describe 'process_subject_hierarchy' do
     before(:all) do
       @subject610 = { '610' => { 'ind1' => '', 'ind2' => '5', 'subfields' => [{ 'a' => 'Include' }] } }

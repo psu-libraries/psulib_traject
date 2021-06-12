@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Bound with spec:' do
+RSpec.describe 'Bound with' do
   let(:leader) { '1234567890' }
 
   describe 'Child items bound in' do

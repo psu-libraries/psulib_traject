@@ -1,33 +1,16 @@
 # frozen_string_literal: true
 
-$LOAD_PATH << File.expand_path('../', __dir__)
+$LOAD_PATH.prepend(Pathname.pwd.join('lib').to_s)
 
-ENV['RUBY_ENVIRONMENT'] = 'dev' if ENV['RUBY_ENVIRONMENT'].nil?
+ENV['RUBY_ENVIRONMENT'] ||= 'dev'
+
+require 'pry' if /dev|test/.match?(ENV['RUBY_ENVIRONMENT'])
 require 'bundler/setup'
-require 'library_stdnums'
-require 'traject'
-is_jruby = RUBY_ENGINE == 'jruby'
-require 'traject/macros/marc21_semantics'
-require 'marc_pub_date_processor'
-require 'marc_format_processor'
-require 'marc_media_type_processor'
-require 'marc_access_facet_processor'
-require 'traject/regex_split'
-require 'traject/readers/marc_combining_reader'
-require 'traject/hathi_overlap_reducer'
-require 'csv'
-require 'yaml'
-require 'config'
-require 'pry' if ENV['RUBY_ENVIRONMENT'] == 'dev'
+require 'psulib_traject'
 
 extend Traject::Macros::Marc21
 extend Traject::Macros::Marc21Semantics
-
-Marc21 = Traject::Macros::Marc21
-MarcExtractor = Traject::MarcExtractor
-
-require 'traject/macros/custom'
-extend Traject::Macros::Custom
+extend PsulibTraject::Macros
 
 Config.setup do |config|
   config.const_name = 'ConfigSettings'
@@ -46,7 +29,7 @@ settings do
   provide 'commit_timeout', ConfigSettings.commit_timeout
   provide 'hathi_overlap_path', ConfigSettings.hathi_overlap_path
 
-  if is_jruby
+  if RUBY_ENGINE == 'jruby'
     provide 'marc4j_reader.permissive', ConfigSettings.marc4j_reader.permissive
     provide 'marc4j_reader.source_encoding', ConfigSettings.marc4j_reader.source_encoding
     provide 'processing_thread_pool', ConfigSettings.processing_thread_pool
@@ -55,7 +38,7 @@ end
 ATOZ = ('a'..'z').to_a.join('')
 ATOU = ('a'..'u').to_a.join('')
 
-ht_overlap = HathiOverlapReducer.new(ConfigSettings.hathi_overlap_path)
+ht_overlap = PsulibTraject::HathiOverlapReducer.new(ConfigSettings.hathi_overlap_path)
 ht_overlap_hash = ht_overlap.hashify
 
 logger.info RUBY_DESCRIPTION
@@ -214,7 +197,7 @@ if ht_overlap_hash
 end
 
 ## Access facet
-access_facet_processor = MarcAccessFacetProcessor.new
+access_facet_processor = PsulibTraject::Processors::AccessFacet.new
 to_field 'access_facet' do |record, accumulator, context|
   access_facet = access_facet_processor.extract_access_data record, context
   accumulator.replace(access_facet) unless !access_facet || access_facet.empty?
@@ -222,14 +205,14 @@ end
 
 # Formats
 to_field 'format' do |record, accumulator|
-  formats = MarcFormatProcessor.call(record: record)
+  formats = PsulibTraject::Processors::Format.call(record: record)
   accumulator.replace(formats)
 end
 
 # Media Types Facet
 to_field 'media_type_facet' do |record, accumulator, context|
   access_facet = context.output_hash['access_facet']
-  media_types = MarcMediaTypeProcessor.call(record: record, access_facet: access_facet)
+  media_types = PsulibTraject::Processors::MediaType.call(record: record, access_facet: access_facet)
   accumulator.replace(media_types)
 end
 
@@ -294,7 +277,7 @@ to_field 'lc_1letter_facet', extract_marc('050a') do |_record, accumulator|
   next unless accumulator.any?
 
   first_letter = accumulator[0].lstrip.slice(0, 1)
-  letters = regex_to_extract_data_from_a_string accumulator[0], /([[:alpha:]])*/
+  letters = PsulibTraject.regex_to_extract_data_from_a_string accumulator[0], /([[:alpha:]])*/
   unless Traject::TranslationMap.new('callnumber_map')[letters].nil?
     lc1letter = Traject::TranslationMap.new('callnumber_map')[first_letter]
   end
@@ -304,7 +287,7 @@ end
 to_field 'lc_rest_facet', extract_marc('050a') do |_record, accumulator|
   next unless accumulator.any?
 
-  letters = regex_to_extract_data_from_a_string accumulator[0], /([[:alpha:]])*/
+  letters = PsulibTraject.regex_to_extract_data_from_a_string accumulator[0], /([[:alpha:]])*/
   lc_rest = Traject::TranslationMap.new('callnumber_map')[letters]
   accumulator.replace [lc_rest]
 end

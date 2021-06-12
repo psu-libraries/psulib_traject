@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe MarcMediaTypeProcessor do
+RSpec.describe PsulibTraject::Processors::MediaType do
   subject { result['media_type_facet'] }
 
   let(:result) { indexer.map_record(MARC::Reader.new(File.join('./spec/fixtures', record)).to_a.first) }

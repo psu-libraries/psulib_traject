@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Traject
+module PsulibTraject
   # In the data dumps from Sirsi if a record with all of its holdings
   # information attached would be greater that max size, the record is written
   # out multiple times with each subsequent record containing a subset of the

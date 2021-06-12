@@ -2,7 +2,7 @@
 
 RSpec::Matchers.define_negated_matcher :not_include, :include
 
-RSpec.describe 'Audience spec:' do
+RSpec.describe 'Audience' do
   let(:leader) { '1234567890' }
   let(:audience_qual1) do
     { '385' => { 'ind1' => ' ', 'ind2' => ' ', 'subfields' => [
