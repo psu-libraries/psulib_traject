@@ -1,57 +1,60 @@
 # frozen_string_literal: true
 
-namespace :docker do
-  task :up do
-    Rake::Task['docker:pull'].invoke
-    container_status = `docker inspect felix`
-    container_status.strip!
+require 'config'
 
-    if container_status == '[]'
-      Rake::Task['docker:first_start'].invoke
-    else
-      Rake::Task['docker:start'].invoke
-      Rake::Task['docker:conf'].invoke
-      Rake::Task['docker:down'].invoke
-      Rake::Task['docker:start'].invoke
+namespace :docker do
+  def new
+    Config.setup do |config|
+      config.const_name = 'ConfigSettings'
+      config.use_env = true
+      config.load_and_set_settings(Config.setting_files('config', ENV['RUBY_ENVIRONMENT']))
     end
 
-    Rake::Task['docker:ps'].invoke
+    port = ConfigSettings.solr.port || '8983'
+    config = Pathname.pwd.join('solr/conf')
+    args = %W(
+      --name felix
+      -d
+      -p #{port}:8983
+      -v #{config}:/myconfig solr:7.4.0 solr-create
+      -c psul_catalog
+      -d /myconfig
+    )
+
+    exec("docker run #{args.join(' ')}")
+  end
+
+  task :up do
+    results = `docker inspect felix`
+    results.strip!
+    if results == '[]'
+      new
+    else
+      Rake::Task['docker:start'].invoke
+    end
   end
 
   task :clean do
-    print `docker exec -it felix \
-            post -c psul_catalog \
-                 -d '<delete><query>*:*</query></delete>'`
-  end
-
-  task :first_start do
-    print `docker run \
-            --name felix \
-            -a STDOUT \
-            -p 8983:8983 \
-            -v "$(pwd)"/solr/conf:/myconfig \
-            solr:7.4.0 \
-            solr-create -c psul_catalog -d /myconfig`
+    exec("docker exec -it felix post -c psul_catalog -d '<delete><query>*:*</query></delete>'")
   end
 
   task :pull do
-    print `docker pull solr:7.4.0`
+    exec('docker pull solr:7.4.0')
   end
 
   task :start do
-    print `docker start -a felix`
+    exec('docker start felix')
   end
 
   task :conf do
-    print `docker exec -it felix \
-            cp -R /myconfig/. /opt/solr/server/solr/psul_catalog/conf/`
+    exec('docker exec -it felix cp -R /myconfig/. /opt/solr/server/solr/psul_catalog/conf/')
   end
 
   task :down do
-    print `docker stop felix`
+    exec('docker stop felix')
   end
 
   task :ps do
-    print `docker ps`
+    exec('docker ps')
   end
 end
