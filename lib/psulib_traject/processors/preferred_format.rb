@@ -5,7 +5,10 @@
 module PsulibTraject::Processors
   class PreferredFormat
     def self.call(record:, local_formats:)
-      new(record, local_formats).resolve
+      new(record, local_formats)
+        .resolve
+        .compact
+        .uniq
     end
 
     attr_reader :record, :local_formats
