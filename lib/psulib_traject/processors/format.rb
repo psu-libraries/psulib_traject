@@ -19,7 +19,7 @@ module PsulibTraject::Processors
     def resolve_formats
       formats = field949t
       preferred_format = PreferredFormat.call(record: record, local_formats: formats)
-      return preferred_format if preferred_format.any?
+      return [preferred_format] unless preferred_format.nil?
 
       formats = government_docs if formats.empty?
       formats = RecordType.call(record: record, current_formats: formats)
