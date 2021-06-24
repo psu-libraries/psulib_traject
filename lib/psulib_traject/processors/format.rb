@@ -21,7 +21,7 @@ module PsulibTraject::Processors
       preferred_format = PreferredFormat.call(record: record, local_formats: formats)
       return [preferred_format] unless preferred_format.nil?
 
-      formats = government_docs if formats.empty?
+      formats = government_docs_or_instructional_materials if formats.empty?
       formats = RecordType.call(record: record, current_formats: formats)
       formats = physical_description if formats.empty?
 
@@ -45,9 +45,11 @@ module PsulibTraject::Processors
     end
 
     # Check Government Document earlier to avoid overlapping with 007 and leader6-7 formats
-    def government_docs
+    def government_docs_or_instructional_materials
       if government_document?
         ['Government Document']
+      elsif instructional_materials?
+        [Traject::TranslationMap.new('formats_949t')['INSTR-MATL']]
       else
         []
       end
@@ -70,6 +72,11 @@ module PsulibTraject::Processors
         unless university_press?
           record.leader[6] == 'a' && record['008'] && /[acfilmosz]/.match?(record['008'].value[28])
         end
+      end
+
+      def instructional_materials?
+        (record['006'] && record['006'].value[16] == 'q') ||
+          (record['008'] && record['008'].value[33] == 'q')
       end
 
       # Check if 260b OR 264b contain variations of "University Press"

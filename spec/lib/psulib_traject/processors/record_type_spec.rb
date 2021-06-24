@@ -37,8 +37,10 @@ RSpec.describe PsulibTraject::Processors::RecordType do
     it { is_expected.to eq('Archives/Manuscripts') }
   end
 
+  # The rest are private methods, but they need to be tested in order to ensure we have good test coverage
+
   describe '#bibliographic_level' do
-    subject { described_class.new(record, current_formats).bibliographic_level }
+    subject { described_class.new(record, current_formats).send(:bibliographic_level) }
 
     context 'with b leader' do
       let(:record) { OpenStruct.new(leader: '       b') }
@@ -71,8 +73,9 @@ RSpec.describe PsulibTraject::Processors::RecordType do
     end
   end
 
+  # We're testing this as a private method to ensure proper test coverage and to make things easier.
   describe '#thesis_or_book' do
-    subject { described_class.new(record, current_formats).thesis_or_book }
+    subject { described_class.new(record, current_formats).send(:thesis_or_book) }
 
     context 'with a matchin 008 field' do
       let(:record) do

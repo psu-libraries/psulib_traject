@@ -38,31 +38,31 @@ module PsulibTraject::Processors
       end
     end
 
-    def bibliographic_level
-      case record.leader[7]
-      when 'a'
-        'Article'
-      when 'b', 's'
-        'Journal/Periodical'
-      when 'c'
-        'Archives/Manuscripts'
-      when 'd'
-        book
-      when 'm'
-        thesis_or_book
-      end
-    end
-
-    # If decided that it is a Thesis/Dissertation, it is NOT a Book
-    def thesis_or_book
-      if record['008'] && record['008'].value[24..27].include?('m')
-        'Thesis/Dissertation'
-      else
-        book
-      end
-    end
-
     private
+
+      def bibliographic_level
+        case record.leader[7]
+        when 'a'
+          'Article'
+        when 'b', 's'
+          'Journal/Periodical'
+        when 'c'
+          'Archives/Manuscripts'
+        when 'd'
+          book
+        when 'm'
+          thesis_or_book
+        end
+      end
+
+      # If decided that it is a Thesis/Dissertation, it is NOT a Book
+      def thesis_or_book
+        if record['008'] && record['008'].value[24..27].include?('m')
+          'Thesis/Dissertation'
+        else
+          book
+        end
+      end
 
       # Check 008 byte 33 for video
       def type_of_visual_material

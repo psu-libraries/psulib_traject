@@ -53,6 +53,28 @@ RSpec.describe PsulibTraject::Processors::Format do
       it { is_expected.to contain_exactly 'Microfilm/Microfiche', 'Journal/Periodical' }
     end
 
+    context 'with Instructional Material in the 006 field' do
+      let(:record) do
+        MARC::Record.new.tap do |record|
+          record.append(MARC::ControlField.new('006', "#{'x' * 16}q"))
+        end
+      end
+      let(:result) { indexer.map_record(record) }
+
+      it { is_expected.to contain_exactly 'Instructional Material' }
+    end
+
+    context 'with Instructional Material in the 008 field' do
+      let(:record) do
+        MARC::Record.new.tap do |record|
+          record.append(MARC::ControlField.new('008', "#{'x' * 33}q"))
+        end
+      end
+      let(:result) { indexer.map_record(record) }
+
+      it { is_expected.to contain_exactly 'Instructional Material' }
+    end
+
     context 'with 260b or 264b contain variations of "University Press"' do
       let(:record) { 'format_university_press.mrc' }
 
