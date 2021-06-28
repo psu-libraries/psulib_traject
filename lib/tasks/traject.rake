@@ -14,27 +14,13 @@ namespace :traject do
       config.load_and_set_settings(Config.setting_files('config', ENV['RUBY_ENVIRONMENT']))
     end
 
-  traject_indexer = PsulibTraject::Indexer.new
+  traject_indexer = IndexFileWorker.new
   solr_manager = PsulibTraject::SolrManager.new
-
-  desc 'Iterate Collection and Import'
-  task :iterate_and_import do |_task|
-    target = Dir["#{ConfigSettings.symphony_data_path}/full_extracts/*.mrc"]
-  end
-
-  desc 'Does a index of Data in symphony_data_path'
-  task :full_extract do |_task|
-    target = Dir["#{ConfigSettings.symphony_data_path}/full_extracts"]
-    traject_indexer = PsulibTraject::Indexer.new
-    target.each do |t|
-      traject_indexer.perform(filename=t)
-    end
-  end
 
   desc 'Index a file or folder of files async'
   task :index_async, [:path] do |_task, args|
     Dir[args.path].each do |f|
-      PsulibTraject::Indexer.perform_async(filename=f)
+      IndexFileWorker.perform_async(filename=f)
     end
   end
 
@@ -43,13 +29,4 @@ namespace :traject do
     traject_indexer.perform(filename=args.path)
   end
 
-  desc 'Imports sample data'
-  task :sample do |_task|
-    target = Dir["solr/sample_data/sample_psucat.mrc"]
-    traject_indexer = PsulibTraject::Indexer.new
-    target.each do |t|
-      traject_indexer.perform(filename=t)
-    end
-
-  end
 end
