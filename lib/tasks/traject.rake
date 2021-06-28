@@ -4,29 +4,26 @@ require 'traject'
 require './lib/psulib_traject/indexer'
 
 namespace :traject do
-
-    require 'config'
-    Config.setup do |config|
-      config.const_name = 'ConfigSettings'
-      config.use_env = true
-      config.env_prefix = 'SETTINGS'
-      config.env_separator = '__'
-      config.load_and_set_settings(Config.setting_files('config', ENV['RUBY_ENVIRONMENT']))
-    end
+  require 'config'
+  Config.setup do |config|
+    config.const_name = 'ConfigSettings'
+    config.use_env = true
+    config.env_prefix = 'SETTINGS'
+    config.env_separator = '__'
+    config.load_and_set_settings(Config.setting_files('config', ENV['RUBY_ENVIRONMENT']))
+  end
 
   traject_indexer = IndexFileWorker.new
-  solr_manager = PsulibTraject::SolrManager.new
 
   desc 'Index a file or folder of files async'
-  task :index_async, [:path] do |_task, args|
+  task :index_async, [:path, :collection] => :environment do |_task, args|
     Dir[args.path].each do |f|
-      IndexFileWorker.perform_async(filename=f)
+      IndexFileWorker.perform_async(f, args.collection)
     end
   end
 
   desc 'Index a file or folder of files'
-  task :index, [:path] do |_task, args|
-    traject_indexer.perform(filename=args.path)
+  task :index, [:path] => :environment do |_task, args|
+    traject_indexer.perform(args.path)
   end
-
 end

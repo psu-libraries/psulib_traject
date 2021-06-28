@@ -19,7 +19,6 @@ module PsulibTraject
       end
     end
 
-
     def last_incremented_collection
       collections_with_prefix.max_by(&:version_number)
     end
@@ -37,7 +36,8 @@ module PsulibTraject
 
       def connection
         @connection ||= Faraday.new(url) do |faraday|
-          faraday.request :basic_auth, ConfigSettings.solr.username, ConfigSettings.solr.password if ConfigSettings.solr.username && ConfigSettings.solr.password
+          faraday.request :basic_auth, ConfigSettings.solr.username, ConfigSettings.solr.password \
+            if ConfigSettings.solr.username && ConfigSettings.solr.password
           faraday.request :multipart
           faraday.adapter :net_http
         end
