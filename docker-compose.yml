@@ -1,0 +1,23 @@
+version: '3.5'
+services:
+  traject:
+    tty: true
+    stdin_open: true
+    environment:
+      RUBY_ENV: dev
+      # database 1 on catalog redis instance
+      REDIS_URL: redis://host.docker.internal:6397/1
+    build: 
+      context: . 
+    command: ["sleep", "999999"]
+    ports:
+      - 9292:9292
+    volumes:
+    - bundle-data:/app/vendor
+    - type: bind
+      source: ./
+      target: /app/
+
+volumes:
+  solr-data:
+  bundle-data:

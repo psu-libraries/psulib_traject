@@ -15,11 +15,13 @@ extend PsulibTraject::Macros
 Config.setup do |config|
   config.const_name = 'ConfigSettings'
   config.use_env = true
+  config.env_prefix = 'SETTINGS'
+  config.env_separator = '__'
   config.load_and_set_settings(Config.setting_files('config', ENV['RUBY_ENVIRONMENT']))
 end
 
 settings do
-  provide 'solr.url', "#{ConfigSettings.solr.url}#{ConfigSettings.solr.collection_name}"
+  provide 'solr.url', "#{ConfigSettings.solr.protocol}://#{ConfigSettings.solr.host}:#{ConfigSettings.solr.port}/solr/#{ConfigSettings.solr.collection}"
   provide 'log.batch_size', ConfigSettings.log.batch_size
   provide 'solr.version', ConfigSettings.solr.version
   provide 'log.file', ConfigSettings.log.file
@@ -38,8 +40,12 @@ end
 ATOZ = ('a'..'z').to_a.join('')
 ATOU = ('a'..'u').to_a.join('')
 
-ht_overlap = PsulibTraject::HathiOverlapReducer.new(ConfigSettings.hathi_overlap_path)
-ht_overlap_hash = ht_overlap.hashify
+if Dir[ConfigSettings.hathi_overlap_path].empty?
+  logger.info "#{ConfigSettings.hathi_overlap_path} not found"
+else
+  ht_overlap = PsulibTraject::HathiOverlapReducer.new(ConfigSettings.hathi_overlap_path)
+  ht_overlap_hash = ht_overlap.hashify
+end
 
 logger.info RUBY_DESCRIPTION
 

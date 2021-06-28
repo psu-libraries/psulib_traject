@@ -1,18 +1,25 @@
 solr:
   version: 7.4
-  url: http://localhost:8983/solr/
-  collection_name: psul_catalog
+  protocol: "<%= ENV.fetch("SOLR_PROTO", "http") %>"
+  host: "<%= ENV.fetch("SOLR_HOST", "host.docker.internal") %>"
+  username: "<%= ENV.fetch("SOLR_USERNAME", nil) %>"
+  password: "<%= ENV.fetch("SOLR_PASSWORD", nil) %>"
+  num_shards: 1
+  replication_factor: 1
+  max_shards_per_node: 1
+  port: "<%= ENV.fetch("SOLR_PORT", "8983") %>"
+  collection: "<%= ENV.fetch("SOLR_COLLECTION", "psul_catalog_v1") %>"
 log:
-  error_file: log/traject_error.log
-  file: log/traject.log
+  error_file: STDOUT
+  file: STDOUT
   batch_size: 100_000
 solr_writer:
   commit_on_close: true
 reader_class_name: PsulibTraject::MarcCombiningReader
 commit_timeout: 10000
-symphony_data_path: /data/symphony_data/
+symphony_data_path: /app/data/symphony_data/
 hathi_etas: false
-hathi_overlap_path: /data/hathitrust_data/overlap.tsv
+hathi_overlap_path: /app/data/hathitrust_data/overlap.tsv
 marc4j_reader:
   permissive: true
   source_encoding: 'UTF-8'
