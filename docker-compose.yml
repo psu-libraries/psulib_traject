@@ -5,6 +5,7 @@ services:
     stdin_open: true
     environment:
       RUBY_ENV: dev
+      SOLR_HOST: host.docker.internal
       # database 1 on catalog redis instance
       REDIS_URL: redis://host.docker.internal:6397/1
     build: 

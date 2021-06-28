@@ -1,7 +1,7 @@
 solr:
   version: 7.4
   protocol: "<%= ENV.fetch("SOLR_PROTO", "http") %>"
-  host: "<%= ENV.fetch("SOLR_HOST", "host.docker.internal") %>"
+  host: "<%= ENV.fetch("SOLR_HOST", "127.0.0.1") %>"
   username: "<%= ENV.fetch("SOLR_USERNAME", nil) %>"
   password: "<%= ENV.fetch("SOLR_PASSWORD", nil) %>"
   num_shards: 1
