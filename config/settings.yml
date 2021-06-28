@@ -19,7 +19,7 @@ reader_class_name: PsulibTraject::MarcCombiningReader
 commit_timeout: 10000
 symphony_data_path: /data/symphony_data/
 hathi_etas: false
-hathi_overlap_path: /app/data/hathitrust_data/overlap.tsv
+hathi_overlap_path: /data/hathitrust_data/overlap.tsv
 marc4j_reader:
   permissive: true
   source_encoding: 'UTF-8'
