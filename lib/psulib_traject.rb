@@ -14,7 +14,9 @@ module PsulibTraject
   require 'psulib_traject/processors/access_facet'
   require 'psulib_traject/processors/format'
   require 'psulib_traject/processors/media_type'
+  require 'psulib_traject/processors/preferred_format'
   require 'psulib_traject/processors/pub_date'
+  require 'psulib_traject/processors/record_type'
   require 'psulib_traject/solr_manager'
 
   class << self
