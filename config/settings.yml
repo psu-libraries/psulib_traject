@@ -1,7 +1,11 @@
 solr:
   version: 7.4
-  url: http://localhost:8983/solr/
-  collection_name: psul_catalog
+  protocol: "<%= ENV.fetch("SOLR_PROTO", "http") %>"
+  host: "<%= ENV.fetch("SOLR_HOST", "localhost") %>"
+  username: "<%= ENV.fetch("SOLR_USERNAME", nil) %>"
+  password: "<%= ENV.fetch("SOLR_PASSWORD", nil) %>"
+  port: "<%= ENV.fetch("SOLR_PORT", "8983") %>"
+  collection: "<%= ENV.fetch("SOLR_COLLECTION", "psul_catalog_v1") %>"
 log:
   error_file: log/traject_error.log
   file: log/traject.log
