@@ -44,12 +44,14 @@ namespace :incrementals do
     require 'config'
     Config.setup do |config|
       config.const_name = 'ConfigSettings'
+      config.env_prefix = 'SETTINGS'
+      config.env_separator = '__'
       config.use_env = true
       config.load_and_set_settings(Config.setting_files('config', ENV['RUBY_ENVIRONMENT']))
     end
 
     indexer = Traject::Indexer.new(
-      'solr.url': "#{ConfigSettings.solr.url}#{ConfigSettings.solr.collection_name}",
+      'solr.url': "#{ConfigSettings.solr.url}#{ConfigSettings.solr.collection}",
       'log.batch_size': ConfigSettings.log.batch_size,
       'solr.version': ConfigSettings.solr.version,
       'log.file': ConfigSettings.log.file,

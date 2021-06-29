@@ -12,7 +12,7 @@ RUN mkdir /app/tmp
 RUN chown -R app /app
 USER app
 
-RUN gem install bundler -v 2.2.15
+RUN gem install bundler -v "$(grep -A 1 "BUNDLED WITH" Gemfile.lock | tail -n 1)"
 COPY --chown=app Gemfile Gemfile.lock /app/
 RUN bundle install
 
