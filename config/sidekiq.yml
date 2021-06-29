@@ -1,0 +1,10 @@
+---
+:verbose: false
+:concurrency: <%= ENV.fetch("SIDEKIQ_CONCURRENCY", "1") %>
+:timeout: 25
+:max_retries: <%= ENV.fetch("SIDEKIQ_RETRIES", "3") %>
+:schedule:
+  hourlies:
+    cron: '3 0,7-23 * * *'
+    class: 'HourliesWorker'
+
