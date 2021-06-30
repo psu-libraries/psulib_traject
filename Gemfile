@@ -21,9 +21,10 @@ end
 group :development, :test do
   gem 'faker'
   gem 'marc_bot'
-  gem 'pry'
+  gem 'pry-byebug', platform: :mri
   gem 'pry-debugger-jruby', platform: :jruby
   gem 'rspec'
+  gem 'rspec-its'
   gem 'rubocop', '~> 0.79'
   gem 'rubocop-performance', '~> 1.1'
   gem 'rubocop-rspec', '~> 1.3'

@@ -8,6 +8,7 @@ end
 ENV['RUBY_ENVIRONMENT'] = 'test'
 
 require 'rspec'
+require 'rspec/its'
 require 'webmock/rspec'
 require 'psulib_traject'
 
