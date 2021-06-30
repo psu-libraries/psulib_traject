@@ -7,12 +7,8 @@ RSpec.describe PsulibTraject::Processors::Format do
 
   describe '#resolve_formats' do
     context 'with an empty record' do
-      let(:empty_record) do
-        MARC::Record.new.tap do |record|
-          record.append(MARC::ControlField.new('001', '000000000'))
-        end
-      end
-      let(:result) { indexer.map_record(empty_record) }
+      let(:record) { MarcBot.build(:record) }
+      let(:result) { indexer.map_record(record) }
 
       it { is_expected.to contain_exactly('Other') }
     end
@@ -54,22 +50,14 @@ RSpec.describe PsulibTraject::Processors::Format do
     end
 
     context 'with Instructional Material in the 006 field' do
-      let(:record) do
-        MARC::Record.new.tap do |record|
-          record.append(MARC::ControlField.new('006', "#{'x' * 16}q"))
-        end
-      end
+      let(:record) { MarcBot.build(:record, f006: "#{'x' * 16}q") }
       let(:result) { indexer.map_record(record) }
 
       it { is_expected.to contain_exactly 'Instructional Material' }
     end
 
     context 'with Instructional Material in the 008 field' do
-      let(:record) do
-        MARC::Record.new.tap do |record|
-          record.append(MARC::ControlField.new('008', "#{'x' * 33}q"))
-        end
-      end
+      let(:record) { MarcBot.build(:record, f008: "#{'x' * 33}q") }
       let(:result) { indexer.map_record(record) }
 
       it { is_expected.to contain_exactly 'Instructional Material' }
@@ -130,9 +118,10 @@ RSpec.describe PsulibTraject::Processors::Format do
     end
 
     context 'with Other when no other format found' do
-      # A fake marc record to ensure no formats are detected
-      record = '00085cxm a2200049Ii 45000010005000000080030000051234150224t21052015cau dq x eng d'
-      let(:result) { indexer.map_record(MARC::Reader.new(StringIO.new(record)).to_a.first) }
+      let(:record) do
+        MarcBot.build(:record, leader: '00085cxm a2200049Ii 4500', f008: '150224t21052015cau dq x eng d')
+      end
+      let(:result) { indexer.map_record(record) }
 
       it { is_expected.to contain_exactly 'Other' }
     end

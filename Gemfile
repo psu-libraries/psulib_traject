@@ -17,6 +17,8 @@ group :test do
 end
 
 group :development, :test do
+  gem 'faker'
+  gem 'marc_bot'
   gem 'pry'
   gem 'pry-debugger-jruby', platform: :jruby
   gem 'rspec'
