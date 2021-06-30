@@ -15,6 +15,11 @@ module PsulibTraject
   require 'psulib_traject/processors/format'
   require 'psulib_traject/processors/media_type'
   require 'psulib_traject/processors/pub_date'
+  require 'psulib_traject/call_numbers/holding'
+  require 'psulib_traject/call_numbers/call_number_base'
+  require 'psulib_traject/call_numbers/lc'
+  require 'psulib_traject/call_numbers/dewey'
+  require 'psulib_traject/call_numbers/other'
   require 'psulib_traject/solr_manager'
 
   class << self

@@ -186,6 +186,7 @@ GEM
     yell (2.2.2)
 
 PLATFORMS
+  universal-java-10
   universal-java-11
 
 DEPENDENCIES
@@ -208,4 +209,4 @@ DEPENDENCIES
   whenever
 
 BUNDLED WITH
-   2.2.15
+   2.2.20
