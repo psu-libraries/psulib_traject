@@ -45,15 +45,21 @@ module PsulibTraject::CallNumbers
       end
 
       def resolve_excludes
-        holdings.reject! { |call_number| local?(call_number.value) || periodical?(call_number.value) }
+        holdings.reject! do |call_number|
+          local?(call_number.value) ||
+          periodical?(call_number.value)
+        end
       end
 
       # @return Array
       def resolve_lop
+        return [] if holdings.empty?
+
         update_holdings
+
         return holdings.map(&:value) if holdings.one?
 
-        holdings.map do |call_number|
+        holdings.map! do |call_number|
           case call_number.classification
           when 'LC', 'LCPER'
             PsulibTraject::CallNumbers::LC.new(call_number.value).lopped
@@ -63,6 +69,9 @@ module PsulibTraject::CallNumbers
             PsulibTraject::CallNumbers::Other.new(call_number.value).lopped
           end
         end
+        update_holdings
+
+        holdings
       end
 
       def update_holdings
