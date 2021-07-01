@@ -10,12 +10,12 @@ namespace :traject do
     config.load_and_set_settings(Config.setting_files('config', ENV['RUBY_ENVIRONMENT']))
   end
 
-  traject_indexer = IndexFileWorker.new
+  traject_indexer = PsulibTraject::IndexFileWorker.new
 
   desc 'Index a file or folder of files async with sidekiq'
   task :index_async, [:path, :collection] do |_task, args|
     Dir[args.path].each do |f|
-      IndexFileWorker.perform_async(f, args.collection)
+      PsulibTraject::IndexFileWorker.perform_async(f, args.collection)
     end
   end
 
@@ -26,7 +26,7 @@ namespace :traject do
 
   desc 'Run Hourlies'
   task :hourlies do |_task|
-    HourliesWorker.new.perform
+    PsulibTraject::HourliesWorker.new.perform
   end
 
   desc 'Clear redis of hourly semaphores'
