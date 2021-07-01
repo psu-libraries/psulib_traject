@@ -41,6 +41,12 @@ RSpec.describe PsulibTraject::CallNumbers::Holding do
       it { is_expected.to be_empty }
     end
 
+    context 'with a periodical record' do
+      let(:fields) { [MARC::DataField.new('949', '', '', ['a', 'Periodical'])] }
+
+      it { is_expected.to be_empty }
+    end
+
     context 'with a record that has two holdings with same call number' do
       let(:fields) do
         [
