@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require 'traject'
-require './lib/psulib_traject/indexer'
-require 'sidekiq'
-
 namespace :traject do
   require 'config'
   Config.setup do |config|
