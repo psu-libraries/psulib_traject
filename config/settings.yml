@@ -2,8 +2,8 @@ solr:
   version: 7.4
   protocol: "<%= ENV.fetch("SOLR_PROTO", "http") %>"
   host: "<%= ENV.fetch("SOLR_HOST", "localhost") %>"
-  username: "<%= ENV.fetch("SOLR_USERNAME", nil) %>"
-  password: "<%= ENV.fetch("SOLR_PASSWORD", nil) %>"
+  username: "<%= ENV.fetch("SOLR_USERNAME", "") %>"
+  password: "<%= ENV.fetch("SOLR_PASSWORD", "") %>"
   port: "<%= ENV.fetch("SOLR_PORT", "8983") %>"
   collection: "<%= ENV.fetch("SOLR_COLLECTION", "psul_catalog") %>"
 log:
@@ -14,11 +14,11 @@ solr_writer:
   commit_on_close: true
 reader_class_name: PsulibTraject::MarcCombiningReader
 commit_timeout: 10000
-symphony_data_path: /data/symphony_data
+symphony_data_path: "<%= ENV.fetch('SYMPHONY_DATA_PATH', '/data/symphony_data') %>"
 # Folder within `symphony_data_path` where hourlies are stored
 symphony_hourlies_subdir: hourlies
 hathi_etas: false
-hathi_overlap_path: /data/hathitrust_data/overlap.tsv
+hathi_overlap_path: "<%= ENV.fetch('HATHI_OVERLAP_PATH', '/data/hathitrust_data/overlap.tsv') %>"
 marc4j_reader:
   permissive: true
   source_encoding: 'UTF-8'
