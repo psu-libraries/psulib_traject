@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-require 'traject'
-require 'sidekiq'
-require 'sidekiq-scheduler'
-require 'redis'
-
 class HourliesWorker
   include Sidekiq::Worker
 

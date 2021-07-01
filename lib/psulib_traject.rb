@@ -1,14 +1,18 @@
 # frozen_string_literal: true
 
-require 'csv'
-require 'yaml'
 require 'config'
+require 'csv'
 require 'library_stdnums'
+require 'redis'
+require 'sidekiq'
+require 'sidekiq-scheduler'
 require 'traject'
 require 'traject/macros/marc21_semantics'
+require 'yaml'
 
 module PsulibTraject
   require 'psulib_traject/hathi_overlap_reducer'
+  require 'psulib_traject/indexer'
   require 'psulib_traject/macros'
   require 'psulib_traject/marc_combining_reader'
   require 'psulib_traject/processors/access_facet'
