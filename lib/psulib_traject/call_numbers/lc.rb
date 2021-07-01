@@ -15,7 +15,6 @@ module PsulibTraject::CallNumbers
         (?<cutter2>\.?[a-zA-Z]+\d+([a-zA-Z]+(?![0-9]))?)?\s*
         (?<doon3>(\d{1,4})(?:ST|ND|RD|TH|D)?\s+)?\s*
         (?<cutter3>\.?[a-zA-Z]+\d+([a-zA-Z]+(?![0-9]))?)?\s*
-        # (?<folio>(?<=\s)?F{1,2}(?=(\s|$)))?
         (?<rest>.*))
       /x.match(call_number)
 
@@ -30,7 +29,6 @@ module PsulibTraject::CallNumbers
       @cutter2 = match_data[:cutter2]
       @doon3 = match_data[:doon3]
       @cutter3 = match_data[:cutter3]
-      # @folio = match_data[:folio]
       @rest = match_data[:rest]
       @potential_stuff_to_lop = match_data[:potential_stuff_to_lop]
       @serial = serial

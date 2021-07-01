@@ -12,10 +12,11 @@ RSpec.describe PsulibTraject::CallNumbers::Holding do
     end
   end
   let(:context) { instance_spy('Traject::Indexer::Context', output_hash: {}) }
-  let(:mocked_lc_holding) { instance_spy(PsulibTraject::CallNumbers::LC, lopped: Struct.new(:value, :classification).new('LC Call Number', 'LC')) }
-  let(:mocked_lcper_holding) { instance_spy(PsulibTraject::CallNumbers::LC, lopped: Struct.new(:value, :classification).new('LCPER Call Number', 'LCPER')) }
-  let(:mocked_dewey_holding) { instance_spy(PsulibTraject::CallNumbers::Dewey, lopped: Struct.new(:value, :classification).new('Dewey Call Number', 'DEWEY')) }
-  let(:mocked_other_holding) { instance_spy(PsulibTraject::CallNumbers::Other, lopped: Struct.new(:value, :classification).new('ASIS Call Number', 'ASIS')) }
+  let(:call_number_struct) { Struct.new(:value, :classification) }
+  let(:mocked_lc_holding) { instance_spy(PsulibTraject::CallNumbers::LC, lopped: call_number_struct.new('LC Call Number', 'LC')) }
+  let(:mocked_lcper_holding) { instance_spy(PsulibTraject::CallNumbers::LC, lopped: call_number_struct.new('LCPER Call Number', 'LCPER')) }
+  let(:mocked_dewey_holding) { instance_spy(PsulibTraject::CallNumbers::Dewey, lopped: call_number_struct.new('Dewey Call Number', 'DEWEY')) }
+  let(:mocked_other_holding) { instance_spy(PsulibTraject::CallNumbers::Other, lopped: call_number_struct.new('ASIS Call Number', 'ASIS')) }
 
   before do
     allow(PsulibTraject::CallNumbers::LC).to receive(:new).with('LC Call Number').and_return(mocked_lc_holding)
@@ -81,14 +82,14 @@ RSpec.describe PsulibTraject::CallNumbers::Holding do
         ]
       end
 
-      let(:mocked_lc_holding_1) { instance_spy(PsulibTraject::CallNumbers::LC, lopped: Struct.new(:value, :classification).new('LC Call Number v.1', 'LC')) }
-      let(:mocked_lc_holding_2) { instance_spy(PsulibTraject::CallNumbers::LC, lopped: Struct.new(:value, :classification).new('LC Call Number v.2', 'LC')) }
+      let(:mocked_lc_holding_1) { instance_spy(PsulibTraject::CallNumbers::LC, lopped: call_number_struct.new('LC Call Number v.1', 'LC')) }
+      let(:mocked_lc_holding_2) { instance_spy(PsulibTraject::CallNumbers::LC, lopped: call_number_struct.new('LC Call Number v.2', 'LC')) }
 
       before do
         allow(PsulibTraject::CallNumbers::LC).to receive(:new).with('LC Call Number v.1').and_return(mocked_lc_holding_1)
         allow(PsulibTraject::CallNumbers::LC).to receive(:new).with('LC Call Number v.2').and_return(mocked_lc_holding_2)
-        allow(mocked_lc_holding_1).to receive(:lopped).and_return(Struct.new(:value, :classification).new('LC Call Number', 'LC'))
-        allow(mocked_lc_holding_2).to receive(:lopped).and_return(Struct.new(:value, :classification).new('LC Call Number', 'LC'))
+        allow(mocked_lc_holding_1).to receive(:lopped).and_return(call_number_struct.new('LC Call Number', 'LC'))
+        allow(mocked_lc_holding_2).to receive(:lopped).and_return(call_number_struct.new('LC Call Number', 'LC'))
       end
 
       it 'returns one call number' do
