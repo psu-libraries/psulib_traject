@@ -23,6 +23,14 @@ module PsulibTraject
       collections_with_prefix.max_by(&:version_number)
     end
 
+    def query_url
+      query_url = "#{url}/#{ConfigSettings.solr.collection}"
+      return query_url.gsub(/:\/\//, "://#{ConfigSettings.solr.username}:#{ConfigSettings.solr.password}@") \
+          unless ConfigSettings.solr.username.empty? && ConfigSettings.solr.password.empty?
+
+      query_url
+    end
+
     private
 
       def collections_with_prefix

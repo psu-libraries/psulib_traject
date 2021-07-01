@@ -21,7 +21,7 @@ Config.setup do |config|
 end
 
 settings do
-  provide 'solr.url', "#{ConfigSettings.solr.url}#{ConfigSettings.solr.collection_name}"
+  provide 'solr.url', PsulibTraject::SolrManager.new.query_url.to_s
   provide 'log.batch_size', ConfigSettings.log.batch_size
   provide 'solr.version', ConfigSettings.solr.version
   provide 'log.file', ConfigSettings.log.file
