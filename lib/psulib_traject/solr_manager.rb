@@ -13,6 +13,8 @@ module PsulibTraject
       Config.setup do |config|
         config.const_name = 'ConfigSettings'
         config.use_env = true
+        config.env_prefix = 'SETTINGS'
+        config.env_separator = '__'
         config.load_and_set_settings(Config.setting_files('config', ENV['RUBY_ENVIRONMENT']))
       end
     end
@@ -21,10 +23,18 @@ module PsulibTraject
       collections_with_prefix.max_by(&:version_number)
     end
 
+    def query_url
+      query_url = "#{url}/#{ConfigSettings.solr.collection}"
+      return query_url.gsub(/:\/\//, "://#{ConfigSettings.solr.username}:#{ConfigSettings.solr.password}@") \
+          unless ConfigSettings.solr.username.empty? && ConfigSettings.solr.password.empty?
+
+      query_url
+    end
+
     private
 
       def collections_with_prefix
-        collections.select { |c| c.name.scan(/#{ConfigSettings.solr.collection_name}/) }
+        collections.select { |c| c.name.scan(/#{ConfigSettings.solr.collection}/) }
       end
 
       def collections
@@ -33,10 +43,16 @@ module PsulibTraject
       end
 
       def connection
-        @connection ||= Faraday.new(ConfigSettings.solr.url) do |faraday|
+        @connection ||= Faraday.new(url) do |faraday|
+          faraday.request :basic_auth, ConfigSettings.solr.username, ConfigSettings.solr.password \
+            if ConfigSettings.solr.username && ConfigSettings.solr.password
           faraday.request :multipart
           faraday.adapter :net_http
         end
+      end
+
+      def url
+        "#{ConfigSettings.solr.protocol}://#{ConfigSettings.solr.host}:#{ConfigSettings.solr.port}/solr"
       end
   end
 

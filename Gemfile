@@ -8,6 +8,8 @@ gem 'mail'
 gem 'marc'
 gem 'rake'
 gem 'rsolr'
+gem 'sidekiq'
+gem 'sidekiq-scheduler'
 gem 'traject'
 gem 'traject-marc4j_reader', platform: :jruby
 gem 'whenever', require: false
