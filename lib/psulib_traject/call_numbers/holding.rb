@@ -8,7 +8,7 @@ module PsulibTraject::CallNumbers
 
     attr_reader :record, :context, :holdings
 
-    CallNumber = Struct.new(:value, :classification)
+    CallNumber = Struct.new(:value, :classification, :location)
 
     def initialize(record, context)
       @record = record
@@ -34,20 +34,25 @@ module PsulibTraject::CallNumbers
         call_number == 'Periodical'
       end
 
+      def on_order?(location)
+        location == 'ON-ORDER'
+      end
+
       def local?(call_number)
         call_number.start_with? 'xx('
       end
 
       def extract_holdings
         Traject::MarcExtractor.cached('949').collect_matching_lines(record) do |field, _spec, _extractor|
-          CallNumber.new(field['a'], field['w']) # assuming each 949 has only one subfield a and w
+          CallNumber.new(field['a'], field['w'], field['l']) # assuming each 949 has only one subfield a, w and l
         end
       end
 
       def resolve_excludes
         holdings.reject! do |call_number|
           local?(call_number.value) ||
-          periodical?(call_number.value)
+          periodical?(call_number.value) ||
+          on_order?(call_number.location)
         end
       end
 

@@ -36,6 +36,12 @@ RSpec.describe PsulibTraject::CallNumbers::Holding do
       it { is_expected.to be_empty }
     end
 
+    context 'with an on order record' do
+      let(:fields) { [MARC::DataField.new('949', '', '', ['a', 'Call Number'], ['l', 'ON-ORDER'])] }
+
+      it { is_expected.to be_empty }
+    end
+
     context 'with a local record' do
       let(:fields) { [MARC::DataField.new('949', '', '', ['a', 'xx(Call Number)'])] }
 
