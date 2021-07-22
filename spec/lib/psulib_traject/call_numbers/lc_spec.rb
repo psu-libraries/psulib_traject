@@ -121,6 +121,14 @@ RSpec.describe PsulibTraject::CallNumbers::LC do
           expect(described_class.new('A1 .B2 BOO ...').lopped).to eq 'A1 .B2 BOO ...'
           expect(described_class.new('A1 .B2 BOO .C3 BOO ...').lopped).to eq 'A1 .B2 BOO .C3 BOO ...'
         end
+
+        it 'handles edition data, number followed by (st|nd|rd|th|d)' do
+          expect(described_class.new('TK7872.O7S901 31st 1996/60').lopped).to eq 'TK7872.O7S901'
+          expect(described_class.new('TK7872.O7S901 22nd 1996').lopped).to eq 'TK7872.O7S901'
+          expect(described_class.new('TK7872.O7S901 3rd 1996').lopped).to eq 'TK7872.O7S901'
+          expect(described_class.new('TK7872.O7S901 122d 1996').lopped).to eq 'TK7872.O7S901'
+          expect(described_class.new('TK7872.O7S901 50th 1996').lopped).to eq 'TK7872.O7S901'
+        end
       end
 
       context 'when a serial' do
