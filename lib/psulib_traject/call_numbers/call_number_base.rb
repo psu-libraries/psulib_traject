@@ -3,7 +3,7 @@
 module PsulibTraject::CallNumbers
   class CallNumberBase
     MONTHS = 'jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec'
-    VOL_PARTS = 'bd|tbd|ed|hov|iss|issue|jahrg|new ser|no|part|pts?|ser|shanah|[^a-z]t|v|vols?|vyp'
+    VOL_PARTS = 'bd|tbd|ed|hov|iss|issue|jahrg|new ser|no|part|pts?|ser|shanah|[^a-z]t|v|vols?|vyp|k|h'
     ADDL_VOL_PARTS = [
       'bklet', 'box', 'carton', 'cass', 'fig', 'flat box', 'grade', 'half box',
       'half carton', 'index', 'large folder', 'large map folder', 'lp', 'maps',

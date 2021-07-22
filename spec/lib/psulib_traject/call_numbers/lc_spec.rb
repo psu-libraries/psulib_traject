@@ -1,30 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe PsulibTraject::CallNumbers::LC do
-  # subject(:lc) { described_class.new(call_number, serial: serial) }
-  #
-  # let(:serial) { false }
-  # let(:call_number) {}
-
   describe '#new' do
-    # context 'with an empty call number' do
-      # it 'instantiates an empty LC call number object' do
-      #   expect(lc.call_number).to be_nil
-      # end
-    # end
-
-    # context 'with a LC call number' do
-    # let(:call_number) { 'LC Call Number' }
-    #
-    # it 'instantiates LC call number object' do
-    #   expect(lc.call_number).to eq call_number
-    # end
-    #
-    # it 'instantiates LC call number object' do
-    #   expect(lc.call_number).to eq call_number
-    # end
-    # end
-
     context 'standard numbers' do
       it 'handles 1 - 3 class letters' do
         expect(described_class.new('P123.23 .M23 2002').klass).to eq 'P'
@@ -115,6 +92,7 @@ RSpec.describe PsulibTraject::CallNumbers::LC do
           expect(described_class.new('PN2007 .K3 V.8:NO.1-2 1972').lopped).to eq 'PN2007 .K3'
           expect(described_class.new('PN2007 .K3 V.5-6:NO.11-25 1967-1970').lopped).to eq 'PN2007 .K3'
           expect(described_class.new('PN2007 .S3 NO.14-15,34').lopped).to eq 'PN2007 .S3'
+          expect(described_class.new('PJ5008.Z55G47 1959 k.6').lopped).to eq 'PJ5008.Z55G47 1959'
         end
 
         it 'retains a year right after the cutter' do
@@ -156,6 +134,7 @@ RSpec.describe PsulibTraject::CallNumbers::LC do
           expect(described_class.new('PN2007 .K3 V.8:NO.1-2 1972', serial: true).lopped).to eq 'PN2007 .K3'
           expect(described_class.new('PN2007 .K3 V.5-6:NO.11-25 1967-1970', serial: true).lopped).to eq 'PN2007 .K3'
           expect(described_class.new('PN2007 .S3 NO.14-15,34', serial: true).lopped).to eq 'PN2007 .S3'
+          expect(described_class.new('PJ5008.Z55G47 1959 k.6').lopped).to eq 'PJ5008.Z55G47 1959'
         end
 
         it 'drops year data after the cutter' do
