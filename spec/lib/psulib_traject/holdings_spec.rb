@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe PsulibTraject::CallNumbers::Holding do
+RSpec.describe PsulibTraject::Holdings do
   subject(:holdings) { described_class.call(record: record, context: context) }
 
   let(:fields) { [MARC::ControlField.new('001', '000000000')] }

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module PsulibTraject::CallNumbers
-  class Holding
+module PsulibTraject
+  class Holdings
     def self.call(record:, context:)
       new(record, context).resolve_base
     end

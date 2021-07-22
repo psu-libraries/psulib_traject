@@ -60,6 +60,6 @@ end
 to_field 'call_number_raw', extract_marc('949aw', separator: ', scheme: ')
 
 to_field 'call_number_base' do |record, accumulator, context|
-  call_number_base = PsulibTraject::CallNumbers::Holding.call(record: record, context: context)
+  call_number_base = PsulibTraject::Holdings.call(record: record, context: context)
   accumulator.replace(call_number_base) unless !call_number_base || call_number_base.empty?
 end
