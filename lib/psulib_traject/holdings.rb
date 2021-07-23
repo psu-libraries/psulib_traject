@@ -48,7 +48,9 @@ module PsulibTraject
           CallNumber.new(
             value: field['a'],
             classification: field['w'],
-            location: field['l']
+            location: field['l'],
+            item_type: field['t'],
+            leader: record.leader
           )
         end
       end
