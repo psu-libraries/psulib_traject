@@ -79,79 +79,83 @@ RSpec.describe PsulibTraject::CallNumbers::LC do
         expect(described_class.new('P123.23 2012 .M23 2002 .M45 V.1 2002-2012/GobbldyGoop').rest).to eq 'V.1 2002-2012/GobbldyGoop'
       end
     end
+  end
 
-    describe '#lopped' do
-      context 'non-serial' do
-        it 'leaves cutters in tact' do
-          expect(described_class.new('P123.23 .M23 A12').lopped).to eq 'P123.23 .M23 A12'
-        end
-
-        it 'drops data after the first volume designation' do
-          expect(described_class.new('PN2007 .S589 NO.17 1998').lopped).to eq 'PN2007 .S589'
-          expect(described_class.new('PN2007 .K3 V.7:NO.4').lopped).to eq 'PN2007 .K3'
-          expect(described_class.new('PN2007 .K3 V.8:NO.1-2 1972').lopped).to eq 'PN2007 .K3'
-          expect(described_class.new('PN2007 .K3 V.5-6:NO.11-25 1967-1970').lopped).to eq 'PN2007 .K3'
-          expect(described_class.new('PN2007 .S3 NO.14-15,34').lopped).to eq 'PN2007 .S3'
-          expect(described_class.new('PJ5008.Z55G47 1959 k.6').lopped).to eq 'PJ5008.Z55G47 1959'
-        end
-
-        it 'retains a year right after the cutter' do
-          expect(described_class.new('PN2007 .S3 1987').lopped).to eq 'PN2007 .S3 1987'
-          expect(described_class.new('PN2007 .K93 2002/2003:NO.3/1').lopped).to eq 'PN2007 .K93 2002/2003'
-          expect(described_class.new('PN2007 .Z37 1993:JAN.-DEC').lopped).to eq 'PN2007 .Z37 1993'
-          expect(described_class.new('PN2007 .Z37 1994:SEP-1995:JUN').lopped).to eq 'PN2007 .Z37 1994'
-          expect(described_class.new('PN2007 .K93 2002:NO.1-2').lopped).to eq 'PN2007 .K93 2002'
-        end
-
-        it 'handles multiple cutters' do
-          expect(described_class.new('PN1993.5 .A35 A373 VOL.4').lopped).to eq 'PN1993.5 .A35 A373'
-          expect(described_class.new('PN1993.5 .A1 S5595 V.2 2008').lopped).to eq 'PN1993.5 .A1 S5595'
-          expect(described_class.new('PN1993.5 .A75 C564 V.1:NO.1-4 2005').lopped).to eq 'PN1993.5 .A75 C564'
-          expect(described_class.new('PN1993.5 .L3 S78 V.1-2 2004-2005').lopped).to eq 'PN1993.5 .L3 S78'
-
-          # When the year is first
-          expect(described_class.new('PN1993.5 .F7 A3 2006:NO.297-300').lopped).to eq 'PN1993.5 .F7 A3 2006'
-          expect(described_class.new('JQ1519 .A5 A369 1990:NO.1-9+SUPPL.').lopped).to eq 'JQ1519 .A5 A369 1990'
-          expect(described_class.new('PN1993.5 .F7 A3 2005-2006 SUPPL.NO.27-30').lopped).to eq 'PN1993.5 .F7 A3 2005-2006 SUPPL'
-          expect(described_class.new('PN1993.5 .S6 S374 F 2001:JUL.-NOV.').lopped).to eq 'PN1993.5 .S6 S374 F 2001'
-        end
-
-        it 'does not lop off an existing ellipsis' do
-          expect(described_class.new('A1 .B2 ...').lopped).to eq 'A1 .B2 ...'
-          expect(described_class.new('A1 .B2 BOO ...').lopped).to eq 'A1 .B2 BOO ...'
-          expect(described_class.new('A1 .B2 BOO .C3 BOO ...').lopped).to eq 'A1 .B2 BOO .C3 BOO ...'
-        end
-
-        it 'handles edition data, number followed by (st|nd|rd|th|d)' do
-          expect(described_class.new('TK7872.O7S901 31st 1996/60').lopped).to eq 'TK7872.O7S901'
-          expect(described_class.new('TK7872.O7S901 22nd 1996').lopped).to eq 'TK7872.O7S901'
-          expect(described_class.new('TK7872.O7S901 3rd 1996').lopped).to eq 'TK7872.O7S901'
-          expect(described_class.new('TK7872.O7S901 122d 1996').lopped).to eq 'TK7872.O7S901'
-          expect(described_class.new('TK7872.O7S901 50th 1996').lopped).to eq 'TK7872.O7S901'
-        end
+  describe '#lopped' do
+    context 'non-serial' do
+      it 'leaves cutters in tact' do
+        expect(described_class.new('P123.23 .M23 A12').lopped).to eq 'P123.23 .M23 A12'
       end
 
-      context 'when a serial' do
-        it 'leaves cutters in tact' do
-          expect(described_class.new('P123.23 .M23 A12', serial: true).lopped).to eq 'P123.23 .M23 A12'
-        end
+      it 'drops data after the first volume designation' do
+        expect(described_class.new('PN2007 .S589 NO.17 1998').lopped).to eq 'PN2007 .S589'
+        expect(described_class.new('PN2007 .K3 V.7:NO.4').lopped).to eq 'PN2007 .K3'
+        expect(described_class.new('PN2007 .K3 V.8:NO.1-2 1972').lopped).to eq 'PN2007 .K3'
+        expect(described_class.new('PN2007 .K3 V.5-6:NO.11-25 1967-1970').lopped).to eq 'PN2007 .K3'
+        expect(described_class.new('PN2007 .S3 NO.14-15,34').lopped).to eq 'PN2007 .S3'
+        expect(described_class.new('PJ5008.Z55G47 1959 k.6').lopped).to eq 'PJ5008.Z55G47 1959'
+      end
 
-        it 'drops data after the first volume designation' do
-          expect(described_class.new('PN2007 .S589 NO.17 1998', serial: true).lopped).to eq 'PN2007 .S589'
-          expect(described_class.new('PN2007 .K3 V.7:NO.4', serial: true).lopped).to eq 'PN2007 .K3'
-          expect(described_class.new('PN2007 .K3 V.8:NO.1-2 1972', serial: true).lopped).to eq 'PN2007 .K3'
-          expect(described_class.new('PN2007 .K3 V.5-6:NO.11-25 1967-1970', serial: true).lopped).to eq 'PN2007 .K3'
-          expect(described_class.new('PN2007 .S3 NO.14-15,34', serial: true).lopped).to eq 'PN2007 .S3'
-          expect(described_class.new('PJ5008.Z55G47 1959 k.6').lopped).to eq 'PJ5008.Z55G47 1959'
-        end
+      it 'retains a year right after the cutter' do
+        expect(described_class.new('PN2007 .S3 1987').lopped).to eq 'PN2007 .S3 1987'
+        expect(described_class.new('PN2007 .K93 2002/2003:NO.3/1').lopped).to eq 'PN2007 .K93 2002/2003'
+        expect(described_class.new('PN2007 .Z37 1993:JAN.-DEC').lopped).to eq 'PN2007 .Z37 1993'
+        expect(described_class.new('PN2007 .Z37 1994:SEP-1995:JUN').lopped).to eq 'PN2007 .Z37 1994'
+        expect(described_class.new('PN2007 .K93 2002:NO.1-2').lopped).to eq 'PN2007 .K93 2002'
+      end
 
-        it 'drops year data after the cutter' do
-          expect(described_class.new('PN2007 .S3 1987', serial: true).lopped).to eq 'PN2007 .S3'
-          expect(described_class.new('PN2007 .K93 2002/2003:NO.3/1', serial: true).lopped).to eq 'PN2007 .K93'
-          expect(described_class.new('PN2007 .Z37 1993:JAN.-DEC', serial: true).lopped).to eq 'PN2007 .Z37'
-          expect(described_class.new('PN2007 .Z37 1994:SEP-1995:JUN', serial: true).lopped).to eq 'PN2007 .Z37'
-          expect(described_class.new('PN2007 .K93 2002:NO.1-2', serial: true).lopped).to eq 'PN2007 .K93'
-        end
+      it 'handles multiple cutters' do
+        expect(described_class.new('PN1993.5 .A35 A373 VOL.4').lopped).to eq 'PN1993.5 .A35 A373'
+        expect(described_class.new('PN1993.5 .A1 S5595 V.2 2008').lopped).to eq 'PN1993.5 .A1 S5595'
+        expect(described_class.new('PN1993.5 .A75 C564 V.1:NO.1-4 2005').lopped).to eq 'PN1993.5 .A75 C564'
+        expect(described_class.new('PN1993.5 .L3 S78 V.1-2 2004-2005').lopped).to eq 'PN1993.5 .L3 S78'
+
+        # When the year is first
+        expect(described_class.new('PN1993.5 .F7 A3 2006:NO.297-300').lopped).to eq 'PN1993.5 .F7 A3 2006'
+        expect(described_class.new('JQ1519 .A5 A369 1990:NO.1-9+SUPPL.').lopped).to eq 'JQ1519 .A5 A369 1990'
+        expect(described_class.new('PN1993.5 .F7 A3 2005-2006 SUPPL.NO.27-30').lopped).to eq 'PN1993.5 .F7 A3 2005-2006 SUPPL'
+        expect(described_class.new('PN1993.5 .S6 S374 F 2001:JUL.-NOV.').lopped).to eq 'PN1993.5 .S6 S374 F 2001'
+      end
+
+      it 'does not lop off an existing ellipsis' do
+        expect(described_class.new('A1 .B2 ...').lopped).to eq 'A1 .B2 ...'
+        expect(described_class.new('A1 .B2 BOO ...').lopped).to eq 'A1 .B2 BOO ...'
+        expect(described_class.new('A1 .B2 BOO .C3 BOO ...').lopped).to eq 'A1 .B2 BOO .C3 BOO ...'
+      end
+
+      it 'handles edition data, number followed by (st|nd|rd|th|d)' do
+        expect(described_class.new('TK7872.O7S901 31st 1996/60').lopped).to eq 'TK7872.O7S901'
+        expect(described_class.new('TK7872.O7S901 22nd 1996').lopped).to eq 'TK7872.O7S901'
+        expect(described_class.new('TK7872.O7S901 3rd 1996').lopped).to eq 'TK7872.O7S901'
+        expect(described_class.new('TK7872.O7S901 122d 1996').lopped).to eq 'TK7872.O7S901'
+        expect(described_class.new('TK7872.O7S901 50th 1996').lopped).to eq 'TK7872.O7S901'
+      end
+    end
+
+    context 'when a serial' do
+      it 'leaves cutters in tact' do
+        expect(described_class.new('P123.23 .M23 A12', serial: true).lopped).to eq 'P123.23 .M23 A12'
+      end
+
+      it 'drops data after the first volume designation' do
+        expect(described_class.new('PN2007 .S589 NO.17 1998', serial: true).lopped).to eq 'PN2007 .S589'
+        expect(described_class.new('PN2007 .K3 V.7:NO.4', serial: true).lopped).to eq 'PN2007 .K3'
+        expect(described_class.new('PN2007 .K3 V.8:NO.1-2 1972', serial: true).lopped).to eq 'PN2007 .K3'
+        expect(described_class.new('PN2007 .K3 V.5-6:NO.11-25 1967-1970', serial: true).lopped).to eq 'PN2007 .K3'
+        expect(described_class.new('PN2007 .S3 NO.14-15,34', serial: true).lopped).to eq 'PN2007 .S3'
+        expect(described_class.new('PJ5008.Z55G47 1959 k.6').lopped).to eq 'PJ5008.Z55G47 1959'
+      end
+
+      it 'drops year data after the cutter' do
+        expect(described_class.new('PN2007 .S3 1987', serial: true).lopped).to eq 'PN2007 .S3'
+        expect(described_class.new('PN2007 .K93 2002/2003:NO.3/1', serial: true).lopped).to eq 'PN2007 .K93'
+        expect(described_class.new('PN2007 .Z37 1993:JAN.-DEC', serial: true).lopped).to eq 'PN2007 .Z37'
+        expect(described_class.new('PN2007 .Z37 1994:SEP-1995:JUN', serial: true).lopped).to eq 'PN2007 .Z37'
+        expect(described_class.new('PN2007 .K93 2002:NO.1-2', serial: true).lopped).to eq 'PN2007 .K93'
+      end
+
+      it 'drops date ranges with "index|ind' do
+        expect(described_class.new('HQ1101.M72 Index Spr.1972-Feb.1974', serial: true).lopped).to eq 'HQ1101.M72'
       end
     end
   end

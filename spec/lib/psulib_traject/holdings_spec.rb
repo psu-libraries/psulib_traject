@@ -19,8 +19,8 @@ RSpec.describe PsulibTraject::Holdings do
   let(:mocked_other_holding) { instance_spy(PsulibTraject::CallNumbers::Other, lopped: 'ASIS Call Number') }
 
   before do
-    allow(PsulibTraject::CallNumbers::LC).to receive(:new).with('LC Call Number').and_return(mocked_lc_holding)
-    allow(PsulibTraject::CallNumbers::LC).to receive(:new).with('LCPER Call Number').and_return(mocked_lcper_holding)
+    allow(PsulibTraject::CallNumbers::LC).to receive(:new).with('LC Call Number', serial: false).and_return(mocked_lc_holding)
+    allow(PsulibTraject::CallNumbers::LC).to receive(:new).with('LCPER Call Number', serial: false).and_return(mocked_lcper_holding)
     allow(PsulibTraject::CallNumbers::Dewey).to receive(:new).with('Dewey Call Number').and_return(mocked_dewey_holding)
     allow(PsulibTraject::CallNumbers::Other).to receive(:new).with('ASIS Call Number').and_return(mocked_other_holding)
   end
@@ -90,8 +90,8 @@ RSpec.describe PsulibTraject::Holdings do
       let(:mocked_lc_holding_2) { instance_spy(PsulibTraject::CallNumbers::LC, lopped: 'LC Call Number v.2') }
 
       before do
-        allow(PsulibTraject::CallNumbers::LC).to receive(:new).with('LC Call Number v.1').and_return(mocked_lc_holding_1)
-        allow(PsulibTraject::CallNumbers::LC).to receive(:new).with('LC Call Number v.2').and_return(mocked_lc_holding_2)
+        allow(PsulibTraject::CallNumbers::LC).to receive(:new).with('LC Call Number v.1', serial: false).and_return(mocked_lc_holding_1)
+        allow(PsulibTraject::CallNumbers::LC).to receive(:new).with('LC Call Number v.2', serial: false).and_return(mocked_lc_holding_2)
         allow(mocked_lc_holding_1).to receive(:lopped).and_return('LC Call Number')
         allow(mocked_lc_holding_2).to receive(:lopped).and_return('LC Call Number')
       end

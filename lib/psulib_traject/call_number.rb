@@ -1,7 +1,7 @@
 module PsulibTraject
   class CallNumber
     SERIAL_ITEM_TYPES = %w(PERIODSPEC PERIODICAL BNDSER-DSL BNDSER-HY)
-    
+
     attr_reader :value, :classification, :location, :item_type, :leader
 
     def initialize(value:, classification:, location:, item_type:, leader:)
@@ -26,7 +26,7 @@ module PsulibTraject
     def lopped_value
       case classification
         when 'LC', 'LCPER'
-          PsulibTraject::CallNumbers::LC.new(value).lopped
+          PsulibTraject::CallNumbers::LC.new(value, serial: serial?).lopped
         when 'DEWEY'
           PsulibTraject::CallNumbers::Dewey.new(value).lopped
         else
