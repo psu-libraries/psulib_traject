@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module PsulibTraject
   class CallNumber
-    SERIAL_ITEM_TYPES = %w(PERIODSPEC PERIODICAL BNDSER-DSL BNDSER-HY)
+    SERIAL_ITEM_TYPES = %w(PERIODSPEC PERIODICAL BNDSER-DSL BNDSER-HY).freeze
 
     attr_reader :value, :classification, :location, :item_type, :leader
 
@@ -17,22 +19,21 @@ module PsulibTraject
     end
 
     def serial?
-     SERIAL_ITEM_TYPES.include?(item_type) ||
-       'MICROFORM' == item_type && %w(ab as).include?(leader[6..7])
+      SERIAL_ITEM_TYPES.include?(item_type) ||
+        item_type == 'MICROFORM' && %w(ab as).include?(leader[6..7])
     end
 
     private
 
-    def lopped_value
-      case classification
+      def lopped_value
+        case classification
         when 'LC', 'LCPER'
           PsulibTraject::CallNumbers::LC.new(value, serial: serial?).lopped
         when 'DEWEY'
           PsulibTraject::CallNumbers::Dewey.new(value).lopped
         else
           PsulibTraject::CallNumbers::Other.new(value).lopped
+        end
       end
-    end
-
   end
 end

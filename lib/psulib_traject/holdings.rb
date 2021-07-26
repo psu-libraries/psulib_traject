@@ -58,8 +58,8 @@ module PsulibTraject
       def resolve_excludes
         holdings.reject! do |call_number|
           local?(call_number.value) ||
-          periodical?(call_number.value) ||
-          on_order?(call_number.location)
+            periodical?(call_number.value) ||
+            on_order?(call_number.location)
         end
       end
 

@@ -3,7 +3,8 @@
 module PsulibTraject::CallNumbers
   class LC < CallNumberBase
     attr_reader :call_number, :serial,
-                :klass, :klass_number, :klass_decimal, :doon1, :doon2, :doon3, :cutter1, :cutter2, :cutter3, :folio, :rest, :potential_stuff_to_lop
+                :klass, :klass_number, :klass_decimal, :doon1, :doon2, :doon3, :cutter1, :cutter2, :cutter3, :rest,
+                :potential_stuff_to_lop
 
     def initialize(call_number, serial: false)
       match_data = /

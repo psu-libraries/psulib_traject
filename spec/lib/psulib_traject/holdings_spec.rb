@@ -19,8 +19,10 @@ RSpec.describe PsulibTraject::Holdings do
   let(:mocked_other_holding) { instance_spy(PsulibTraject::CallNumbers::Other, lopped: 'ASIS Call Number') }
 
   before do
-    allow(PsulibTraject::CallNumbers::LC).to receive(:new).with('LC Call Number', serial: false).and_return(mocked_lc_holding)
-    allow(PsulibTraject::CallNumbers::LC).to receive(:new).with('LCPER Call Number', serial: false).and_return(mocked_lcper_holding)
+    allow(PsulibTraject::CallNumbers::LC).to receive(:new).with('LC Call Number', serial: false)
+      .and_return(mocked_lc_holding)
+    allow(PsulibTraject::CallNumbers::LC).to receive(:new).with('LCPER Call Number', serial: false)
+      .and_return(mocked_lcper_holding)
     allow(PsulibTraject::CallNumbers::Dewey).to receive(:new).with('Dewey Call Number').and_return(mocked_dewey_holding)
     allow(PsulibTraject::CallNumbers::Other).to receive(:new).with('ASIS Call Number').and_return(mocked_other_holding)
   end
@@ -31,7 +33,8 @@ RSpec.describe PsulibTraject::Holdings do
     end
 
     context 'with an online record' do
-      let(:context) { instance_spy('Traject::Indexer::Context', output_hash: { access_facet: ["Online", "In the Library", "Free to Read"] }) }
+      let(:context) { instance_spy('Traject::Indexer::Context',
+                                   output_hash: { access_facet: ['Online', 'In the Library', 'Free to Read'] }) }
 
       it { is_expected.to be_empty }
     end
@@ -75,7 +78,7 @@ RSpec.describe PsulibTraject::Holdings do
         ]
       end
 
-      it { is_expected.to contain_exactly  'ASIS Call Number', 'Dewey Call Number', 'LC Call Number', 'LCPER Call Number' }
+      it { is_expected.to contain_exactly 'ASIS Call Number', 'Dewey Call Number', 'LC Call Number', 'LCPER Call Number' }
     end
 
     context 'with a record that has holdings with identical base call numbers' do
@@ -90,13 +93,15 @@ RSpec.describe PsulibTraject::Holdings do
       let(:mocked_lc_holding_2) { instance_spy(PsulibTraject::CallNumbers::LC, lopped: 'LC Call Number v.2') }
 
       before do
-        allow(PsulibTraject::CallNumbers::LC).to receive(:new).with('LC Call Number v.1', serial: false).and_return(mocked_lc_holding_1)
-        allow(PsulibTraject::CallNumbers::LC).to receive(:new).with('LC Call Number v.2', serial: false).and_return(mocked_lc_holding_2)
+        allow(PsulibTraject::CallNumbers::LC).to receive(:new).with('LC Call Number v.1', serial: false)
+          .and_return(mocked_lc_holding_1)
+        allow(PsulibTraject::CallNumbers::LC).to receive(:new).with('LC Call Number v.2', serial: false)
+          .and_return(mocked_lc_holding_2)
         allow(mocked_lc_holding_1).to receive(:lopped).and_return('LC Call Number')
         allow(mocked_lc_holding_2).to receive(:lopped).and_return('LC Call Number')
       end
 
-      it { is_expected.to contain_exactly'LC Call Number' }
+      it { is_expected.to contain_exactly 'LC Call Number' }
     end
   end
 end

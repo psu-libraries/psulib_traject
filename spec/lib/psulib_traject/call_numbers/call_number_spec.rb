@@ -37,7 +37,6 @@ RSpec.describe PsulibTraject::CallNumber do
     it { is_expected.to be_serial }
   end
 
-
   context 'when a microfilm record with leader6 and leader7 is as' do
     let(:item_type) { 'MICROFORM' }
     let(:leader) { '000000as' }

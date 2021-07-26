@@ -2,7 +2,7 @@
 
 RSpec.describe PsulibTraject::CallNumbers::LC do
   describe '#new' do
-    context 'standard numbers' do
+    context 'when standard numbers' do
       it 'handles 1 - 3 class letters' do
         expect(described_class.new('P123.23 .M23 2002').klass).to eq 'P'
         expect(described_class.new('PS123.23 .M23 2002').klass).to eq 'PS'
@@ -76,13 +76,14 @@ RSpec.describe PsulibTraject::CallNumbers::LC do
     describe 'the rest of the stuff' do
       it 'puts any other content into the rest attribute' do
         expect(described_class.new('P123.23 .M23 V.1 2002').rest).to eq 'V.1 2002'
-        expect(described_class.new('P123.23 2012 .M23 2002 .M45 V.1 2002-2012/GobbldyGoop').rest).to eq 'V.1 2002-2012/GobbldyGoop'
+        expect(described_class.new('P123.23 2012 .M23 2002 .M45 V.1 2002-2012/GobbldyGoop').rest)
+          .to eq 'V.1 2002-2012/GobbldyGoop'
       end
     end
   end
 
   describe '#lopped' do
-    context 'non-serial' do
+    context 'when non-serial' do
       it 'leaves cutters in tact' do
         expect(described_class.new('P123.23 .M23 A12').lopped).to eq 'P123.23 .M23 A12'
       end
@@ -113,7 +114,8 @@ RSpec.describe PsulibTraject::CallNumbers::LC do
         # When the year is first
         expect(described_class.new('PN1993.5 .F7 A3 2006:NO.297-300').lopped).to eq 'PN1993.5 .F7 A3 2006'
         expect(described_class.new('JQ1519 .A5 A369 1990:NO.1-9+SUPPL.').lopped).to eq 'JQ1519 .A5 A369 1990'
-        expect(described_class.new('PN1993.5 .F7 A3 2005-2006 SUPPL.NO.27-30').lopped).to eq 'PN1993.5 .F7 A3 2005-2006 SUPPL'
+        expect(described_class.new('PN1993.5 .F7 A3 2005-2006 SUPPL.NO.27-30').lopped)
+          .to eq 'PN1993.5 .F7 A3 2005-2006 SUPPL'
         expect(described_class.new('PN1993.5 .S6 S374 F 2001:JUL.-NOV.').lopped).to eq 'PN1993.5 .S6 S374 F 2001'
       end
 
