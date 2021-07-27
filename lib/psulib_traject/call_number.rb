@@ -2,7 +2,7 @@
 
 module PsulibTraject
   class CallNumber
-    SERIAL_ITEM_TYPES = %w(PERIODSPEC PERIODICAL BNDSER-DSL BNDSER-HY).freeze
+    SERIAL_ITEM_TYPES = %w(SERIAL PERIODSPEC PERIODICAL BNDSER-DSL BNDSER-HY).freeze
 
     attr_reader :value, :classification, :location, :item_type, :leader
 
