@@ -70,7 +70,7 @@ workflows:
   blacklight:
     jobs:
       - release:
-          name: "Tag Image"
+          name: "Release Image"
           filters:
             tags:
               only:
