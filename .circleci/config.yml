@@ -37,9 +37,6 @@ jobs:
           digest-path: /tmp/digest.txt
           image: library/psulib_traject
           registry: harbor.k8s.libraries.psu.edu
-      - run:
-          command: |
-            echo "Digest is: $(</tmp/digest.txt)"
   test:
     docker:
       - image: circleci/ruby:2.7.1

@@ -13,10 +13,6 @@ require 'yaml'
 
 module PsulibTraject
   require 'psulib_traject/hathi_overlap_reducer'
-  require 'psulib_traject/indexer'
-  require 'psulib_traject/index_file_worker'
-  require 'psulib_traject/index_worker'
-  require 'psulib_traject/hourlies_worker'
   require 'psulib_traject/macros'
   require 'psulib_traject/marc_combining_reader'
   require 'psulib_traject/processors/access_facet'
@@ -26,6 +22,9 @@ module PsulibTraject
   require 'psulib_traject/processors/pub_date'
   require 'psulib_traject/processors/record_type'
   require 'psulib_traject/solr_manager'
+  require 'psulib_traject/workers/base'
+  require 'psulib_traject/workers/hourly_indexer'
+  require 'psulib_traject/workers/indexer'
 
   Config.setup do |config|
     config.const_name = 'ConfigSettings'

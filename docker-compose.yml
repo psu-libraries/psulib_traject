@@ -22,5 +22,4 @@ services:
       target: /app/
 
 volumes:
-  solr-data:
   bundle-data:

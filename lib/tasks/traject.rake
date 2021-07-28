@@ -1,29 +1,24 @@
 # frozen_string_literal: true
 
 namespace :traject do
-  traject_indexer = PsulibTraject::IndexFileWorker.new
-
   desc 'Index a file or folder of files async with sidekiq'
   task :index_async, [:path, :collection] do |_task, args|
-    Dir[args.path].each do |f|
-      PsulibTraject::IndexFileWorker.perform_async(f, args.collection)
-    end
+    PsulibTraject::Workers::Indexer.perform_async(args.path, collection_name: args.collection)
   end
 
   desc 'Index a file or folder of files without sidekiq'
   task :index, [:path] do |_task, args|
-    traject_indexer.perform(args.path)
+    PsulibTraject::Workers::Indexer.perform_now(args.path, collection_name: args.collection)
   end
 
   desc 'Run Hourlies'
-  task :hourlies do |_task|
-    PsulibTraject::HourliesWorker.new.perform
+  task :hourlies do
+    PsulibTraject::HourliesWorker.perform_now
   end
 
   desc 'Clear redis of hourly semaphores'
-  task :clear_hourlies do |_task|
-    require 'redis'
+  task :clear_hourlies do
     redis = Redis.new
-    redis.keys('hr:*').map { |e| redis.del(e) }
+    redis.keys('hr:*').map { |key| redis.del(key) }
   end
 end

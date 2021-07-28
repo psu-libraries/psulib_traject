@@ -41,7 +41,6 @@ namespace :incrementals do
 
   desc 'Deletes from the index'
   task :delete, [:period] do |_task, args|
-
     indexer = Traject::Indexer.new(
       'solr.url': "#{ConfigSettings.solr.url}#{ConfigSettings.solr.collection}",
       'log.batch_size': ConfigSettings.log.batch_size,

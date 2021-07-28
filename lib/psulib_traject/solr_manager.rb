@@ -12,10 +12,9 @@ module PsulibTraject
 
     def query_url
       query_url = "#{url}/#{ConfigSettings.solr.collection}"
-      return query_url.gsub(/:\/\//, "://#{ConfigSettings.solr.username}:#{ConfigSettings.solr.password}@") \
-          unless ConfigSettings.solr.username.empty? && ConfigSettings.solr.password.empty?
+      return query_url if ConfigSettings.solr.username.empty? && ConfigSettings.solr.password.empty?
 
-      query_url
+      query_url.gsub(/:\/\//, "://#{ConfigSettings.solr.username}:#{ConfigSettings.solr.password}@") \
     end
 
     private
@@ -31,8 +30,9 @@ module PsulibTraject
 
       def connection
         @connection ||= Faraday.new(url) do |faraday|
-          faraday.request :basic_auth, ConfigSettings.solr.username, ConfigSettings.solr.password \
-            if ConfigSettings.solr.username && ConfigSettings.solr.password
+          if ConfigSettings.solr.username && ConfigSettings.solr.password
+            faraday.request :basic_auth, ConfigSettings.solr.username, ConfigSettings.solr.password
+          end
           faraday.request :multipart
           faraday.adapter :net_http
         end
