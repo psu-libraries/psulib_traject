@@ -2,6 +2,7 @@
 
 require 'config'
 require 'csv'
+require 'faraday'
 require 'library_stdnums'
 require 'redis'
 require 'sidekiq'
@@ -25,6 +26,14 @@ module PsulibTraject
   require 'psulib_traject/processors/pub_date'
   require 'psulib_traject/processors/record_type'
   require 'psulib_traject/solr_manager'
+
+  Config.setup do |config|
+    config.const_name = 'ConfigSettings'
+    config.use_env = true
+    config.env_prefix = 'SETTINGS'
+    config.env_separator = '__'
+    config.load_and_set_settings(Config.setting_files('config', ENV['RUBY_ENVIRONMENT']))
+  end
 
   class << self
     # work-around for https://github.com/jruby/jruby/issues/4868

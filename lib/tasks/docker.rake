@@ -1,17 +1,7 @@
 # frozen_string_literal: true
 
-require 'config'
-
 namespace :docker do
   def new
-    Config.setup do |config|
-      config.const_name = 'ConfigSettings'
-      config.use_env = true
-      config.env_prefix = 'SETTINGS'
-      config.env_separator = '__'
-      config.load_and_set_settings(Config.setting_files('config', ENV['RUBY_ENVIRONMENT']))
-    end
-
     port = ConfigSettings.solr.port || '8983'
     config = Pathname.pwd.join('solr/conf')
     args = %W(
