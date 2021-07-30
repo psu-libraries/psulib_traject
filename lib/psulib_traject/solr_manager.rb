@@ -1,30 +1,26 @@
 # frozen_string_literal: true
 
-require 'config'
-require 'faraday'
-
 module PsulibTraject
   # For interacting with Apache Solr, an incomplete implementation of
   # https://github.com/psu-libraries/psulib_blacklight/blob/master/lib/psulib_blacklight/solr_manager.rb
   class SolrManager
     COLLECTION_PATH = '/solr/admin/collections'
 
-    def initialize
-      Config.setup do |config|
-        config.const_name = 'ConfigSettings'
-        config.use_env = true
-        config.load_and_set_settings(Config.setting_files('config', ENV['RUBY_ENVIRONMENT']))
-      end
-    end
-
     def last_incremented_collection
       collections_with_prefix.max_by(&:version_number)
+    end
+
+    def query_url
+      query_url = "#{url}/#{ConfigSettings.solr.collection}"
+      return query_url if ConfigSettings.solr.username.empty? && ConfigSettings.solr.password.empty?
+
+      query_url.gsub(/:\/\//, "://#{ConfigSettings.solr.username}:#{ConfigSettings.solr.password}@") \
     end
 
     private
 
       def collections_with_prefix
-        collections.select { |c| c.name.scan(/#{ConfigSettings.solr.collection_name}/) }
+        collections.select { |c| c.name.scan(/#{ConfigSettings.solr.collection}/) }
       end
 
       def collections
@@ -33,10 +29,17 @@ module PsulibTraject
       end
 
       def connection
-        @connection ||= Faraday.new(ConfigSettings.solr.url) do |faraday|
+        @connection ||= Faraday.new(url) do |faraday|
+          if ConfigSettings.solr.username && ConfigSettings.solr.password
+            faraday.request :basic_auth, ConfigSettings.solr.username, ConfigSettings.solr.password
+          end
           faraday.request :multipart
           faraday.adapter :net_http
         end
+      end
+
+      def url
+        "#{ConfigSettings.solr.protocol}://#{ConfigSettings.solr.host}:#{ConfigSettings.solr.port}/solr"
       end
   end
 

@@ -13,3 +13,14 @@ AllCops:
   DisplayCopNames: true
   NewCops: enable
 
+Lint/ConstantDefinitionInBlock:
+  Exclude:
+    - 'spec/lib/psulib_traject/workers/base_spec.rb'
+
+RSpec/LeakyConstantDeclaration:
+  Exclude:
+    - 'spec/lib/psulib_traject/workers/base_spec.rb'
+
+Lint/UnusedMethodArgument:
+  Exclude:
+    - 'spec/lib/psulib_traject/workers/base_spec.rb'

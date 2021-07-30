@@ -1,0 +1,25 @@
+version: '3.5'
+services:
+  traject:
+    tty: true
+    stdin_open: true
+    environment:
+      RUBY_ENV: dev
+      SOLR_HOST: host.docker.internal
+      SYMPHONY_DATA_PATH: "${SYMPHONY_DATA_PATH:-/app/data/symphony_data}"
+      HATHI_OVERLAP_PATH: "${HATHI_OVERLAP_PATH:-/app/data/symphony_data/overlap.tsv}"
+      # database 1 on catalog redis instance
+      REDIS_URL: redis://host.docker.internal:6379/1
+    build: 
+      context: . 
+    command: ["sleep", "999999"]
+    ports:
+      - 9292:9292
+    volumes:
+    - bundle-data:/app/vendor
+    - type: bind
+      source: ./
+      target: /app/
+
+volumes:
+  bundle-data:

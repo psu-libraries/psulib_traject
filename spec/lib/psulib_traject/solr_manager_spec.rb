@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require './lib/psulib_traject/solr_manager'
-require 'config'
-
 RSpec.describe PsulibTraject::SolrManager do
   subject(:solr_manager) { described_class.new }
 

@@ -12,14 +12,8 @@ extend Traject::Macros::Marc21
 extend Traject::Macros::Marc21Semantics
 extend PsulibTraject::Macros
 
-Config.setup do |config|
-  config.const_name = 'ConfigSettings'
-  config.use_env = true
-  config.load_and_set_settings(Config.setting_files('config', ENV['RUBY_ENVIRONMENT']))
-end
-
 settings do
-  provide 'solr.url', "#{ConfigSettings.solr.url}#{ConfigSettings.solr.collection_name}"
+  provide 'solr.url', PsulibTraject::SolrManager.new.query_url.to_s
   provide 'log.batch_size', ConfigSettings.log.batch_size
   provide 'solr.version', ConfigSettings.solr.version
   provide 'log.file', ConfigSettings.log.file

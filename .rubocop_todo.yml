@@ -13,6 +13,7 @@ Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
     - 'lib/tasks/docker.rake'
+    - 'lib/tasks/traject.rake'
     - 'lib/tasks/incrementals.rake'
 
 # Offense count: 1

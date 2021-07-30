@@ -21,3 +21,9 @@ solr/sample_data/*
 config/settings.local.yml
 config/settings/*.local.yml
 config/environments/*.local.yml
+
+# Local dev files
+.bash_history
+.cache
+.local
+data/
