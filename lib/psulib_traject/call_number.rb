@@ -20,8 +20,23 @@ module PsulibTraject
       @leader = leader
     end
 
-    def reduce
+    def reduce!
       @value = base_value
+    end
+
+    def forward_shelfkey
+      shelf_key.forward
+    end
+
+    def reverse_shelfkey
+      shelf_key.reverse
+    end
+
+    def keymap
+      {
+        forward_shelfkey => value,
+        reverse_shelfkey => value
+      }
     end
 
     def periodical?
@@ -60,6 +75,10 @@ module PsulibTraject
         else
           PsulibTraject::Processors::CallNumber::Other.new(value).reduce
         end
+      end
+
+      def shelf_key
+        @shelf_key ||= ShelfKey.new(value)
       end
   end
 end
