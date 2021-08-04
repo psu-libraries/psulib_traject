@@ -3,6 +3,7 @@
 source 'https://rubygems.org'
 
 gem 'config'
+gem 'lcsort'
 gem 'library_stdnums'
 gem 'mail'
 gem 'marc'

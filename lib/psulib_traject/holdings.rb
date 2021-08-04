@@ -2,6 +2,11 @@
 
 module PsulibTraject
   class Holdings
+    # @param record [Marc::Record]
+    # @param context [Traject::Indexer::Context]
+    # @param classification [Array<String>] Returns call numbers only for given classifications, example: 'LC', 'LCPER',
+    #   'DEWEY'. Defaults to [], which return any classification.
+    # @return [Array<CallNumber>]
     def self.call(record:, context:, classification: [])
       new(
         record: record,
@@ -12,10 +17,6 @@ module PsulibTraject
 
     attr_reader :record, :context, :holdings, :classification
 
-    # @param record [MARC::Record]
-    # @param context [Traject::Indexer::Context]
-    # @param classification [Array<String>] Returns call numbers only for given classifications, example: 'LC', 'LCPER',
-    #   'DEWEY'. Defaults to [], which return any classification.
     def initialize(record:, context:, classification:)
       @record = record
       @context = context
@@ -28,8 +29,14 @@ module PsulibTraject
       return [] if online? || holdings.empty?
 
       holdings.reject! { |call_number| call_number.exclude? || classification_not_requested?(call_number) }
-      holdings.each(&:reduce) unless holdings.one?
-      holdings.map(&:value).uniq
+
+      if holdings.one?
+        holdings
+      else
+        holdings
+          .each(&:reduce!)
+          .uniq(&:value)
+      end
     end
 
     private
