@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe PsulibTraject::Holdings do
-  subject(:holdings) { described_class.call(record: record, context: context) }
+  subject(:holdings) do
+    described_class.call(record: record, context: context).map(&:value)
+  end
 
   let(:fields) { [MARC::ControlField.new('001', '000000000')] }
   let(:record) do
@@ -82,7 +84,9 @@ RSpec.describe PsulibTraject::Holdings do
     end
 
     context 'when requesting only LC and LCPER classifications' do
-      subject(:holdings) { described_class.call(record: record, context: context, classification: ['LC', 'LCPER']) }
+      subject(:holdings) do
+        described_class.call(record: record, context: context, classification: ['LC', 'LCPER']).map(&:value)
+      end
 
       let(:fields) do
         [

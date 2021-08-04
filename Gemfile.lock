@@ -98,6 +98,7 @@ GEM
       concurrent-ruby (~> 1.0)
     json (2.5.1)
     json (2.5.1-java)
+    lcsort (0.9.1)
     library_stdnums (1.6.0)
     mail (2.7.1)
       mini_mime (>= 0.1.1)
@@ -251,6 +252,7 @@ PLATFORMS
 DEPENDENCIES
   config
   faker
+  lcsort
   library_stdnums
   mail
   marc

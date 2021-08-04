@@ -74,4 +74,29 @@ RSpec.describe PsulibTraject::CallNumber do
       it { is_expected.to be_serial }
     end
   end
+
+  describe '#forward_shelfkey' do
+    subject { described_class.new(value: 'AB123 .C456 2000') }
+
+    its(:forward_shelfkey) { is_expected.to eq('AB.0123.C456.2000') }
+  end
+
+  describe '#reverse_shelfkey' do
+    subject { described_class.new(value: 'AB123 .C456 2000') }
+
+    its(:reverse_shelfkey) { is_expected.to eq('PO.ZYXW.NVUT.XZZZ~') }
+  end
+
+  describe '#keymap' do
+    subject { described_class.new(value: 'AB123 .C456 2000') }
+
+    its(:keymap) do
+      is_expected.to eq(
+        {
+          'AB.0123.C456.2000' => 'AB123 .C456 2000',
+          'PO.ZYXW.NVUT.XZZZ~' => 'AB123 .C456 2000'
+        }
+      )
+    end
+  end
 end
