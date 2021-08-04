@@ -286,6 +286,11 @@ to_field 'lc_rest_facet', extract_marc('050a') do |_record, accumulator|
   accumulator.replace [lc_rest]
 end
 
+to_field 'call_number_lc_ssm' do |record, accumulator, context|
+  call_number_base = PsulibTraject::Holdings.call(record: record, context: context, classification: ['LC', 'LCPER'])
+  accumulator.replace(call_number_base) unless !call_number_base || call_number_base.empty?
+end
+
 # Material Characteristics
 #
 ## 300 / 340 Physical description / physical medium
