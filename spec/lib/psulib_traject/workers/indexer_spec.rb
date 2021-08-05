@@ -39,7 +39,7 @@ RSpec.describe PsulibTraject::Workers::Indexer do
 
     context 'when specifying a Solr collection' do
       it 'processes the file using the specified collection' do
-        indexer.perform(marc_file, collection_name: 'my_collection')
+        indexer.perform(marc_file, 'my_collection')
         expect(mock_traject_indexer.settings['solr.url']).to eq('http://localhost:8993/solr/my_collection')
         expect(mock_traject_indexer).to have_received(:process).with([kind_of(File)])
       end
