@@ -6,10 +6,10 @@ module PsulibTraject
       # @param [Hash] args
       # @option args [String, Pathname] :filename (required)
       # @option args [String] :collection_name
-      def perform(filename, opts = {})
+      def perform(filename, collection_name = nil)
         path = Pathname.new(filename)
         files = marc_files(path)
-        process(files, opts[:collection_name])
+        process(files, collection_name)
       end
 
       private
