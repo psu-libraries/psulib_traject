@@ -6,5 +6,5 @@
 :schedule:
   hourlies:
     cron: '3 0,7-23 * * *'
-    class: 'PsulibTraject::HourliesWorker'
+    class: 'PsulibTraject::Workers::HourlyIndexer'
 

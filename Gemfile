@@ -24,6 +24,7 @@ group :development, :test do
   gem 'pry'
   gem 'pry-debugger-jruby', platform: :jruby
   gem 'rspec'
+  gem 'rspec-sidekiq'
   gem 'rubocop', '~> 0.79'
   gem 'rubocop-performance', '~> 1.1'
   gem 'rubocop-rspec', '~> 1.3'
