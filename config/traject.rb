@@ -294,7 +294,7 @@ each_record do |record, context|
   context.add_output('call_number_lc_ssm', *call_numbers.map(&:value))
   context.add_output('forward_lc_shelfkey', *call_numbers.map(&:forward_shelfkey))
   context.add_output('reverse_lc_shelfkey', *call_numbers.map(&:reverse_shelfkey))
-  context.add_output('keymap_struct', *call_numbers.map(&:keymap).reduce(&:merge).to_json)
+  context.add_output('keymap_struct', *call_numbers.map(&:keymap).to_json)
 end
 
 # Material Characteristics
