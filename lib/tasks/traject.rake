@@ -13,7 +13,7 @@ namespace :traject do
 
   desc 'Run Hourlies'
   task :hourlies do
-    PsulibTraject::HourliesWorker.perform_now
+    PsulibTraject::Workers::HourlyIndexer.perform_now
   end
 
   desc 'Clear redis of hourly semaphores'

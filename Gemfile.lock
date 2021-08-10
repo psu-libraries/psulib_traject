@@ -157,6 +157,9 @@ GEM
     rspec-mocks (3.10.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.10.0)
+    rspec-sidekiq (3.1.0)
+      rspec-core (~> 3.0, >= 3.0.0)
+      sidekiq (>= 2.4.0)
     rspec-support (3.10.2)
     rubocop (0.93.1)
       parallel (~> 1.10)
@@ -250,6 +253,7 @@ DEPENDENCIES
   rake
   rsolr
   rspec
+  rspec-sidekiq
   rubocop (~> 0.79)
   rubocop-performance (~> 1.1)
   rubocop-rspec (~> 1.3)

@@ -40,8 +40,12 @@ jobs:
   test:
     docker:
       - image: circleci/ruby:2.7.1
+      - image: redis:5.0.7
     steps:
       - checkout
+      - run:
+          name: "Wait for Redis"
+          command: dockerize -wait tcp://localhost:6379 -timeout 1m
       - run:
           name: Install Gems
           command: |
@@ -49,7 +53,9 @@ jobs:
             bundle install
       - run:
           name: RSpec
-          command: bundle exec rspec
+          command: |
+            export REDIS_URL=redis://localhost:6379/1
+            bundle exec rspec
       - run:
           name: Upload Coverage
           when: on_success
