@@ -18,13 +18,13 @@ RSpec.describe PsulibTraject::Workers::HourlyIndexer do
   describe '#perform' do
     it 'submits jobs for each hourly file' do
       indexer.perform_async
-      expect(described_class).to have_enqueued_sidekiq_job
+      expect(indexer).to have_enqueued_sidekiq_job
     end
 
     it 'increases the size of the job queue' do
       expect {
-        described_class.perform_async
-      }.to change(described_class.jobs, :size).by(1)
+        indexer.perform_async
+      }.to change(indexer.jobs, :size).by(1)
     end
 
     it 'performs Indexer jobs' do
