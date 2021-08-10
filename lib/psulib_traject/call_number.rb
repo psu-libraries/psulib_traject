@@ -34,8 +34,9 @@ module PsulibTraject
 
     def keymap
       {
-        forward_shelfkey => value,
-        reverse_shelfkey => value
+        'call_number' => value,
+        'forward_key' => forward_shelfkey,
+        'reverse_key' => reverse_shelfkey
       }
     end
 

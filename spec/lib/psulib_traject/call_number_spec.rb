@@ -93,8 +93,9 @@ RSpec.describe PsulibTraject::CallNumber do
     its(:keymap) do
       is_expected.to eq(
         {
-          'AB.0123.C456.2000' => 'AB123 .C456 2000',
-          'PO.ZYXW.NVUT.XZZZ~' => 'AB123 .C456 2000'
+          'call_number' => 'AB123 .C456 2000',
+          'forward_key' => 'AB.0123.C456.2000',
+          'reverse_key' => 'PO.ZYXW.NVUT.XZZZ~'
         }
       )
     end
