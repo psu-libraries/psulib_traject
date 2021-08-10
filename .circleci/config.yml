@@ -52,6 +52,9 @@ jobs:
             gem install bundler -v "$(grep -A 1 "BUNDLED WITH" Gemfile.lock | tail -n 1)"
             bundle install
       - run:
+          name: Linting
+          command: bundle exec rubocop
+      - run:
           name: RSpec
           command: |
             export REDIS_URL=redis://localhost:6379/1
