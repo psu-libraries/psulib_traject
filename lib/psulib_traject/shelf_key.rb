@@ -5,6 +5,8 @@ module PsulibTraject
     FORWARD_CHARS = ('0'..'9').to_a + ('A'..'Z').to_a
     CHAR_MAP = FORWARD_CHARS.zip(FORWARD_CHARS.reverse).to_h
 
+    class NullKey < NullObject; end
+
     attr_reader :call_number
 
     # @param [String] call_number
@@ -15,7 +17,7 @@ module PsulibTraject
 
     # @return [String]
     def forward
-      Lcsort.normalize(call_number) || default_forward_key
+      Lcsort.normalize(call_number) || NullKey.new
     end
 
     # @return [String]
@@ -26,11 +28,5 @@ module PsulibTraject
         .append('~')
         .join
     end
-
-    private
-
-      def default_forward_key
-        call_number.upcase.gsub(/ /, '.')
-      end
   end
 end

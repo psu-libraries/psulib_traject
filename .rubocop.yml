@@ -30,6 +30,7 @@ Lint/MissingSuper:
     - 'lib/psulib_traject/processors/call_number/dewey.rb'
     - 'lib/psulib_traject/processors/call_number/lc.rb'
     - 'lib/psulib_traject/processors/call_number/other.rb'
+    - 'lib/psulib_traject/null_object.rb'
 
 Lint/MixedRegexpCaptureTypes:
   Exclude:

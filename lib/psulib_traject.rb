@@ -18,6 +18,7 @@ module PsulibTraject
   require 'psulib_traject/holdings'
   require 'psulib_traject/macros'
   require 'psulib_traject/marc_combining_reader'
+  require 'psulib_traject/null_object'
   require 'psulib_traject/processors/access_facet'
   require 'psulib_traject/processors/call_number/base'
   require 'psulib_traject/processors/call_number/dewey'
