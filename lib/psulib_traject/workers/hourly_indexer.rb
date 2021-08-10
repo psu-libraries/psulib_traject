@@ -5,7 +5,7 @@ module PsulibTraject
     class HourlyIndexer < Base
       def perform
         target = Dir.glob("#{ConfigSettings.symphony_data_path}/#{ConfigSettings.symphony_hourlies_subdir}/**/*.m*rc")
-        indexed_files = redis.keys('hr:*').map! { |e| e.gsub('hr:', '') }
+        indexed_files = redis.keys('hr:*').map { |e| e.gsub('hr:', '') }
         files_to_index = target - indexed_files
 
         files_to_index.each do |t|

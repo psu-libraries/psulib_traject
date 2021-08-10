@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'sidekiq/testing'
 
-Sidekiq::Testing.fake!
 
 RSpec.describe PsulibTraject::Workers::HourlyIndexer do
   let(:indexer) { described_class }
@@ -24,9 +22,9 @@ RSpec.describe PsulibTraject::Workers::HourlyIndexer do
     end
 
     it 'increases the size of the job queue' do
-      expect do
+      expect {
         described_class.perform_async
-      end.to change(described_class.jobs, :size).by(1)
+      }.to change(described_class.jobs, :size).by(1)
     end
 
     it 'performs Indexer jobs' do

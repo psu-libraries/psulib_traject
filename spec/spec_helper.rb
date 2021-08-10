@@ -10,8 +10,6 @@ ENV['RUBY_ENVIRONMENT'] = 'test'
 require 'rspec'
 require 'webmock/rspec'
 require 'psulib_traject'
-require 'rspec-sidekiq'
-require 'sidekiq/testing/inline'
 
 def ci_build?
   ENV.key?('CIRCLECI') || ENV.key?('CI')
@@ -44,15 +42,6 @@ RSpec.configure do |config|
     @indexer ||= Traject::Indexer.new.tap do |indexer|
       indexer.load_config_file('./config/traject.rb')
     end
-  end
-
-  RSpec::Sidekiq.configure do |conf|
-    # Clears all job queues before each example
-    conf.clear_all_enqueued_jobs = true # default => true
-    # Whether to use terminal colours when outputting messages
-    conf.enable_terminal_colours = true # default => true
-    # Warn when jobs are not enqueued to Redis but to a job array
-    conf.warn_when_jobs_not_processed_by_sidekiq = false # default => true
   end
 
   # rspec-expectations config goes here. You can use an alternate
