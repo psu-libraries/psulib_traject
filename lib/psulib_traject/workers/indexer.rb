@@ -26,9 +26,6 @@ module PsulibTraject
         end
 
         def process(files, collection_name)
-          indexer = Traject::Indexer::MarcIndexer.new
-          indexer.load_config_file('config/traject.rb')
-
           # if we are passed a collection name we index to it instead of what's in settings
           if collection_name
             url = indexer.settings['solr.url']
