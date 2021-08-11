@@ -13,7 +13,7 @@ RSpec.describe PsulibTraject::ShelfKey do
   context 'with a number that Lcsort cannot process' do
     let(:call_number) { 'Fiction G758thefu 2015' }
 
-    its(:forward) { is_expected.to eq('FICTION.G758THEFU.2015') }
-    its(:reverse) { is_expected.to eq('KHN6HBC.JSUR6ILK5.XZYU~') }
+    its(:forward) { is_expected.to be_nil }
+    its(:reverse) { is_expected.to be_nil }
   end
 end
