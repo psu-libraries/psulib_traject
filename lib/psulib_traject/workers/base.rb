@@ -10,9 +10,11 @@ module PsulibTraject
       end
 
       def indexer
-        @indexer ||= Traject::Indexer::MarcIndexer.new
-        @config ||= @indexer.load_config_file('config/traject.rb')
-        @indexer
+        @indexer ||= begin
+          indexer = Traject::Indexer::MarcIndexer.new
+          indexer.load_config_file('config/traject.rb')
+          indexer
+        end
       end
 
       def redis
