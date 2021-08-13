@@ -15,12 +15,10 @@ module PsulibTraject
       end
 
       def perform_deletes
-        target_deletes = hourlies_directory
-          .children
-          .select { |filename| filename.basename.fnmatch?('*_deletes_*.txt') }
+        target_deletes = Dir.glob("#{hourlies_directory}/**/*_deletes_*.txt")
 
         processed_deletes = redis.keys('hr:*').map { |e| e.gsub('hr:', '') }
-        files_to_process = target_deletes.reject { |filename| processed_deletes.include?(filename.to_s) }
+        files_to_process = target_deletes - processed_deletes
 
         indexer.logger.info "Found #{files_to_process.length} files to process for deletes"
 
@@ -39,12 +37,10 @@ module PsulibTraject
       end
 
       def perform_indexes
-        target_files = hourlies_directory
-          .children
-          .select { |filename| filename.extname.match?(/ma?rc/) }
+        target_files = Dir.glob("#{hourlies_directory}/**/*.m*rc")
 
         indexed_files = redis.keys('hr:*').map { |e| e.gsub('hr:', '') }
-        files_to_index = target_files.reject { |filename| indexed_files.include?(filename.to_s) }
+        files_to_index = target_files - indexed_files
 
         indexer.logger.info "Found #{files_to_index.length} files to index"
         array_of_files = files_to_index.map { |file| File.new(file) }
