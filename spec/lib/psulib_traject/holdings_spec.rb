@@ -54,7 +54,7 @@ RSpec.describe PsulibTraject::Holdings do
     end
 
     context 'with a periodical record' do
-      let(:fields) { [MARC::DataField.new('949', '', '', ['a', 'Periodical'])] }
+      let(:fields) { [MARC::DataField.new('949', '', '', ['a', 'Periodical Fiche v.17-v.40'])] }
 
       it { is_expected.to be_empty }
     end

@@ -3,8 +3,18 @@
 require 'spec_helper'
 
 RSpec.describe PsulibTraject::CallNumber do
-  context "when value is 'Periodical'" do
-    subject { described_class.new(value: 'Periodical') }
+  context "when value starts with 'Periodical'" do
+    subject { described_class.new(value: 'Periodical Something') }
+
+    it { is_expected.to be_periodical }
+    it { is_expected.not_to be_newspaper }
+    it { is_expected.not_to be_local }
+    it { is_expected.not_to be_on_order }
+    it { is_expected.to be_exclude }
+  end
+
+  context "when value starts with '^Periodical'" do
+    subject { described_class.new(value: '^Periodical blah') }
 
     it { is_expected.to be_periodical }
     it { is_expected.not_to be_newspaper }
@@ -25,6 +35,16 @@ RSpec.describe PsulibTraject::CallNumber do
 
   context "when value starts with 'xx('" do
     subject { described_class.new(value: 'xx(asdf1234)') }
+
+    it { is_expected.not_to be_periodical }
+    it { is_expected.not_to be_newspaper }
+    it { is_expected.to be_local }
+    it { is_expected.not_to be_on_order }
+    it { is_expected.to be_exclude }
+  end
+
+  context "when value starts with 'XX('" do
+    subject { described_class.new(value: 'XX(asdf1234)') }
 
     it { is_expected.not_to be_periodical }
     it { is_expected.not_to be_newspaper }
