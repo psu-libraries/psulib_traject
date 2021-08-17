@@ -41,7 +41,7 @@ module PsulibTraject
     end
 
     def periodical?
-      value == 'Periodical'
+      value.match?(/^\^?Periodical/i)
     end
 
     def newspaper?
@@ -49,7 +49,7 @@ module PsulibTraject
     end
 
     def local?
-      value.start_with?('xx(')
+      value.match?(/^xx/i)
     end
 
     def on_order?
