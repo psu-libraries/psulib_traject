@@ -3,6 +3,7 @@
 source 'https://rubygems.org'
 
 gem 'config'
+gem 'gitlab-sidekiq-fetcher'
 gem 'library_stdnums'
 gem 'mail'
 gem 'marc'

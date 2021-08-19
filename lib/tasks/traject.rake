@@ -3,7 +3,11 @@
 namespace :traject do
   desc 'Index a file or folder of files async with sidekiq'
   task :index_async, [:path, :collection] do |_task, args|
-    PsulibTraject::Workers::Indexer.perform_async(args.path, args.collection)
+    target = Dir.glob("#{args.path}/**/*.m*rc")
+    target.each do |file_name|
+        puts "indexing #{file_name}"
+        PsulibTraject::Workers::Indexer.perform_async(file_name, args.collection)
+    end
   end
 
   desc 'Index a file or folder of files without sidekiq'
