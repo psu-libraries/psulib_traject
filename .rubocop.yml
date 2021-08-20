@@ -24,3 +24,14 @@ RSpec/LeakyConstantDeclaration:
 Lint/UnusedMethodArgument:
   Exclude:
     - 'spec/lib/psulib_traject/workers/base_spec.rb'
+
+Lint/MissingSuper:
+  Exclude:
+    - 'lib/psulib_traject/processors/call_number/dewey.rb'
+    - 'lib/psulib_traject/processors/call_number/lc.rb'
+    - 'lib/psulib_traject/processors/call_number/other.rb'
+    - 'lib/psulib_traject/null_object.rb'
+
+Lint/MixedRegexpCaptureTypes:
+  Exclude:
+    - 'lib/psulib_traject/processors/call_number/lc.rb'

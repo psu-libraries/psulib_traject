@@ -3,6 +3,7 @@
 source 'https://rubygems.org'
 
 gem 'config'
+gem 'lcsort'
 gem 'library_stdnums'
 gem 'mail'
 gem 'marc'
@@ -21,9 +22,10 @@ end
 group :development, :test do
   gem 'faker'
   gem 'marc_bot'
-  gem 'pry'
+  gem 'pry-byebug', platform: :mri
   gem 'pry-debugger-jruby', platform: :jruby
   gem 'rspec'
+  gem 'rspec-its'
   gem 'rspec-sidekiq'
   gem 'rubocop', '~> 0.79'
   gem 'rubocop-performance', '~> 1.1'
