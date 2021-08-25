@@ -6,7 +6,7 @@ orbs:
 jobs:
   release:
     docker:
-      - image: harbor.k8s.libraries.psu.edu/library/ci-utils:v1.0.6
+      - image: harbor.k8s.libraries.psu.edu/library/ci-utils:$CI_UTILS_IMG_TAG
     environment:
       REGISTRY_HOST: harbor.k8s.libraries.psu.edu
       REGISTRY_REPO: library/psulib_traject
@@ -21,7 +21,7 @@ jobs:
 
   publish:
     docker:
-      - image: harbor.k8s.libraries.psu.edu/library/ci-utils:v1.0.6
+      - image: harbor.k8s.libraries.psu.edu/library/ci-utils:$CI_UTILS_IMG_TAG
         user: root
     steps:
       - setup_remote_docker:
@@ -76,6 +76,7 @@ workflows:
   blacklight:
     jobs:
       - release:
+          context: org-global
           name: "Release Image"
           filters:
             tags:
@@ -84,5 +85,7 @@ workflows:
             branches:
               ignore:
                 - /.*/
-      - test
-      - publish
+      - test:
+          context: org-global
+      - publish:
+          context: org-global
