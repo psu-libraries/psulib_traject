@@ -16,6 +16,6 @@ COPY --chown=app Gemfile Gemfile.lock /app/
 RUN gem install bundler -v "$(grep -A 1 "BUNDLED WITH" Gemfile.lock | tail -n 1)"
 RUN bundle install
 
-COPY . /app
+COPY --chown=app . /app
 
 
