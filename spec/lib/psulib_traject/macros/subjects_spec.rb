@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Subjects' do
+RSpec.describe PsulibTraject::Macros::Subjects do
   describe 'process_subject_hierarchy' do
     before(:all) do
       @subject610 = { '610' => { 'ind1' => '', 'ind2' => '5', 'subfields' => [{ 'a' => 'Include' }] } }
@@ -12,8 +12,8 @@ RSpec.describe 'Subjects' do
     it 'only separates v,x,y,z with em dash, strips punctuation' do
       result = indexer.map_record(@sample_marc)
       expect(result['subject_display_ssm']).to include('Include')
-      expect(result['subject_display_ssm']).to include("John. Title#{SEPARATOR}split genre 2015")
-      expect(result['subject_display_ssm']).to include("Fiction#{SEPARATOR}1492#{SEPARATOR}don't ignore TITLE")
+      expect(result['subject_display_ssm']).to include("John. Title#{described_class::SEPARATOR}split genre 2015")
+      expect(result['subject_display_ssm']).to include("Fiction#{described_class::SEPARATOR}1492#{described_class::SEPARATOR}don't ignore TITLE")
     end
   end
 

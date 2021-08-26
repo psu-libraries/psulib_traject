@@ -11,6 +11,7 @@ require 'psulib_traject'
 extend Traject::Macros::Marc21
 extend Traject::Macros::Marc21Semantics
 extend PsulibTraject::Macros
+extend PsulibTraject::Macros::Subjects
 
 settings do
   provide 'solr.url', PsulibTraject::SolrManager.new.query_url.to_s
