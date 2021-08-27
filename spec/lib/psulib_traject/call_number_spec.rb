@@ -33,6 +33,16 @@ RSpec.describe PsulibTraject::CallNumber do
     it { is_expected.to be_exclude }
   end
 
+  context "when value contains 'Newspaper'" do
+    subject { described_class.new(value: 'Cool newspaper Thing') }
+
+    it { is_expected.not_to be_periodical }
+    it { is_expected.to be_newspaper }
+    it { is_expected.not_to be_local }
+    it { is_expected.not_to be_on_order }
+    it { is_expected.to be_exclude }
+  end
+
   context "when value starts with 'xx('" do
     subject { described_class.new(value: 'xx(asdf1234)') }
 
