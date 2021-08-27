@@ -2,6 +2,7 @@
 
 module PsulibTraject::Macros::Subjects
   SEPARATOR = '—'
+  SUBFIELD_SPLIT = %w[v x y z].freeze
 
   # A set of custom traject macros (extractors and normalizers)
   # For the hierarchical subject display
@@ -9,19 +10,28 @@ module PsulibTraject::Macros::Subjects
   # Split with em dash along v,x,y,z
   def process_subject_hierarchy(fields)
     lambda do |record, accumulator|
-      return nil unless record.is_a? MARC::Record
+      return unless record.is_a? MARC::Record
 
       subjects = []
-      split_on_subfield = %w[v x y z]
       Traject::MarcExtractor.cached(fields).collect_matching_lines(record) do |field, spec, extractor|
-        subject = extractor.collect_subfields(field, spec).first
-        unless subject.nil?
-          field.subfields.each do |s_field|
-            subject = add_subject_separator(subject, s_field) if split_on_subfield.include?(s_field.code)
-          end
-          subject = subject.split(SEPARATOR)
-          subject = subject.map { |s| Traject::Macros::Marc21.trim_punctuation(s) }.join(SEPARATOR)
-          subjects << subject # if include_subject
+        subjects << extract_subjects(field, spec, extractor).join(SEPARATOR)
+      end
+      accumulator.replace(subjects.compact.uniq)
+    end
+  end
+
+  def process_subject_browse_facet(standard_fields:, pst_fields:)
+    lambda do |record, accumulator|
+      return unless record.is_a? MARC::Record
+
+      subjects = []
+      Traject::MarcExtractor.cached(standard_fields).collect_matching_lines(record) do |field, spec, extractor|
+        subjects << extract_subjects(field, spec, extractor).join(SEPARATOR)
+      end
+
+      Traject::MarcExtractor.cached(pst_fields).collect_matching_lines(record) do |field, spec, extractor|
+        if field.indicator2 == '7' && (field['2'] || '').match?(/pst/i)
+          subjects << extract_subjects(field, spec, extractor).join(SEPARATOR)
         end
       end
 
@@ -34,26 +44,29 @@ module PsulibTraject::Macros::Subjects
   # Split with em dash along v,x,y,z
   def process_subject_topic_facet(fields)
     lambda do |record, accumulator|
-      return nil unless record.is_a? MARC::Record
+      return unless record.is_a? MARC::Record
 
       subjects = []
-      split_on_subfield = %w[v x y z]
       Traject::MarcExtractor.cached(fields).collect_matching_lines(record) do |field, spec, extractor|
-        subject = extractor.collect_subfields(field, spec).first
-        unless subject.nil?
-          field.subfields.each do |s_field|
-            subject = add_subject_separator(subject, s_field) if split_on_subfield.include?(s_field.code)
-          end
-          subject = subject.split(SEPARATOR)
-          subjects << subject.map { |s| Traject::Macros::Marc21.trim_punctuation(s) }
-        end
+        subjects << extract_subjects(field, spec, extractor)
       end
 
       accumulator.replace(subjects.flatten.compact.uniq)
     end
   end
 
-  def add_subject_separator(subject, s_field)
-    subject.gsub(" #{s_field.value}", "#{SEPARATOR}#{s_field.value}")
+  def extract_subjects(field, spec, extractor)
+    subject = extractor.collect_subfields(field, spec).first
+    return if subject.nil?
+
+    field.subfields.each do |subfield|
+      if SUBFIELD_SPLIT.include?(subfield.code)
+        subject = subject.gsub(" #{subfield.value}", "#{SEPARATOR}#{subfield.value}")
+      end
+    end
+
+    subject
+      .split(SEPARATOR)
+      .map { |s| Traject::Macros::Marc21.trim_punctuation(s) }
   end
 end

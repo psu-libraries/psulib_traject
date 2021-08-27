@@ -4,30 +4,7 @@ RSpec.describe PsulibTraject::Macros::Subjects do
   let(:result) { indexer.map_record(record) }
 
   describe 'process_subject_hierarchy' do
-    let(:record) do
-      MarcBot.build(
-        :record,
-        f610: {
-          indicator2: '5',
-          a: 'Include'
-        },
-        f600: {
-          indicator2: '0',
-          a: 'John.',
-          t: 'Title.',
-          v: 'split genre',
-          d: '2015',
-          2 => 'special'
-        },
-        f630: {
-          indicator2: '0',
-          x: 'Fiction',
-          y: '1492',
-          z: "don't ignore",
-          t: 'TITLE.'
-        }
-      )
-    end
+    let(:record) { MarcBot.build(:subject_facet) }
 
     it 'only separates v,x,y,z with em dash, strips punctuation' do
       expect(result['subject_display_ssm']).to include(
@@ -39,27 +16,29 @@ RSpec.describe PsulibTraject::Macros::Subjects do
   end
 
   describe 'process_subject_topic_facet' do
-    let(:record) do
-      MarcBot.build(
-        :record,
-        f600: {
-          indicator2: '0',
-          a: 'John.',
-          x: 'Join',
-          t: 'Title',
-          d: '2015.'
-        },
-        f650: {
-          indicator2: '0',
-          x: 'Fiction',
-          y: '1492',
-          v: 'split genre'
-        }
-      )
-    end
+    let(:record) { MarcBot.build(:subject_topic_facet) }
 
     it 'includes subjects split along v, x, y and z, strips punctuation' do
       expect(result['subject_topic_facet']).to include('John. Title 2015', 'Fiction')
+    end
+  end
+
+  describe '#process_subject_browse_facet' do
+    subject { result['subject_browse_facet'] }
+
+    context "when 'pst' is not in subfield 2" do
+      let(:record) { MarcBot.build(:non_pst_subjects) }
+
+      it { is_expected.to contain_exactly(['A', 'B', 'C'].join(described_class::SEPARATOR)) }
+    end
+
+    context "when 'pst' is in subfield 2" do
+      let(:record) { MarcBot.build(:pst_subjects) }
+
+      it { is_expected.to contain_exactly(
+        ['A', 'B', 'C'].join(described_class::SEPARATOR),
+        ['L', 'M', 'N'].join(described_class::SEPARATOR)
+      )}
     end
   end
 end

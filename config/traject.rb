@@ -253,6 +253,12 @@ to_field 'subject_facet', process_subject_hierarchy(hierarchy_fields)
 ## Subject facet (sidebar)
 to_field 'subject_topic_facet', process_subject_topic_facet('650|*0|aa:650|*0|x:650|*1|aa:650|*1|x:651|*0|a:651|*0|x:600abcdtq:610abt:610x:611abt:611x')
 
+## Subject browse facet
+to_field 'subject_browse_facet', process_subject_browse_facet(
+  standard_fields: '650|*0|abcdgvxyz:650|*1|abcdgvxyz:650|*3|abcdgvxyz:650|*3|abcdgvxyz',
+  pst_fields: '650|*7|abcdgvxyz'
+)
+
 # Genre Fields
 #
 ## Main genre
