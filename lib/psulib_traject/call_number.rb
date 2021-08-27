@@ -45,7 +45,7 @@ module PsulibTraject
     end
 
     def newspaper?
-      value == 'Newspaper'
+      value.match?(/Newspaper/i)
     end
 
     def local?
