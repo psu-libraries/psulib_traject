@@ -35,3 +35,7 @@ Lint/MissingSuper:
 Lint/MixedRegexpCaptureTypes:
   Exclude:
     - 'lib/psulib_traject/processors/call_number/lc.rb'
+
+RSpec/ImplicitSubject:
+  Exclude:
+    - 'spec/lib/psulib_traject/macros/subjects_spec.rb'
