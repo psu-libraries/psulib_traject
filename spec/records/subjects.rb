@@ -15,6 +15,12 @@ MarcBot.define do
     end
   end
 
+  factory :subject_empty_650 do
+    f650 do
+      { indicator2: '0' }
+    end
+  end
+
   factory :subject_topic_facet do
     f600 do
       { indicator2: '0', a: 'John.', x: 'Join', t: 'Title', d: '2015.' }

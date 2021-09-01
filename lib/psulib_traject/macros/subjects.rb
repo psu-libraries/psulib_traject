@@ -14,7 +14,10 @@ module PsulibTraject::Macros::Subjects
 
       subjects = []
       Traject::MarcExtractor.cached(fields).collect_matching_lines(record) do |field, spec, extractor|
-        subjects << extract_subjects(field, spec, extractor).join(SEPARATOR)
+        extracted_subjects = extract_subjects(field, spec, extractor)
+        unless extracted_subjects.empty?
+          subjects << extracted_subjects.join(SEPARATOR)
+        end
       end
       accumulator.replace(subjects.compact.uniq)
     end
@@ -26,12 +29,18 @@ module PsulibTraject::Macros::Subjects
 
       subjects = []
       Traject::MarcExtractor.cached(standard_fields).collect_matching_lines(record) do |field, spec, extractor|
-        subjects << extract_subjects(field, spec, extractor).join(SEPARATOR)
+        extracted_subjects = extract_subjects(field, spec, extractor)
+        unless extracted_subjects.empty?
+          subjects << extract_subjects(field, spec, extractor).join(SEPARATOR)
+        end
       end
 
       Traject::MarcExtractor.cached(pst_fields).collect_matching_lines(record) do |field, spec, extractor|
         if field.indicator2 == '7' && (field['2'] || '').match?(/pst/i)
-          subjects << extract_subjects(field, spec, extractor).join(SEPARATOR)
+          extracted_subjects = extract_subjects(field, spec, extractor)
+          unless extracted_subjects.empty?
+            subjects << extracted_subjects.join(SEPARATOR)
+          end
         end
       end
 
@@ -57,7 +66,7 @@ module PsulibTraject::Macros::Subjects
 
   def extract_subjects(field, spec, extractor)
     subject = extractor.collect_subfields(field, spec).first
-    return if subject.nil?
+    return [] if subject.nil?
 
     field.subfields.each do |subfield|
       if SUBFIELD_SPLIT.include?(subfield.code)
