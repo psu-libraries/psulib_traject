@@ -13,6 +13,14 @@ RSpec.describe PsulibTraject::Macros::Subjects do
         "Fiction#{described_class::SEPARATOR}1492#{described_class::SEPARATOR}don't ignore TITLE"
       )
     end
+
+    context 'when empty 650 only' do
+      let(:record) { MarcBot.build(:subject_empty_650) }
+
+      it 'handles empty 650s correctly' do
+        expect(result['subject_display_ssm']).to be_nil
+      end
+    end
   end
 
   describe 'process_subject_topic_facet' do
@@ -39,6 +47,14 @@ RSpec.describe PsulibTraject::Macros::Subjects do
         ['A', 'B', 'C'].join(described_class::SEPARATOR),
         ['L', 'M', 'N'].join(described_class::SEPARATOR)
       )}
+    end
+
+    context 'when empty 650 only' do
+      let(:record) { MarcBot.build(:subject_empty_650) }
+
+      it 'handles empty 650s correctly' do
+        expect(result['subject_browse_facet']).to be_nil
+      end
     end
   end
 end
