@@ -50,4 +50,58 @@ MarcBot.define do
       { indicator2: '7', x: 'L', y: 'M', z: 'N', 2 => 'Pst' }
     end
   end
+
+  factory :repeated_headings do
+    f650 do
+      {
+        indicator2: '0',
+        a: 'Quilting'
+      }
+    end
+
+    f650 do
+      {
+        indicator2: '0',
+        a: 'Quilting',
+        z: 'Pennsylvania'
+      }
+    end
+
+    f650 do
+      {
+        indicator2: '0',
+        a: 'Quilting',
+        z: ['Pennsylvania', 'Cumberland County'],
+        x: 'History',
+        y: '18th century.'
+      }
+    end
+
+    f650 do
+      {
+        indicator2: '0',
+        a: 'Quilting',
+        z: ['Pennsylvania', 'Cumberland County'],
+        x: 'History',
+        y: '19th century.'
+      }
+    end
+
+    f650 do
+      {
+        indicator2: '0',
+        a: 'Quilting',
+        z: ['Pennsylvania', 'Cumberland County']
+      }
+    end
+
+    f650 do
+      {
+        indicator2: '0',
+        a: 'Quilting',
+        z: ['Pennsylvania', 'Cumberland County'],
+        x: 'History'
+      }
+    end
+  end
 end

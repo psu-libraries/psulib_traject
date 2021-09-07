@@ -21,7 +21,7 @@ end
 
 group :development, :test do
   gem 'faker'
-  gem 'marc_bot'
+  gem 'marc_bot', '~> 0.2'
   gem 'pry-byebug', platform: :mri
   gem 'pry-debugger-jruby', platform: :jruby
   gem 'rspec'

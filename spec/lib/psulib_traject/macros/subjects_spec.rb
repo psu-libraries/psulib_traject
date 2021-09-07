@@ -2,6 +2,7 @@
 
 RSpec.describe PsulibTraject::Macros::Subjects do
   let(:result) { indexer.map_record(record) }
+  let(:separator) { PsulibTraject::SubjectHeading::SEPARATOR }
 
   describe 'process_subject_hierarchy' do
     let(:record) { MarcBot.build(:subject_facet) }
@@ -9,8 +10,8 @@ RSpec.describe PsulibTraject::Macros::Subjects do
     it 'only separates v,x,y,z with em dash, strips punctuation' do
       expect(result['subject_display_ssm']).to include(
         'Include',
-        "John. Title#{described_class::SEPARATOR}split genre 2015",
-        "Fiction#{described_class::SEPARATOR}1492#{described_class::SEPARATOR}don't ignore TITLE"
+        "John. Title#{separator}split genre 2015",
+        "Fiction#{separator}1492#{separator}don't ignore TITLE"
       )
     end
 
@@ -37,15 +38,15 @@ RSpec.describe PsulibTraject::Macros::Subjects do
     context "when 'pst' is not in subfield 2" do
       let(:record) { MarcBot.build(:non_pst_subjects) }
 
-      it { is_expected.to contain_exactly(['A', 'B', 'C'].join(described_class::SEPARATOR)) }
+      it { is_expected.to contain_exactly(['A', 'B', 'C'].join(separator)) }
     end
 
     context "when 'pst' is in subfield 2" do
       let(:record) { MarcBot.build(:pst_subjects) }
 
       it { is_expected.to contain_exactly(
-        ['A', 'B', 'C'].join(described_class::SEPARATOR),
-        ['L', 'M', 'N'].join(described_class::SEPARATOR)
+        ['A', 'B', 'C'].join(separator),
+        ['L', 'M', 'N'].join(separator)
       )}
     end
 
@@ -55,6 +56,15 @@ RSpec.describe PsulibTraject::Macros::Subjects do
       it 'handles empty 650s correctly' do
         expect(result['subject_browse_facet']).to be_nil
       end
+    end
+
+    context 'when subject headings are repeated' do
+      let(:record) { MarcBot.build(:repeated_headings) }
+
+      it { is_expected.to contain_exactly(
+        ['Quilting', 'Pennsylvania', 'Cumberland County', 'History', '18th century'].join(separator),
+        ['Quilting', 'Pennsylvania', 'Cumberland County', 'History', '19th century'].join(separator)
+      )}
     end
   end
 end
