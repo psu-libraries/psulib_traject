@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module PsulibTraject::Macros::Subjects
-  SEPARATOR = '—'
   SUBFIELD_SPLIT = %w[v x y z].freeze
 
   # A set of custom traject macros (extractors and normalizers)
@@ -16,10 +15,15 @@ module PsulibTraject::Macros::Subjects
       Traject::MarcExtractor.cached(fields).collect_matching_lines(record) do |field, spec, extractor|
         extracted_subjects = extract_subjects(field, spec, extractor)
         unless extracted_subjects.empty?
-          subjects << extracted_subjects.join(SEPARATOR)
+          subjects << PsulibTraject::SubjectHeading.new(extracted_subjects)
         end
       end
-      accumulator.replace(subjects.compact.uniq)
+
+      accumulator.replace(
+        subjects
+          .map(&:value)
+          .uniq
+      )
     end
   end
 
@@ -31,7 +35,7 @@ module PsulibTraject::Macros::Subjects
       Traject::MarcExtractor.cached(standard_fields).collect_matching_lines(record) do |field, spec, extractor|
         extracted_subjects = extract_subjects(field, spec, extractor)
         unless extracted_subjects.empty?
-          subjects << extract_subjects(field, spec, extractor).join(SEPARATOR)
+          subjects << PsulibTraject::SubjectHeading.new(extracted_subjects)
         end
       end
 
@@ -39,12 +43,17 @@ module PsulibTraject::Macros::Subjects
         if field.indicator2 == '7' && (field['2'] || '').match?(/pst/i)
           extracted_subjects = extract_subjects(field, spec, extractor)
           unless extracted_subjects.empty?
-            subjects << extracted_subjects.join(SEPARATOR)
+            subjects << PsulibTraject::SubjectHeading.new(extracted_subjects)
           end
         end
       end
 
-      accumulator.replace(subjects.compact.uniq)
+      accumulator.replace(
+        subjects
+          .select { |subject| subject.length == subjects.max.length }
+          .map(&:value)
+          .uniq
+      )
     end
   end
 
@@ -70,12 +79,12 @@ module PsulibTraject::Macros::Subjects
 
     field.subfields.each do |subfield|
       if SUBFIELD_SPLIT.include?(subfield.code)
-        subject = subject.gsub(" #{subfield.value}", "#{SEPARATOR}#{subfield.value}")
+        subject = subject.gsub(" #{subfield.value}", "#{PsulibTraject::SubjectHeading::SEPARATOR}#{subfield.value}")
       end
     end
 
     subject
-      .split(SEPARATOR)
+      .split(PsulibTraject::SubjectHeading::SEPARATOR)
       .map { |s| Traject::Macros::Marc21.trim_punctuation(s) }
   end
 end

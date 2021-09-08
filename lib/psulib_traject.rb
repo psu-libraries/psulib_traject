@@ -32,6 +32,7 @@ module PsulibTraject
   require 'psulib_traject/processors/record_type'
   require 'psulib_traject/shelf_key'
   require 'psulib_traject/solr_manager'
+  require 'psulib_traject/subject_heading'
   require 'psulib_traject/workers/base'
   require 'psulib_traject/workers/hourly_indexer'
   require 'psulib_traject/workers/indexer'

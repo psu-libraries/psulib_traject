@@ -110,7 +110,7 @@ GEM
       marc (~> 1.0)
     marc-marc4j (1.0.0-java)
       marc (~> 1)
-    marc_bot (0.1.0)
+    marc_bot (0.2.0)
       marc (~> 1.1)
     method_source (1.0.0)
     mini_mime (1.1.0)
@@ -256,7 +256,7 @@ DEPENDENCIES
   library_stdnums
   mail
   marc
-  marc_bot
+  marc_bot (~> 0.2)
   pry-byebug
   pry-debugger-jruby
   rake
