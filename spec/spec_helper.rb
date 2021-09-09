@@ -34,17 +34,7 @@ Dir[Pathname.pwd.join('spec', 'support', '**', '*.rb')].sort.each { |f| require 
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
-def indexer
-  @indexer
-end
-
 RSpec.configure do |config|
-  config.before(:all) do
-    @indexer ||= Traject::Indexer.new.tap do |indexer|
-      indexer.load_config_file('./config/traject.rb')
-    end
-  end
-
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
