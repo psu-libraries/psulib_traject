@@ -3,7 +3,6 @@
 RSpec.describe PsulibTraject::MarcCombiningReader do
   subject(:reader) { described_class.new(File.open(File.join(fixture_path, 'split_items_test.mrc').to_s, 'r'), 'marc_source.type' => 'binary') }
 
-  let(:fixture_path) { './spec/fixtures' }
   let(:results) { reader.each.to_a }
 
   describe '#each' do

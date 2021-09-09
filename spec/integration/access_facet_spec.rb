@@ -2,8 +2,6 @@
 
 RSpec.describe 'Access facet' do
   describe 'access_facet' do
-    let(:fixture_path) { './spec/fixtures' }
-
     it 'works with empty record, returns empty' do
       @empty_record = MARC::Record.new
       @empty_record.append(MARC::ControlField.new('001', '000000000'))

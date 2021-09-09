@@ -2,8 +2,6 @@
 
 RSpec.describe PsulibTraject::Processors::PubDate do
   describe 'process_publication_date' do
-    let(:fixture_path) { './spec/fixtures' }
-
     it "works when there's no date information" do
       @empty_record = MARC::Record.new
       @empty_record.append(MARC::ControlField.new('001', '000000000'))
