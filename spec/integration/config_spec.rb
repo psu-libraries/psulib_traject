@@ -4,7 +4,6 @@ RSpec::Matchers.define_negated_matcher :not_include, :include
 
 RSpec.describe 'Config' do
   let(:leader) { '1234567890' }
-  let(:fixture_path) { './spec/fixtures' }
 
   describe 'id' do
     context 'one record with trailing whitespace' do
