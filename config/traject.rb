@@ -293,14 +293,19 @@ to_field 'lc_rest_facet', extract_marc('050a') do |_record, accumulator|
   accumulator.replace [lc_rest]
 end
 
-# Determines a base call number from the record's holdings and creates forward and reverse shelfkeys
+# Call Number Browse
+#
+## Determines a base call number from the record's holdings and creates forward and reverse shelfkeys for LC, LCPER and DEWEY
 each_record do |record, context|
-  call_numbers = PsulibTraject::Holdings.call(record: record, context: context, classification: ['LC', 'LCPER'])
+  call_numbers = PsulibTraject::Holdings.call(record: record, context: context)
   next if call_numbers.empty?
 
-  context.add_output('call_number_lc_ssm', *call_numbers.map(&:value))
-  context.add_output('forward_lc_shelfkey', *call_numbers.map(&:forward_shelfkey))
-  context.add_output('reverse_lc_shelfkey', *call_numbers.map(&:reverse_shelfkey))
+  call_numbers.each do |call_number|
+    context.add_output(call_number.solr_field, call_number.value)
+    context.add_output(call_number.forward_shelfkey_field, call_number.forward_shelfkey)
+    context.add_output(call_number.reverse_shelfkey_field, call_number.reverse_shelfkey)
+  end
+
   context.add_output('keymap_struct', *call_numbers.map(&:keymap).to_json)
 end
 

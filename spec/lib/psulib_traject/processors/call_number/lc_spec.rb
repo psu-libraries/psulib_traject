@@ -83,24 +83,6 @@ RSpec.describe PsulibTraject::Processors::CallNumber::LC do
   end
 
   describe '#reduce' do
-    RSpec::Matchers.define :reduce_to do |expected|
-      match do |actual|
-        described_class.new(actual).reduce == expected
-      end
-      failure_message do |actual|
-        "expected #{actual} to reduce to #{expected} but got #{described_class.new(actual).reduce} instead."
-      end
-    end
-
-    RSpec::Matchers.define :serial_reduce_to do |expected|
-      match do |actual|
-        described_class.new(actual, serial: true).reduce == expected
-      end
-      failure_message do |actual|
-        "expected #{actual} to reduce to #{expected} but got #{described_class.new(actual).reduce} instead."
-      end
-    end
-
     context 'when non-serial' do
       it 'leaves cutters intact' do
         expect('P123.23 .M23 A12').to reduce_to('P123.23 .M23 A12')
@@ -165,6 +147,7 @@ RSpec.describe PsulibTraject::Processors::CallNumber::LC do
         expect('PN2007 .K3 V.8:NO.1-2 1972').to serial_reduce_to('PN2007 .K3')
         expect('PN2007 .K3 V.5-6:NO.11-25 1967-1970').to serial_reduce_to('PN2007 .K3')
         expect('PN2007 .S3 NO.14-15,34').to serial_reduce_to('PN2007 .S3')
+        expect('PN2007 .S3 T.1').to serial_reduce_to('PN2007 .S3')
       end
 
       it 'drops year data after the cutter' do
@@ -175,7 +158,7 @@ RSpec.describe PsulibTraject::Processors::CallNumber::LC do
         expect('PN2007 .K93 2002:NO.1-2').to serial_reduce_to('PN2007 .K93')
       end
 
-      it 'drops date ranges with "index|ind' do
+      it 'drops date ranges with index|ind' do
         expect('HQ1101.M72 Index Spr.1972-Feb.1974').to serial_reduce_to('HQ1101.M72')
       end
     end
@@ -226,6 +209,10 @@ RSpec.describe PsulibTraject::Processors::CallNumber::LC do
 
       it 'preserves the K' do
         expect('PJ5129.A8K65 1921 Bd.11').to reduce_to('PJ5129.A8K65 1921')
+      end
+
+      it 'preserves the T' do
+        expect('PJ5129.A8T65 1921 Bd.11').to reduce_to('PJ5129.A8T65 1921')
       end
     end
   end

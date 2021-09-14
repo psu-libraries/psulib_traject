@@ -12,6 +12,8 @@ inherit_from:
 AllCops:
   DisplayCopNames: true
   NewCops: enable
+  Exclude:
+    - 'config/ignorethis_*.rb'
 
 Lint/ConstantDefinitionInBlock:
   Exclude:
@@ -35,7 +37,18 @@ Lint/MissingSuper:
 Lint/MixedRegexpCaptureTypes:
   Exclude:
     - 'lib/psulib_traject/processors/call_number/lc.rb'
+    - 'lib/psulib_traject/processors/call_number/dewey.rb'
 
 RSpec/ImplicitSubject:
   Exclude:
     - 'spec/lib/psulib_traject/macros/subjects_spec.rb'
+
+RSpec/NestedGroups:
+  Exclude:
+    - 'spec/lib/psulib_traject/processors/call_number/lc_spec.rb'
+    - 'spec/lib/psulib_traject/processors/call_number/dewey_spec.rb'
+
+RSpec/ExpectActual:
+  Exclude:
+    - 'spec/lib/psulib_traject/processors/call_number/lc_spec.rb'
+    - 'spec/lib/psulib_traject/processors/call_number/dewey_spec.rb'
