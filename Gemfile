@@ -3,12 +3,12 @@
 source 'https://rubygems.org'
 
 gem 'config'
-gem 'lcsort'
 gem 'library_stdnums'
 gem 'mail'
 gem 'marc'
 gem 'rake'
 gem 'rsolr'
+gem 'shelvit'
 gem 'sidekiq'
 gem 'sidekiq-scheduler'
 gem 'traject'
