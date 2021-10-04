@@ -4,31 +4,29 @@ module PsulibTraject
   class Holdings
     # @param record [Marc::Record]
     # @param context [Traject::Indexer::Context]
-    # @param classification [Array<String>] Returns call numbers only for given classifications, example: 'LC', 'LCPER',
-    #   'DEWEY'. Defaults to [], which return any classification.
     # @return [Array<CallNumber>]
-    def self.call(record:, context:, classification: [])
+    def self.call(record:, context:)
       new(
         record: record,
-        context: context,
-        classification: Array(classification)
+        context: context
       ).resolve_base
     end
 
-    attr_reader :record, :context, :holdings, :classification
+    attr_reader :record, :context, :holdings
 
-    def initialize(record:, context:, classification:)
+    def initialize(record:, context:)
       @record = record
       @context = context
       @holdings = extract_holdings
-      @classification = classification
       freeze
     end
 
     def resolve_base
       return [] if online? || holdings.empty?
 
-      holdings.reject! { |call_number| call_number.exclude? || classification_not_requested?(call_number) }
+      holdings.reject! do |call_number|
+        call_number.exclude? || call_number.not_browsable?
+      end
 
       if holdings.one?
         holdings
@@ -43,12 +41,6 @@ module PsulibTraject
 
       def online?
         context.output_hash['access_facet']&.include?('Online')
-      end
-
-      def classification_not_requested?(call_number)
-        return false if classification.empty?
-
-        !classification.include?(call_number.classification)
       end
 
       # assuming each 949 has only one subfield a, w and l

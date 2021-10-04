@@ -246,6 +246,7 @@ GEM
     yell (2.2.2)
 
 PLATFORMS
+  universal-java-10
   universal-java-11
   universal-java-14
   x86_64-darwin-20

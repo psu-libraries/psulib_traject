@@ -117,15 +117,54 @@ RSpec.describe PsulibTraject::CallNumber do
     its(:reverse_shelfkey) { is_expected.to eq('PO.ZYXW.NVUT.XZZZ~') }
   end
 
+  describe '#solr_field' do
+    subject { described_class.new(classification: 'LCPER') }
+
+    its(:solr_field) { is_expected.to eq('call_number_lc_ssm') }
+  end
+
+  describe '#forward_shelfkey_field' do
+    subject { described_class.new(classification: 'DEWEY') }
+
+    its(:forward_shelfkey_field) { is_expected.to eq('forward_dewey_shelfkey') }
+  end
+
+  describe '#reverse_shelfkey_field' do
+    subject { described_class.new(classification: 'DEWEY') }
+
+    its(:reverse_shelfkey_field) { is_expected.to eq('reverse_dewey_shelfkey') }
+  end
+
+  describe '#not_browsable?' do
+    context 'when an invalid LC call number' do
+      subject { described_class.new(value: 'INVALID LC', classification: 'LC') }
+
+      it { is_expected.to be_not_browsable }
+    end
+
+    context 'when an invalid Dewey call number' do
+      subject { described_class.new(value: 'Microfilm E243', classification: 'DEWEY') }
+
+      it { is_expected.to be_not_browsable }
+    end
+
+    context 'when a call number that is not LC or Dewey' do
+      subject { described_class.new(value: 'AB123 .C456 2000', classification: 'ASIS') }
+
+      it { is_expected.to be_not_browsable }
+    end
+  end
+
   describe '#keymap' do
-    subject { described_class.new(value: 'AB123 .C456 2000') }
+    subject { described_class.new(value: 'AB123 .C456 2000', classification: 'LC') }
 
     its(:keymap) do
       is_expected.to eq(
         {
-          'call_number' => 'AB123 .C456 2000',
-          'forward_key' => 'AB.0123.C456.2000',
-          'reverse_key' => 'PO.ZYXW.NVUT.XZZZ~'
+          call_number: 'AB123 .C456 2000',
+          classification: 'LC',
+          forward_key: 'AB.0123.C456.2000',
+          reverse_key: 'PO.ZYXW.NVUT.XZZZ~'
         }
       )
     end

@@ -10,8 +10,8 @@ module PsulibTraject
     attr_reader :call_number
 
     # @param [String] call_number
-    def initialize(call_number)
-      @call_number = call_number
+    def initialize(call_number, prefix: '')
+      @call_number = prefix + call_number
       freeze
     end
 
