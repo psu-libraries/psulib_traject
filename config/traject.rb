@@ -255,7 +255,7 @@ to_field 'subject_topic_facet', process_subject_topic_facet('650|*0|aa:650|*0|x:
 
 ## Subject browse facet
 to_field 'subject_browse_facet', process_subject_browse_facet(
-  standard_fields: '650|*0|abcdgvxyz:650|*1|abcdgvxyz:650|*3|abcdgvxyz:650|*3|abcdgvxyz',
+  standard_fields: '600|*0|abcd:610|*0|abcd:611|*0|abcd:630|*0|avxyz:647|*0|avxyz:650|*0|abcdgvxyz:650|*1|abcdgvxyz:650|*2|abcdgvxyz:650|*3|abcdgvxyz:651|*0|agvxyz',
   pst_fields: '650|*7|abcdgvxyz'
 )
 

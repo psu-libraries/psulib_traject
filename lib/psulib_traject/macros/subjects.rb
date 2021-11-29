@@ -35,7 +35,7 @@ module PsulibTraject::Macros::Subjects
       Traject::MarcExtractor.cached(standard_fields).collect_matching_lines(record) do |field, spec, extractor|
         extracted_subjects = extract_subjects(field, spec, extractor)
         unless extracted_subjects.empty?
-          subjects << PsulibTraject::SubjectHeading.new(extracted_subjects)
+          subjects << PsulibTraject::SubjectHeading.new(extracted_subjects, tag: field.tag)
         end
       end
 
@@ -43,16 +43,20 @@ module PsulibTraject::Macros::Subjects
         if field.indicator2 == '7' && (field['2'] || '').match?(/pst/i)
           extracted_subjects = extract_subjects(field, spec, extractor)
           unless extracted_subjects.empty?
-            subjects << PsulibTraject::SubjectHeading.new(extracted_subjects)
+            subjects << PsulibTraject::SubjectHeading.new(extracted_subjects, tag: field.tag)
           end
         end
       end
 
       accumulator.replace(
         subjects
-          .select { |subject| subject.length == subjects.max.length }
-          .map(&:value)
-          .uniq
+          .group_by(&:tag)
+          .map do |_tag, subjectheadings|
+            subjectheadings
+              .select { |subject| subject.length == subjectheadings.max.length }
+              .map(&:value)
+              .uniq
+          end.flatten
       )
     end
   end
