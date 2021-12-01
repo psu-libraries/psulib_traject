@@ -573,6 +573,9 @@ to_field 'library_facet', extract_marc('949m'), translation_map('libraries')
 # All locations (in psulib_blacklight this is used only in advanced search)
 to_field 'location_facet', extract_marc('949l'), exclude_locations, translation_map('locations')
 
+# 993 - Endowment Information
+to_field 'endowment_info_note_ssim', extract_marc('993an')
+
 # Serials fields
 #
 # Preceding and Succeeding Entries display
