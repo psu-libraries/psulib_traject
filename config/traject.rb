@@ -87,6 +87,9 @@ to_field 'lccn_ssim', extract_marc('010a'), trim_punctuation
 # Special Collections Accessioning Number ("scan")
 to_field 'scan_sim', extract_marc('099a')
 
+# Report Numbers
+to_field 'report_numbers_ssim', extract_marc('027aq:088aq')
+
 # Title fields
 #
 ## Title Search Fields
