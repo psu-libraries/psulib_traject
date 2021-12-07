@@ -312,6 +312,14 @@ each_record do |record, context|
   context.add_output('keymap_struct', *call_numbers.map(&:keymap).to_json)
 end
 
+# Summary Holdings
+#
+# Builds a json struct of summary holdings for applicable records
+to_field 'summary_holdings_struct' do |record, accumulator|
+  summary_holdings = PsulibTraject::Processors::SummaryHoldings.call(record: record)
+  accumulator << summary_holdings.to_json unless summary_holdings.empty?
+end
+
 # Material Characteristics
 #
 ## 300 / 340 Physical description / physical medium
