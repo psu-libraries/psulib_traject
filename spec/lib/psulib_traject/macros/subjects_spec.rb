@@ -35,10 +35,19 @@ RSpec.describe PsulibTraject::Macros::Subjects do
   describe '#process_subject_browse_facet' do
     subject { result['subject_browse_facet'] }
 
-    context "when 'pst' is not in subfield 2" do
-      let(:record) { MarcBot.build(:non_pst_subjects) }
+    context "when 'pst' is not in subfield 2 for 650 subjects" do
+      let(:record) { MarcBot.build(:non_pst_subjects_650) }
 
       it { is_expected.to contain_exactly(['A', 'B', 'C'].join(separator)) }
+    end
+
+    context 'when max length rule should be applied' do
+      let(:record) { MarcBot.build(:non_pst_subjects_non_650) }
+
+      it { is_expected.to contain_exactly('A B C D', 'E F G H', 'L M N O', 'P R S T',
+                                          ['1 2', '3', '4', '5', '6'].join(separator),
+                                          ['7', '8', '9', '10', '11'].join(separator),
+                                          ['12', '13', '14', '15', '16'].join(separator)) }
     end
 
     context "when 'pst' is in subfield 2" do

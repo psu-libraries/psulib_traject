@@ -4,8 +4,11 @@ module PsulibTraject
   class SubjectHeading
     SEPARATOR = '—'
 
-    def initialize(headings)
+    attr_reader :tag, :headings
+
+    def initialize(headings, tag: nil)
       @headings = headings
+      @tag = tag
     end
 
     def length
