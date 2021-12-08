@@ -34,44 +34,89 @@ RSpec.describe PsulibTraject::PeriodicalHoldings do
   end
 
   describe '#summary' do
-    before { holdings.add_summary(MARC::DataField.new('266', '0', '0', ['a', 'v.12(1956/57)-v.40:1-7/8(1984)'])) }
+    before do
+      holdings.add_summary(
+        MARC::DataField.new(
+          '266', '0', '0',
+          ['a', 'v.12(1956/57)-v.40:1-7/8(1984)'],
+          ['b', 'extra summary statement b'],
+          ['c', 'extra summary statement c'],
+          ['z', 'extra summary statement z']
+        )
+      )
+    end
 
-    its(:summary) { is_expected.to contain_exactly('v.12(1956/57)-v.40:1-7/8(1984)') }
+    its(:summary) { is_expected.to contain_exactly(
+      'v.12(1956/57)-v.40:1-7/8(1984)',
+      'extra summary statement b',
+      'extra summary statement c',
+      'extra summary statement z'
+    )}
   end
 
   describe '#supplement' do
-    before { holdings.add_supplement(MARC::DataField.new('267', '0', '0', ['a', 'supplement statement'])) }
+    before do
+      holdings.add_supplement(
+        MARC::DataField.new(
+          '267', '0', '0',
+          ['a', 'supplement statement'],
+          ['b', 'extra supplement statement b'],
+          ['c', 'extra supplement statement c'],
+          ['z', 'extra supplement statement z']
+        )
+      )
+    end
 
-    its(:supplement) { is_expected.to contain_exactly('supplement statement') }
+    its(:supplement) { is_expected.to contain_exactly(
+      'supplement statement',
+      'extra supplement statement b',
+      'extra supplement statement c',
+      'extra supplement statement z'
+    )}
   end
 
   describe '#index' do
-    before { holdings.add_index(MARC::DataField.new('268', '0', '0', ['a', 'index statement'])) }
+    before do
+      holdings.add_index(
+        MARC::DataField.new(
+          '268', '0', '0',
+          ['a', 'index statement'],
+          ['b', 'extra index statement b'],
+          ['c', 'extra index statement c'],
+          ['z', 'extra index statement z']
+        )
+      )
+    end
 
-    its(:index) { is_expected.to contain_exactly('index statement') }
+    its(:index) { is_expected.to contain_exactly(
+      'index statement',
+      'extra index statement b',
+      'extra index statement c',
+      'extra index statement z'
+    )}
   end
 
   describe '#to_hash' do
-    # @note Since DataField is just a kind of hash, we're using that for simplicity
-    before do
-      holdings.heading = { 'b' => 'Library', 'c' => 'Location', 'h' => 'Call Number' }
-      holdings.add_summary({ 'a' => 'The First Summary' })
-      holdings.add_summary({ 'a' => 'The Second Summary' })
-      holdings.add_supplement({ 'a' => 'The First Supplement' })
-      holdings.add_supplement({ 'a' => 'The Second Supplement' })
-      holdings.add_index({ 'a' => 'The First Index' })
-      holdings.add_index({ 'a' => 'The Second Index' })
-    end
-
+    let(:record) { MarcBot.build(:sample_summary_holdings) }
     let(:sample) do
       {
         library: 'Library',
         location: 'Location',
         call_number: 'Call Number',
-        summary: ['The First Summary', 'The Second Summary'],
-        supplement: ['The First Supplement', 'The Second Supplement'],
-        index: ['The First Index', 'The Second Index']
+        summary: ['the first summary', 'extra summary 1', 'the second summary', 'extra summary 2'],
+        supplement: ['the first supplement', 'extra supplement 1', 'the second supplement', 'extra supplement 2'],
+        index: ['the first index', 'extra index 1', 'the second index', 'extra index 2']
       }
+    end
+
+    before do
+      holdings.heading = record['852']
+      holdings.add_summary(record.fields('866')[0])
+      holdings.add_summary(record.fields('866')[1])
+      holdings.add_supplement(record.fields('867')[0])
+      holdings.add_supplement(record.fields('867')[1])
+      holdings.add_index(record.fields('868')[0])
+      holdings.add_index(record.fields('868')[1])
     end
 
     its(:to_hash) { is_expected.to eq(sample) }
