@@ -28,4 +28,29 @@ MarcBot.define do
     end
     f866 { 'v.1(2000)- to Date.' }
   end
+
+  factory :sample_summary_holdings do
+    f852 do
+      { b: 'Library', c: 'Location', h: 'Call Number' }
+    end
+
+    f866 do
+      { a: 'the first summary', z: 'extra summary 1' }
+    end
+    f866 do
+      { a: 'the second summary', z: 'extra summary 2' }
+    end
+    f867 do
+      { a: 'the first supplement', z: 'extra supplement 1' }
+    end
+    f867 do
+      { a: 'the second supplement', z: 'extra supplement 2' }
+    end
+    f868 do
+      { a: 'the first index', z: 'extra index 1' }
+    end
+    f868 do
+      { a: 'the second index', z: 'extra index 2' }
+    end
+  end
 end

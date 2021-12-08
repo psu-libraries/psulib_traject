@@ -42,7 +42,9 @@ module PsulibTraject
     end
 
     def summary
-      @summaries.map { |field| field['a'] }
+      @summaries
+        .map { |field| atoz(field) }
+        .flatten
     end
 
     def add_supplement(field)
@@ -50,7 +52,9 @@ module PsulibTraject
     end
 
     def supplement
-      @supplementals.map { |field| field['a'] }
+      @supplementals
+        .map { |field| atoz(field) }
+        .flatten
     end
 
     def add_index(field)
@@ -58,7 +62,9 @@ module PsulibTraject
     end
 
     def index
-      @indices.map { |field| field['a'] }
+      @indices
+        .map { |field| atoz(field) }
+        .flatten
     end
 
     def to_hash
@@ -76,5 +82,13 @@ module PsulibTraject
         index: index
       }
     end
+
+    private
+
+      def atoz(field)
+        ('a'..'z')
+          .map { |indicator| field[indicator] }
+          .compact
+      end
   end
 end
