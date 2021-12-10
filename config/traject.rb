@@ -18,6 +18,7 @@ settings do
   provide 'log.batch_size', ConfigSettings.log.batch_size
   provide 'solr.version', ConfigSettings.solr.version
   provide 'log.file', ConfigSettings.log.file
+  provide 'log.level', ConfigSettings.log.level
   provide 'log.error_file', ConfigSettings.log.error_file
   provide 'solr_writer.commit_on_close', ConfigSettings.solr_writer.commit_on_close
   provide 'reader_class_name', ConfigSettings.reader_class_name

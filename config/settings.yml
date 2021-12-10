@@ -7,6 +7,7 @@ solr:
   port: "<%= ENV.fetch("SOLR_PORT", "8983") %>"
   collection: "<%= ENV.fetch("SOLR_COLLECTION", "psul_catalog") %>"
 log:
+  level: "info"
   error_file: log/traject_error.log
   file: log/traject.log
   batch_size: 100_000
