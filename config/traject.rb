@@ -588,7 +588,7 @@ to_field 'location_facet', extract_marc('949l'), exclude_locations, translation_
 to_field 'endowment_info_note_ssim', extract_marc('993an')
 
 # 995 - Dedication Information
-to_field 'dedication_info_note_ssim', extract_marc('995acn3')
+to_field 'dedication_ssim', extract_marc('995acn3')
 
 # Serials fields
 #
