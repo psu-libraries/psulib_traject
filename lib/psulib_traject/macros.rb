@@ -93,7 +93,7 @@ module PsulibTraject
       when 'full'
         fulltext_link_available?(field.indicator1, field.indicator2, url_label)
       when 'partial'
-        partial_link_available?(field.indicator1, field.indicator2, url_label)
+        partial_link_available?(field.indicator2, url_label)
       when 'suppl'
         suppl_link_available?(field.indicator2)
       else
@@ -102,11 +102,11 @@ module PsulibTraject
     end
 
     def fulltext_link_available?(ind1, ind2, url_label)
-      (ind2 == '0' || ind1 == '4' || (ind1.strip.empty? && ind2.strip.empty?)) && !NOT_FULLTEXT.match?(url_label)
+      (ind2 == '0' || (ind1.strip.empty? && ind2.strip.empty?)) && !NOT_FULLTEXT.match?(url_label)
     end
 
-    def partial_link_available?(ind1, ind2, url_label)
-      ind2 == '1' || ((ind2 == '0' || ind1 == '4') && NOT_FULLTEXT.match?(url_label))
+    def partial_link_available?(ind2, url_label)
+      ind2 == '1' || (ind2 == '0' && NOT_FULLTEXT.match?(url_label))
     end
 
     def suppl_link_available?(ind2)
