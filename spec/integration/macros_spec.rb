@@ -20,30 +20,17 @@ RSpec.describe 'Macros' do
       end
     end
 
-    context 'A record where indicator 1 is 4, indicator 2 is blank and magic word is not in one of the label subfields' do
+    context 'A record where indicator 1 and 2 is blank and magic word is not in one of the label subfields' do
       let(:url_856_2) do
-        { '856' => { 'ind1' => '4', 'ind2' => '', 'subfields' => [{ 'u' => 'https://scholarsphere.psu.edu/files/02870v8'\
+        { '856' => { 'ind1' => '', 'ind2' => '', 'subfields' => [{ 'u' => 'https://scholarsphere.psu.edu/files/02870v8'\
                                                                             '5d' },
-                                                                  { 'z' => 'This is a note' }] } }
+                                                                 { 'z' => 'This is a note' }] } }
       end
       let(:result_1) { indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_2], 'leader' => leader)) }
 
       it 'produces a fulltext link' do
         expect(result_1['full_links_struct']).to match ['{"prefix":"","text":"scholarsphere.psu.edu","url":"https://scholarsphere.ps'\
                                                         'u.edu/files/02870v85d","notes":"This is a note"}']
-      end
-    end
-
-    context 'A record where indicator 1 and 2 is blank and magic word is not in one of the label subfields' do
-      let(:url_856_2) do
-        { '856' => { 'ind1' => ' ', 'ind2' => ' ', 'subfields' => [{ 'u' => 'https://scholarsphere.psu.edu/files/02870v8'\
-                                                                            '5d' }] } }
-      end
-      let(:result_1) { indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_2], 'leader' => leader)) }
-
-      it 'produces a fulltext link' do
-        expect(result_1['full_links_struct']).to match ['{"prefix":"","text":"scholarsphere.psu.edu","url":"https://scholarsphere.ps'\
-                                                        'u.edu/files/02870v85d","notes":""}']
       end
     end
 
@@ -63,17 +50,32 @@ RSpec.describe 'Macros' do
       end
     end
 
-    context 'A record with an indicator 1 of 4, indicator 2 is blank and magic word is in one of the label subfields' do
+    context 'A record with an indicator 2 of 1 and magic word is not in one of the label subfields' do
+      let(:url_856_9) do
+        { '856' => { 'ind1' => '4', 'ind2' => '1', 'subfields' => [{ 'u' => 'http://archive.org/details/facultybulletinp00penn' },
+                                                                   { '3' => 'v.19-20 Sept.1939-May 1941' }] } }
+      end
+
+      let(:result_9) { indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_9], 'leader' => leader)) }
+
+      it 'only produces partial links, no full links' do
+        expect(result_9['full_links_struct']).to be_nil
+        expect(result_9['partial_links_struct']).to match ['{"prefix":"v.19-20 Sept.1939-May 1941","text":"archive.org",'\
+                                                                   '"url":"http://archive.org/details/facultybulletinp00penn","notes":""}']
+      end
+    end
+
+    context 'A record with an indicator 2 of 1 and magic word is in one of the label subfields' do
       let(:url_856_7) do
-        { '856' => { 'ind1' => '4', 'ind2' => '', 'subfields' => [{ 'u' => 'http://library.columbia.edu/content/library'\
+        { '856' => { 'ind1' => '4', 'ind2' => '1', 'subfields' => [{ 'u' => 'http://library.columbia.edu/content/library'\
                                                                      'web/indiv/ccoh/our_work/how_to_use_the_archives.ht'\
                                                                      'ml' },
-                                                                  { '3' => 'Carrots executive summary peas' }] } }
+                                                                   { '3' => 'Just prefix' }] } }
       end
       let(:result_3) { indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_7], 'leader' => leader)) }
 
       it 'produces a partial link' do
-        expect(result_3['partial_links_struct']).to match ['{"prefix":"Carrots executive summary peas","text":"library.columbia.edu","url":"http://library.columbia.'\
+        expect(result_3['partial_links_struct']).to match ['{"prefix":"Just prefix","text":"library.columbia.edu","url":"http://library.columbia.'\
                                                          'edu/content/libraryweb/indiv/ccoh/our_work/how_to_use_the_arch'\
                                                          'ives.html","notes":""}']
       end
@@ -139,7 +141,7 @@ RSpec.describe 'Macros' do
 
     context 'A record with a url that has all subfields for a prefix, label and notes' do
       let(:url_856_8) do
-        { '856' => { 'ind1' => '4', 'ind2' => '1', 'subfields' => [{ 'u' => 'http://purl.access.gpo.gov/GPO/LPS47374' },
+        { '856' => { 'ind1' => '4', 'ind2' => '0', 'subfields' => [{ 'u' => 'http://purl.access.gpo.gov/GPO/LPS47374' },
                                                                    { '3' => 'v.7' },
                                                                    { 'y' => 'Electronic resource (PDF)' },
                                                                    { 'y' => 'Electronic resource (PDF) 2' },
