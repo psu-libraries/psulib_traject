@@ -585,7 +585,8 @@ to_field 'library_facet', extract_marc('949m'), translation_map('libraries')
 to_field 'location_facet', extract_marc('949l'), exclude_locations, translation_map('locations')
 
 # 993 - Endowment Information
-to_field 'endowment_info_note_ssim', extract_marc('993an')
+to_field 'endowment_note_ssim', extract_marc('993an')
+to_field 'endowment_note_display_ssm', extract_marc('993n')
 
 # 995 - Dedication Information
 to_field 'dedication_ssim', extract_marc('995acn3')
