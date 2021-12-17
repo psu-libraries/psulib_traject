@@ -589,7 +589,7 @@ to_field 'endowment_note_ssim', extract_marc('993an')
 to_field 'endowment_note_display_ssm', extract_marc('993n')
 
 # 995 - Dedication Information
-to_field 'dedication_ssim', extract_marc('995acn3')
+to_field 'dedication_ssim', extract_marc('995abcd3n')
 
 # Serials fields
 #
