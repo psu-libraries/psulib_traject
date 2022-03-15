@@ -249,6 +249,7 @@ PLATFORMS
   universal-java-10
   universal-java-11
   universal-java-14
+  universal-java-15
   x86_64-darwin-20
   x86_64-linux
 
