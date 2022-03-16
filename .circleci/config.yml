@@ -10,7 +10,6 @@ jobs:
     environment:
       REGISTRY_HOST: harbor.k8s.libraries.psu.edu
       REGISTRY_REPO: library/psulib_traject
-      DOCKER_USERNAME: 'robot$circleci'
       GITHUB_USER: 'psu-stewardship-bot'
     steps:
       - add_ssh_keys
