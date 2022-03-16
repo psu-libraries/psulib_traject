@@ -246,6 +246,7 @@ to_field 'subject_tsim', extract_marc('600abcdfklmnopqrtvxyz:610abfklmnoprstvxyz
 ## Other Subject
 to_field 'subject_other_display_ssm', extract_marc('653a'), trim_punctuation
 
+
 ## Additional subject fields
 to_field 'subject_addl_tsim', extract_marc('600vxyz:610vxyz:611vxyz:630vxyz:647vxyz:648vxyz:650vxyz:651vxyz:654vyz')
 
