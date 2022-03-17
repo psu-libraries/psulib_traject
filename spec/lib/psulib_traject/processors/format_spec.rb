@@ -25,6 +25,12 @@ RSpec.describe PsulibTraject::Processors::Format do
       it { is_expected.to contain_exactly 'Instructional Material', 'Juvenile Book', 'Microfilm/Microfiche' }
     end
 
+    context 'with EQUIP24HR in 949t' do
+      let(:record) { 'format_949t_equipment.marc' }
+
+      it { is_expected.to contain_exactly 'Equipment' }
+    end
+
     context 'with both Statute and Microfilm/Microfiche in 949t' do
       let(:record) { 'format_949t_statute.mrc' }
 
