@@ -17,6 +17,8 @@ commit_timeout: 10000
 symphony_data_path: "<%= ENV.fetch('SYMPHONY_DATA_PATH', '/data/symphony_data') %>"
 # Folder within `symphony_data_path` where hourlies are stored
 symphony_hourlies_subdir: hourlies
+# Folder within `symphony_data_path` where incrementals are stored
+symphony_incrementals_subdir: hourlies
 hathi_etas: false
 hathi_overlap_path: "<%= ENV.fetch('HATHI_OVERLAP_PATH', '/data/hathitrust_data/overlap.tsv') %>"
 marc4j_reader:
