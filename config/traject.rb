@@ -576,6 +576,9 @@ to_field 'bound_with_struct' do |record, accumulator|
   end
 end
 
+# 699a Thesis Department
+to_field 'thesis_dept_facet', extract_marc('699a'), trim_punctuation, include_psu_theses_only
+
 # Place
 #
 # UP Library facet

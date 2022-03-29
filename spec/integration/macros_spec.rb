@@ -172,6 +172,44 @@ RSpec.describe 'Macros' do
     end
   end
 
+  describe '#include_psu_theses_only' do
+    let(:thesis_dept_699) do
+      { '699' => { 'subfields' => [{ 'a' => 'Acoustics.' }] } }
+    end
+
+    context 'when a record has no 949t fields' do
+      let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => [thesis_dept_699], 'leader' => leader)) }
+
+      it 'does not index the theses department data' do
+        expect(result['thesis_dept_facet']).to be_nil
+      end
+    end
+
+    context 'when a record does not have a PSU thesis code' do
+      let(:code_949) do
+        { '949' => { 'subfields' => [{ 'a' => 'Thesis 2011mOrr,A', 't' => 'THESIS-A' }] } }
+      end
+
+      let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => [thesis_dept_699, code_949], 'leader' => leader)) }
+
+      it 'does not index the theses department data' do
+        expect(result['thesis_dept_facet']).to be_nil
+      end
+    end
+
+    context 'when a record does have a PSU thesis code' do
+      let(:code_949) do
+        { '949' => { 'subfields' => [{ 'a' => 'Thesis 2011mOrr,A', 't' => 'THESIS-B' }] } }
+      end
+
+      let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => [thesis_dept_699, code_949], 'leader' => leader)) }
+
+      it 'indexes the theses department data' do
+        expect(result['thesis_dept_facet']).to eq ['Acoustics']
+      end
+    end
+  end
+
   describe '#process_genre' do
     let(:genre650) { { '650' => { 'ind1' => '', 'ind2' => '0', 'subfields' => [{ 'v' => 'Maps' }, { 'z' => 'Tippah County' }] } } }
     let(:genre655_fast) { { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Fiction films' }, { 'b' => '1900' }, { '2' => 'fast' }, { 'z' => 'Germany' }] } } }
