@@ -190,5 +190,26 @@ module PsulibTraject
         accumulator.compact!
       end
     end
+
+    def include_psu_theses_only
+      lambda do |record, accumulator|
+        accumulator.clear unless psu_thesis?(record)
+        accumulator.compact!
+      end
+    end
+
+    private
+
+      def psu_thesis?(record)
+        psu_theses_codes = ['THESIS-B', 'THESIS-D', 'THESIS-M']
+
+        record.fields('949').each do |field|
+          field.subfields.each do |subfield|
+            return true if subfield.code == 't' && psu_theses_codes.include?(subfield.value)
+          end
+        end
+
+        false
+      end
   end
 end
