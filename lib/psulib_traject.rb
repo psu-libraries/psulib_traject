@@ -32,6 +32,7 @@ module PsulibTraject
   require 'psulib_traject/processors/pub_date'
   require 'psulib_traject/processors/record_type'
   require 'psulib_traject/processors/summary_holdings'
+  require 'psulib_traject/processors/title_display'
   require 'psulib_traject/shelf_key'
   require 'psulib_traject/solr_manager'
   require 'psulib_traject/subject_heading'
