@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 NOT_FULLTEXT = /addendum|appendices|appendix|appendixes|cover|excerpt|executive summary|index/i.freeze
+PSU_THESIS_CODE = /THESIS-B|THESIS-D|THESIS-M/.freeze
 ESTIMATE_TOLERANCE = 15
 MIN_YEAR = 500
 MAX_YEAR = Time.new.year + 6
@@ -201,11 +202,9 @@ module PsulibTraject
     private
 
       def psu_thesis?(record)
-        psu_theses_codes = ['THESIS-B', 'THESIS-D', 'THESIS-M']
-
         record.fields('949').each do |field|
           field.subfields.each do |subfield|
-            return true if subfield.code == 't' && psu_theses_codes.include?(subfield.value)
+            return true if subfield.code == 't' && PSU_THESIS_CODE.match?(subfield.value)
           end
         end
 
