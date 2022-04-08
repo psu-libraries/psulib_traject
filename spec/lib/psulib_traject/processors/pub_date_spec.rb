@@ -9,9 +9,25 @@ RSpec.describe PsulibTraject::Processors::PubDate do
       expect(result['pub_date_itsi']).to be_nil
     end
 
-    it 'pulls out 008 date_type s' do
-      result = indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'date_008.marc')).to_a.first)
-      expect(result['pub_date_itsi']).to contain_exactly 2002
+    context 'when the publication date is within the valid date range' do
+      it 'pulls out 008 date_type s' do
+        result = indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'date_008.marc')).to_a.first)
+        expect(result['pub_date_itsi']).to contain_exactly 2002
+      end
+    end
+
+    context 'when the publication date is above MAX_DATE' do
+      it 'does not index the publication date' do
+        result = indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'date_008_above_max_date.marc')).to_a.first)
+        expect(result['pub_date_itsi']).to be_nil
+      end
+    end
+
+    context 'when the publication date is below MIN_DATE' do
+      it 'does not index the publication date' do
+        result = indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'date_008_below_min_date.marc')).to_a.first)
+        expect(result['pub_date_itsi']).to be_nil
+      end
     end
 
     it 'uses start date for date_type c continuing resource' do

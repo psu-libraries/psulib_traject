@@ -153,11 +153,6 @@ module PsulibTraject
       end
     end
 
-    # Ignore dates below min_year (default 500) or above max_year (this year plus 6 years)
-    def pub_date_in_range(pub_date)
-      pub_date && (pub_date > MIN_YEAR || pub_date < MAX_YEAR) ? pub_date : nil
-    end
-
     # Extract OCLC number
     def extract_oclc_number
       lambda do |record, accumulator|
@@ -209,6 +204,11 @@ module PsulibTraject
         end
 
         false
+      end
+
+      # Ignore dates below MIN_YEAR (default 500) or above MAX_YEAR (this year plus 6 years)
+      def pub_date_in_range(pub_date)
+        pub_date && pub_date >= MIN_YEAR && pub_date <= MAX_YEAR ? pub_date : nil
       end
   end
 end
