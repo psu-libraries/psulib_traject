@@ -3,7 +3,9 @@ services:
   traject:
     tty: true
     stdin_open: true
+    mem_limit: 4g
     environment:
+      JRUBY_OPTS: "-J-Xmx4028m"
       RUBY_ENV: dev
       SOLR_HOST: host.docker.internal
       SYMPHONY_DATA_PATH: "${SYMPHONY_DATA_PATH:-/app/data/symphony_data}"

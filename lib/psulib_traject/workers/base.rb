@@ -3,7 +3,6 @@
 module PsulibTraject
   module Workers
     class Base
-
       def self.perform_now(*args)
         new.perform(*args)
       end

@@ -2,12 +2,12 @@
 
 require 'spec_helper'
 
-RSpec.describe PsulibTraject::Workers::HourlyIndexer do
+RSpec.describe PsulibTraject::Workers::IncrementalsIndexer do
   let(:indexer) { described_class }
 
   before(:all) do
     redis = Redis.new
-    redis.keys('hr:*').map { |key| redis.del(key) }
+    redis.keys('incrementals:*').map { |key| redis.del(key) }
   end
 
   before do
