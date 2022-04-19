@@ -64,7 +64,7 @@ module PsulibTraject
     end
 
     def url_match(link)
-      url_match = regex_split link, %r{https*://([\w.]*)}
+      url_match = PsulibTraject.regex_split link, %r{https*://([\w.]*)}
       url_match[1]
     end
 
@@ -156,15 +156,7 @@ module PsulibTraject
     # Extract OCLC number
     def extract_oclc_number
       lambda do |record, accumulator|
-        record.fields(['035']).each do |field|
-          unless field&.[]('a').nil?
-            if includes_oclc_indicators?(field['a'])
-              subfield = regex_split(field['a'], //).map { |x| x[/\d+/] }.compact.join('')
-            end
-            accumulator << subfield
-          end
-          accumulator.uniq!
-        end
+        Processors::OclcExtract.new(record, accumulator).extract_primary_oclc
       end
     end
 
@@ -185,50 +177,11 @@ module PsulibTraject
     # Extract deprecated OCLCs
     def extract_deprecated_oclcs
       lambda do |record, accumulator|
-        record.fields(%w(035 019)).each do |field|
-          case field.tag
-          when '019'
-            get_019_deprecated_oclcs(field, accumulator)
-          when '035'
-            get_035_deprecated_oclcs(field, accumulator)
-          end
-        end
-        accumulator.uniq!
+        Processors::OclcExtract.new(record, accumulator).extract_deprecated_oclcs
       end
     end
 
     private
-
-      def get_019_deprecated_oclcs(field, accumulator)
-        field.subfields.each do |subfield|
-          if subfield.code == 'a' && !subfield.value.nil? &&
-              !subfield.value.empty? && subfield.value.match(/^[0-9]{3,15}$/)
-            accumulator << subfield.value
-          end
-        end
-      end
-
-      def get_035_deprecated_oclcs(field, accumulator)
-        field.subfields.each do |subfield|
-          if subfield.code == 'z' && !subfield.value.nil? &&
-              !subfield.value.empty? && includes_oclc_indicators?(subfield.value)
-            subfield_cleaned = regex_split(subfield.value, //).map { |x| x[/\d+/] }.compact.join('')
-            accumulator << subfield_cleaned
-          end
-        end
-      end
-
-      def includes_oclc_indicators?(sf_a)
-        sf_a.include?('OCoLC') ||
-          sf_a.include?('ocn') ||
-          sf_a.include?('ocm') ||
-          sf_a.include?('OCLC')
-      end
-
-      # work-around for https://github.com/jruby/jruby/issues/4868
-      def regex_split(str, regex)
-        str.split(regex).to_a
-      end
 
       def psu_thesis?(record)
         record.fields('949').each do |field|
