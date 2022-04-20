@@ -24,17 +24,21 @@ module PsulibTraject
 
       def extract_primary_oclc
         record.fields(['035']).each do |field|
+          get_035_primary_oclc(field, accumulator)
+          accumulator.uniq!
+        end
+      end
+
+      private
+
+        def get_035_primary_oclc(field, accumulator)
           unless field&.[]('a').nil?
             if includes_oclc_indicators?(field['a'])
               subfield = PsulibTraject.regex_split(field['a'], //).map { |x| x[/\d+/] }.compact.join('')
             end
             accumulator << subfield
           end
-          accumulator.uniq!
         end
-      end
-
-      private
 
         def get_019_deprecated_oclcs(field, accumulator)
           field.subfields.each do |subfield|
@@ -57,9 +61,9 @@ module PsulibTraject
 
         def includes_oclc_indicators?(sf_a)
           sf_a.include?('OCoLC') ||
-              sf_a.include?('ocn') ||
-              sf_a.include?('ocm') ||
-              sf_a.include?('OCLC')
+            sf_a.include?('ocn') ||
+            sf_a.include?('ocm') ||
+            sf_a.include?('OCLC')
         end
     end
   end
