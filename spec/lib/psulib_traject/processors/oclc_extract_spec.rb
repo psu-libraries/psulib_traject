@@ -2,37 +2,42 @@
 
 RSpec.describe PsulibTraject::Processors::OclcExtract do
   let(:oclc_extract) { described_class.new(record, accumulator) }
+  let(:leader) { '1234567890' }
 
   describe '#extract_deprecated_oclcs' do
-    let(:record) do
-      object_double('Marc Record',
-                    fields: [
-                      object_double('Marc Field', {
-                                      tag: '035', subfields: [
-                                        object_double('Marc Subfield', {
-                                                        code: 'z',
-                                                        value: '(OCoLC)12345678'
-                                                      })
-                                      ]
-                                    }),
-                      object_double('Marc Field', {
-                                      tag: '019', subfields: [
-                                        object_double('Marc Subfield', {
-                                                        code: 'a',
-                                                        value: '87654321'
-                                                      }),
-                                        object_double('Marc Subfield', {
-                                                        code: 'a',
-                                                        value: '8765432121351235123515'
-                                                      }),
-                                        object_double('Marc Subfield', {
-                                                        code: 'a',
-                                                        value: 'MARS'
-                                                      })
-                                      ]
-                                    })
-                    ])
+    let(:fields) do
+      [
+        { '035' => {
+          'ind1' => '',
+          'ind2' => '',
+          'subfields' => [
+            { 'z' => '(OCoLC)12345678' }
+          ]
+        } },
+        { '019' => {
+          'ind1' => '',
+          'ind2' => '',
+          'subfields' => [
+            { 'a' => '87654321' }
+          ]
+        } },
+        { '019' => {
+          'ind1' => '',
+          'ind2' => '',
+          'subfields' => [
+            { 'a' => '8765432121351235123515' }
+          ]
+        } },
+        { '019' => {
+          'ind1' => '',
+          'ind2' => '',
+          'subfields' => [
+            { 'a' => 'MARS' }
+          ]
+        } }
+      ]
     end
+    let(:record) { MARC::Record.new_from_hash('fields' => fields, 'leader' => leader) }
     let(:accumulator) { [] }
 
     it 'extracts deprecated oclcs' do
@@ -42,23 +47,25 @@ RSpec.describe PsulibTraject::Processors::OclcExtract do
   end
 
   describe '#extract_primary_oclcs' do
-    let(:record) do
-      object_double('Marc Record',
-                    fields: [
-                      object_double('Marc Field', {
-                                      tag: '035', subfields: [
-                                        object_double('Marc Subfield', {
-                                                        code: 'a',
-                                                        value: '(OCoLC)56789123'
-                                                      }),
-                                        object_double('Marc Subfield', {
-                                                        code: 'z',
-                                                        value: '(OCoLC)12345678'
-                                                      })
-                                      ]
-                                    })
-                    ])
+    let(:fields) do
+      [
+        { '035' => {
+          'ind1' => '',
+          'ind2' => '',
+          'subfields' => [
+            { 'a' => '(OCoLC)56789123' }
+          ]
+        } },
+        { '035' => {
+          'ind1' => '',
+          'ind2' => '',
+          'subfields' => [
+            { 'z' => '(OCoLC)12345678' }
+          ]
+        } }
+      ]
     end
+    let(:record) { MARC::Record.new_from_hash('fields' => fields, 'leader' => leader) }
     let(:accumulator) { [] }
 
     it 'extracts primary oclc' do
