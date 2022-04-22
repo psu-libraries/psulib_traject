@@ -33,6 +33,7 @@ module PsulibTraject
   require 'psulib_traject/processors/record_type'
   require 'psulib_traject/processors/summary_holdings'
   require 'psulib_traject/processors/title_display'
+  require 'psulib_traject/processors/oclc_extract'
   require 'psulib_traject/shelf_key'
   require 'psulib_traject/solr_manager'
   require 'psulib_traject/subject_heading'
@@ -52,6 +53,11 @@ module PsulibTraject
     # work-around for https://github.com/jruby/jruby/issues/4868
     def regex_to_extract_data_from_a_string(str, regex)
       str[regex]
+    end
+
+    # work-around for https://github.com/jruby/jruby/issues/4868
+    def regex_split(str, regex)
+      str.split(regex).to_a
     end
   end
 end
