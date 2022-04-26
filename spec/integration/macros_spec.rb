@@ -153,6 +153,32 @@ RSpec.describe 'Macros' do
       end
     end
 
+    context 'A record with a url prefix that is not entirely lowercase' do
+      let(:url_856_case_mismatch) do
+        { '856' => { 'ind1' => '0', 'ind2' => '0', 'subfields' => [{ 'u' => 'HtTp://hdl.loc.gov/loc.gmd/g3894p.pm010090' },
+                                                                   { 'z' => 'My Cool Note' }] } }
+      end
+      let(:result_case_mismatch) { indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_case_mismatch], 'leader' => leader)) }
+
+      it 'produces link data' do
+        expect(result_case_mismatch['full_links_struct']).to match ['{"prefix":"","text":"hdl.loc.gov",'\
+                                                                    '"url":"HtTp://hdl.loc.gov/loc.gmd/g3894p.pm010090","notes":"My Cool Note"}']
+      end
+    end
+
+    context 'A record with no url prefix and starts with "www."' do
+      let(:url_856_case_mismatch) do
+        { '856' => { 'ind1' => '0', 'ind2' => '0', 'subfields' => [{ 'u' => 'www.hdl.loc.gov/loc.gmd/g3894p.pm010090' },
+                                                                   { 'z' => 'My Cool Note' }] } }
+      end
+      let(:result_case_mismatch) { indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_case_mismatch], 'leader' => leader)) }
+
+      it 'produces link data' do
+        expect(result_case_mismatch['full_links_struct']).to match ['{"prefix":"","text":"www.hdl.loc.gov",'\
+                                                                    '"url":"http://www.hdl.loc.gov/loc.gmd/g3894p.pm010090","notes":"My Cool Note"}']
+      end
+    end
+
     context 'A record with a url that has all subfields for a prefix, label and notes' do
       let(:url_856_8) do
         { '856' => { 'ind1' => '4', 'ind2' => '0', 'subfields' => [{ 'u' => 'http://purl.access.gpo.gov/GPO/LPS47374' },
