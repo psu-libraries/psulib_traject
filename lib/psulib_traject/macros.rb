@@ -46,6 +46,8 @@ module PsulibTraject
 
         link_data_all.each do |link_data|
           link_data[:url].flatten.compact.each do |link|
+            link = "http://#{link}" if link.start_with?('www.')
+
             url_match = url_match(link)
             next if url_match.nil?
 
@@ -64,7 +66,7 @@ module PsulibTraject
     end
 
     def url_match(link)
-      url_match = PsulibTraject.regex_split link, %r{https*://([\w.]*)}
+      url_match = PsulibTraject.regex_split link, %r{https*://([\w.]*)}i
       url_match[1]
     end
 
