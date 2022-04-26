@@ -2,7 +2,6 @@
 
 module PsulibTraject
   class ShelfKey
-
     class NullKey < NullObject; end
 
     attr_reader :call_number

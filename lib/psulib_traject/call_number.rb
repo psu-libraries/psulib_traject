@@ -38,9 +38,9 @@ module PsulibTraject
 
     def keymap
       {
-        call_number:    value,
+        call_number: value,
         classification: classification,
-        key:            normalized_shelfkey
+        key: normalized_shelfkey
       }
     end
 
