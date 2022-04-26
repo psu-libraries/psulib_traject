@@ -39,9 +39,16 @@ RSpec.describe 'Access facet' do
       expect(result['access_facet']).to be_nil
     end
 
-    it 'produces "Free to Read" when a record has a copy that appears to be "open accessy"' do
-      result = indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'access_open_access.mrc')).to_a.first)
-      expect(result['access_facet']).to contain_exactly 'Online', 'Free to Read'
+    context 'when a record has a copy that appears to be "open access' do
+      it 'produces "Free to Read" when record has one 506' do
+        result = indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'access_open_access.mrc')).to_a.first)
+        expect(result['access_facet']).to contain_exactly 'Online', 'Free to Read'
+      end
+
+      it 'produces "Free to Read" when record has multiple 506s' do
+        result = indexer.map_record(MARC::Reader.new(File.join(fixture_path, 'access_open_access_multi_506.mrc')).to_a.first)
+        expect(result['access_facet']).to contain_exactly 'Online', 'Free to Read'
+      end
     end
 
     it 'produces Online when a record has a HathiTrust copy with only "allow" permissions' do

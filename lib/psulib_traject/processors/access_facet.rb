@@ -30,11 +30,12 @@ module PsulibTraject::Processors
       end
 
       def conditions_on_access_indicate_oa?(record)
-        conditions_on_access(record) == 'star'
+        conditions_on_access(record).include?('star')
       end
 
       def conditions_on_access(record)
-        record['506']&.subfields&.select { |s| s.code == '2' }&.first&.value
+        record.select { |field| field.tag == '506' }
+          .map { |f| f.subfields.select { |s| s.code == '2' } }.flatten.map(&:value)
       end
 
       def link_access_indicates_oa?(record)
