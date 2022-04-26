@@ -35,7 +35,7 @@ module PsulibTraject::Processors
 
       def conditions_on_access(record)
         record.select { |field| field.tag == '506' }
-            .collect { |f| f.subfields.select { |s| s.code == '2'} }.flatten.collect(&:value)
+          .map { |f| f.subfields.select { |s| s.code == '2' } }.flatten.map(&:value)
       end
 
       def link_access_indicates_oa?(record)
