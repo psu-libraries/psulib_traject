@@ -533,6 +533,9 @@ to_field 'provenance_note_ssm', extract_marc('561| *|au3:561|1*|au3')
 # 562 - Version/Copy ID
 to_field 'version_copy_id_note_ssm', extract_marc('562abcde3')
 
+# 563 - Binding Information
+to_field 'binding_information_ssm', extract_marc('563au3')
+
 # 567 - Methodology Note
 to_field 'methodology_ssm', extract_marc('567ab')
 
