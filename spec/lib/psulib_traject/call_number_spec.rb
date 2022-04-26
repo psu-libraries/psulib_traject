@@ -105,16 +105,10 @@ RSpec.describe PsulibTraject::CallNumber do
     end
   end
 
-  describe '#forward_shelfkey' do
+  describe '#normalized_shelfkey' do
     subject { described_class.new(value: 'AB123 .C456 2000') }
 
-    its(:forward_shelfkey) { is_expected.to eq('AB.0123.C456.2000') }
-  end
-
-  describe '#reverse_shelfkey' do
-    subject { described_class.new(value: 'AB123 .C456 2000') }
-
-    its(:reverse_shelfkey) { is_expected.to eq('PO.ZYXW.NVUT.XZZZ~') }
+    its(:normalized_shelfkey) { is_expected.to eq('AB.0123.C456.2000') }
   end
 
   describe '#solr_field' do
@@ -123,16 +117,10 @@ RSpec.describe PsulibTraject::CallNumber do
     its(:solr_field) { is_expected.to eq('call_number_lc_ssm') }
   end
 
-  describe '#forward_shelfkey_field' do
+  describe '#shelfkey_field' do
     subject { described_class.new(classification: 'DEWEY') }
 
-    its(:forward_shelfkey_field) { is_expected.to eq('forward_dewey_shelfkey') }
-  end
-
-  describe '#reverse_shelfkey_field' do
-    subject { described_class.new(classification: 'DEWEY') }
-
-    its(:reverse_shelfkey_field) { is_expected.to eq('reverse_dewey_shelfkey') }
+    its(:shelfkey_field) { is_expected.to eq('dewey_shelfkey') }
   end
 
   describe '#not_browsable?' do
@@ -163,8 +151,7 @@ RSpec.describe PsulibTraject::CallNumber do
         {
           call_number: 'AB123 .C456 2000',
           classification: 'LC',
-          forward_key: 'AB.0123.C456.2000',
-          reverse_key: 'PO.ZYXW.NVUT.XZZZ~'
+          key: 'AB.0123.C456.2000'
         }
       )
     end

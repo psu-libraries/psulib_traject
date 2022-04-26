@@ -302,8 +302,7 @@ each_record do |record, context|
 
   call_numbers.each do |call_number|
     context.add_output(call_number.solr_field, call_number.value)
-    context.add_output(call_number.forward_shelfkey_field, call_number.forward_shelfkey)
-    context.add_output(call_number.reverse_shelfkey_field, call_number.reverse_shelfkey)
+    context.add_output(call_number.shelfkey_field, call_number.normalized_shelfkey)
   end
 
   context.add_output('keymap_struct', *call_numbers.map(&:keymap).to_json)
