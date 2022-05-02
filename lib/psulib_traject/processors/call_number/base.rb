@@ -7,52 +7,69 @@ module PsulibTraject::Processors::CallNumber
     ORDINALS = '\d{1,3}(st|nd|rd|th|d)'
 
     VOL_PARTS = %w(
+      année
+      a(n|ñ)o
       bd
+      dil
       disc
       ed
+      (e|é)poca
       hov
       iss
       issue
       jahrg
       microfiche
       new ser
-      no
       part
       pts?
+      roc
       ser
       shanah
       tbd
     ).join('|')
-      .concat("[^a-z]t|v|vols?|vyp|k\\.|h\\.|ḥ\\.|t\\.|#{ORDINALS}")
+      .concat("[^a-z]t|v(?!ar)|vols?|vyp|(?<!ri)k\\.|h\\.|ḥ\\.|(?<!shee|hf|epoca |época )t\\.|(?<!pag)e\\.|(?<!jahr)g\\.|(?<!k)n\\.|#{ORDINALS}")
 
     ADDL_VOL_PARTS = %w(
       bklet
       box
       carton
       cass
+      cis
       fig
       flat box
       grade
       half box
       half carton
+      Hft
       index
+      kn
+      knj
       large folder
       large map folder
+      leto
       lp
       map folder
       maps
       mfiche
       mfilm
+      no
+      Nr
       os box
       os folder
+      page
+      panel
       pl
+      rel
       reel
+      rik
       series
+      ses
       sheet
       slides
       small folder
       small map folder
       suppl
+      svar
       text
       tl
       tube
