@@ -7,34 +7,34 @@ module PsulibTraject::Processors::CallNumber
     ORDINALS = '\d{1,3}(st|nd|rd|th|d)'
 
     VOL_PARTS = %w(
-      année
-      a(n|ñ)o
       bd
-      dil
       disc
       ed
-      (e|é)poca
       hov
       iss
       issue
-      jahrg
+      (\d+)?-?(\d+)?.?jahrg
       microfiche
       new ser
+      (?<!a)no
       part
       pts?
-      roc
       ser
       shanah
       tbd
     ).join('|')
-      .concat("[^a-z]t|v(?!ar)|vols?|vyp|(?<!ri)k\\.|h\\.|ḥ\\.|(?<!shee|hf|epoca |época )t\\.|(?<!pag)e\\.|(?<!jahr)g\\.|(?<!k)n\\.|#{ORDINALS}")
+      .concat("[^a-z]t|v(?!ar)|vols?|vyp|(?<!ri)k\\.|h\\.|ḥ\\.|(?<!shee|hf)t\\.|(?<!pag)e\\.|(?<!jahr)g\\.|(?<!k)n\\.|#{ORDINALS}")
 
     ADDL_VOL_PARTS = %w(
+      anné
+      a(n|ñ)o
       bklet
       box
       carton
       cass
       cis
+      dil
+      (\d+)?a?( |.)(e|é)poca
       fig
       flat box
       grade
@@ -52,7 +52,6 @@ module PsulibTraject::Processors::CallNumber
       maps
       mfiche
       mfilm
-      no
       Nr
       os box
       os folder
@@ -62,6 +61,7 @@ module PsulibTraject::Processors::CallNumber
       rel
       reel
       rik
+      roc
       series
       ses
       sheet
@@ -70,6 +70,7 @@ module PsulibTraject::Processors::CallNumber
       small map folder
       suppl
       svar
+      special
       text
       tl
       tube

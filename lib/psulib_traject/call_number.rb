@@ -91,7 +91,11 @@ module PsulibTraject
       def base_value
         case classification
         when 'LC', 'LCPER'
-          PsulibTraject::Processors::CallNumber::LC.new(value, serial: serial?).reduce
+          new_value = value
+          until PsulibTraject::Processors::CallNumber::LC.new(new_value, serial: serial?).reduce == new_value do
+            new_value = PsulibTraject::Processors::CallNumber::LC.new(new_value, serial: serial?).reduce
+          end
+          new_value
         when 'DEWEY'
           PsulibTraject::Processors::CallNumber::Dewey.new(value, serial: serial?).reduce
         else
