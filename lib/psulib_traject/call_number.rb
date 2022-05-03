@@ -92,7 +92,7 @@ module PsulibTraject
         case classification
         when 'LC', 'LCPER'
           new_value = value
-          until PsulibTraject::Processors::CallNumber::LC.new(new_value, serial: serial?).reduce == new_value do
+          until PsulibTraject::Processors::CallNumber::LC.new(new_value, serial: serial?).reduce == new_value
             new_value = PsulibTraject::Processors::CallNumber::LC.new(new_value, serial: serial?).reduce
           end
           new_value
