@@ -16,14 +16,14 @@ module PsulibTraject::Processors::CallNumber
       (\d+)?-?(\d+)?.?jahrg
       microfiche
       new ser
-      (?<!a)no
       part
       pts?
       ser
       shanah
       tbd
+      vols?
+      vyp
     ).join('|')
-      .concat("[^a-z]t|v(?!ar)|vols?|vyp|(?<!ri)k\\.|h\\.|ḥ\\.|(?<!shee|hf)t\\.|(?<!pag)e\\.|(?<!jahr)g\\.|(?<!k)n\\.|#{ORDINALS}")
 
     ADDL_VOL_PARTS = %w(
       anné
@@ -76,11 +76,15 @@ module PsulibTraject::Processors::CallNumber
       tube
     ).freeze
 
+    # Place patterns here that might interfere with other patterns (ex. 'e.' could interfere with 'page')
+    LAST_TO_CUT = "[^a-z]t|v\\.|no|k\\.|h\\.|ḥ\\.|t\\.|e\\.|g\\.|n\\.|#{ORDINALS}"
+
     ADDL_VOL_PATTERN = /[:\/]?(#{ADDL_VOL_PARTS.join('|')}).*/i.freeze
     VOL_PARTS_ALL = "((index|ind)\s)?(#{VOL_PARTS}|#{MONTHS})"
-    VOL_PATTERN         = /([.:\/(])?(n\.s\.?,? ?)?[:\/]?#{VOL_PARTS_ALL}[. \-\/]?\d+([\/-]\d+)?( \d{4}([\/-]\d{4})?)?( ?suppl\.?)?/i.freeze
+    LAST_TO_CUT_ALL = "((index|ind)\s)?(#{LAST_TO_CUT})"
+    VOL_PATTERN         = /([.:\/(])?(n\.s\.?,? ?)?[:\/]?#{VOL_PARTS_ALL}[. \-\/]?(\d+)?([\/-]\d+)?( \d{4}([\/-]\d{4})?)?( ?suppl\.?)?/i.freeze
     VOL_PATTERN_LOOSER  = /([.:\/(])?(n\.s\.?,? ?)?[:\/]?#{VOL_PARTS_ALL}[. -]?\d+.*/i.freeze
-    VOL_PATTERN_LETTERS = /([.:\/(])?(n\.s\.?,? ?)?[:\/]?#{VOL_PARTS_ALL}[\/. -]?[A-Z]?([\/-][A-Z]+)?.*/i.freeze
+    LAST_TO_CUT_PATTERN = /([.:\/(])?(n\.s\.?,? ?)?[:\/]?#{LAST_TO_CUT_ALL}[\/. -]?[A-Z]?([\/-][A-Z]+)?(\d+)?.*/i.freeze
     FOUR_DIGIT_YEAR_REGEX = /\W *(20|19|18|17|16|15|14)\d{2}\D?$?/.freeze
     LOOSE_MONTHS_REGEX = /([.:\/(])? *#{MONTHS}/i.freeze
 
@@ -122,30 +126,17 @@ module PsulibTraject::Processors::CallNumber
 
     private
 
-      # @note These are the original regex patterns from Stanford. However, VOL_PATTERN_LOOSER does not currently apply
-      # to any of our test data, so it has been commented-out of the procedure.
       def remove_by_regex
         case removeables
         when VOL_PATTERN
           call_number.slice(0...call_number.index(removeables[VOL_PATTERN])).strip
-        # when VOL_PATTERN_LOOSER
-        #   call_number.slice(0...call_number.index(removeables[VOL_PATTERN_LOOSER])).strip
-        when /Blu-ray|DVD/
-          bluray_or_dvd
-        when VOL_PATTERN_LETTERS
-          call_number.slice(0...call_number.index(removeables[VOL_PATTERN_LETTERS])).strip
         when ADDL_VOL_PATTERN
           call_number.slice(0...call_number.index(removeables[ADDL_VOL_PATTERN])).strip
+        when LAST_TO_CUT_PATTERN
+          call_number.slice(0...call_number.index(removeables[LAST_TO_CUT_PATTERN])).strip
         else
           call_number
         end
-      end
-
-      def bluray_or_dvd
-        element = removeables[ADDL_VOL_PATTERN]
-        return call_number unless element
-
-        call_number.slice(0...call_number.index(removeables[ADDL_VOL_PATTERN])).strip
       end
   end
 end

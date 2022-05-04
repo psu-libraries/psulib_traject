@@ -90,7 +90,7 @@ RSpec.describe PsulibTraject::Processors::CallNumber::LC do
 
       it 'drops data after the first volume designation' do
         expect('PN2007 .S589 NO.17 1998').to reduce_to('PN2007 .S589')
-        expect('PN2007 .K3 V.7:NO.4').to reduce_to('PN2007 .K3')
+        expect('PN2007 .K3 NO.4').to reduce_to('PN2007 .K3')
         expect('PN2007 .K3 V.8:NO.1-2 1972').to reduce_to('PN2007 .K3')
         expect('PN2007 .K3 V.5-6:NO.11-25 1967-1970').to reduce_to('PN2007 .K3')
         expect('PN2007 .S3 NO.14-15,34').to reduce_to('PN2007 .S3')
@@ -111,13 +111,13 @@ RSpec.describe PsulibTraject::Processors::CallNumber::LC do
       it 'handles multiple cutters' do
         expect('PN1993.5 .A35 A373 VOL.4').to reduce_to('PN1993.5 .A35 A373')
         expect('PN1993.5 .A1 S5595 V.2 2008').to reduce_to('PN1993.5 .A1 S5595')
-        expect('PN1993.5 .A75 C564 V.1:NO.1-4 2005').to reduce_to('PN1993.5 .A75 C564')
+        expect('PN1993.5 .A75 C564 NO.1-4 2005').to reduce_to('PN1993.5 .A75 C564')
         expect('PN1993.5 .L3 S78 V.1-2 2004-2005').to reduce_to('PN1993.5 .L3 S78')
 
         # When the year is first
         expect('PN1993.5 .F7 A3 2006:NO.297-300').to reduce_to('PN1993.5 .F7 A3 2006')
-        expect('JQ1519 .A5 A369 1990:NO.1-9+SUPPL.').to reduce_to('JQ1519 .A5 A369 1990')
-        expect('PN1993.5 .F7 A3 2005-2006 SUPPL.NO.27-30').to reduce_to('PN1993.5 .F7 A3 2005-2006 SUPPL')
+        expect('JQ1519 .A5 A369 1990:NO.1-9+SUPPL.').to reduce_to('JQ1519 .A5 A369 1990:NO.1-9+')
+        expect('PN1993.5 .F7 A3 2005-2006 SUPPL.NO.27-30').to reduce_to('PN1993.5 .F7 A3 2005-2006')
         expect('PN1993.5 .S6 S374 F 2001:JUL.-NOV.').to reduce_to('PN1993.5 .S6 S374 F 2001')
       end
 
@@ -143,7 +143,7 @@ RSpec.describe PsulibTraject::Processors::CallNumber::LC do
 
       it 'drops data after the first volume designation' do
         expect('PN2007 .S589 NO.17 1998').to serial_reduce_to('PN2007 .S589')
-        expect('PN2007 .K3 V.7:NO.4').to serial_reduce_to('PN2007 .K3')
+        expect('PN2007 .K3 NO.4').to serial_reduce_to('PN2007 .K3')
         expect('PN2007 .K3 V.8:NO.1-2 1972').to serial_reduce_to('PN2007 .K3')
         expect('PN2007 .K3 V.5-6:NO.11-25 1967-1970').to serial_reduce_to('PN2007 .K3')
         expect('PN2007 .S3 NO.14-15,34').to serial_reduce_to('PN2007 .S3')
@@ -190,7 +190,7 @@ RSpec.describe PsulibTraject::Processors::CallNumber::LC do
       end
 
       it 'drops the DVD disc number' do
-        expect('PN1997.A1M216 2014 DVD v.1 disc.1').to reduce_to('PN1997.A1M216 2014 DVD')
+        expect('PN1997.A1M216 2014 DVD v.1 disc.1').to reduce_to('PN1997.A1M216 2014 DVD v.1')
         expect('PN1995.9.J34Z38 2014 DVD disc.4').to reduce_to('PN1995.9.J34Z38 2014 DVD')
       end
     end
