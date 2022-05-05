@@ -366,8 +366,8 @@ RSpec.describe PsulibTraject::Processors::CallNumber::LC do
       end
     end
 
-    context "when call number has multiple removeables" do
-      describe "multiple reductions" do
+    context 'when call number has multiple removeables' do
+      describe 'multiple reductions' do
         context "when 'special issue' is present in call number" do
           it "removes 'issue' and 'special' after two reduces" do
             reduce_one = described_class.new('AP58.U5Z49 special issue 1974').reduce
