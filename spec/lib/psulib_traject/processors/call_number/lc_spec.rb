@@ -337,13 +337,13 @@ RSpec.describe PsulibTraject::Processors::CallNumber::LC do
     end
 
     context "when 'epoca' is present in call number" do
-      it "removes 'epoca' and everything after" do
+      it "removes 'epoca', everything after, and the numbers before it" do
         expect('AP63.B47 2a epoca').to reduce_to('AP63.B47')
       end
     end
 
     context "when 'época' is present in call number" do
-      it "removes 'época' and everything after" do
+      it "removes 'época', everything after, and the numbers before it" do
         expect('AP63.B47 2a época').to reduce_to('AP63.B47')
       end
     end
@@ -357,6 +357,37 @@ RSpec.describe PsulibTraject::Processors::CallNumber::LC do
     context "when 'leto' is present in call number" do
       it "removes 'leto' and everything after" do
         expect('AP58.S55B4 leto 3-4 1934-1935').to reduce_to('AP58.S55B4')
+      end
+    end
+
+    context "when 'jahrg' is present in call number" do
+      it "removes 'jahrg', everything after, and the numbers before it" do
+        expect('DB200.5.S78 5.Jahrg. 1963').to reduce_to('DB200.5.S78')
+      end
+    end
+
+    context "when call number has multiple removeables" do
+      describe "multiple reductions" do
+        context "when 'special issue' is present in call number" do
+          it "removes 'issue' and 'special' after two reduces" do
+            reduce_one = described_class.new('AP58.U5Z49 special issue 1974').reduce
+            expect(described_class.new(reduce_one).reduce).to eq 'AP58.U5Z49'
+          end
+        end
+
+        context "when ':NO. and SUPPL+' is present in call number" do
+          it "removes 'SUPPL+' and ':NO.' after two reduces" do
+            reduce_one = described_class.new('JQ1519 .A5 A369 1990:NO.1-9+SUPPL.').reduce
+            expect(described_class.new(reduce_one).reduce).to eq 'JQ1519 .A5 A369 1990'
+          end
+        end
+
+        context "when 'pt. and dil.' is present in call number" do
+          it "removes 'pt.' and 'dil.' after two reduces" do
+            reduce_one = described_class.new('DB193.A7 dil.37 pt.1 1941').reduce
+            expect(described_class.new(reduce_one).reduce).to eq 'DB193.A7'
+          end
+        end
       end
     end
   end
