@@ -15,7 +15,7 @@ module PsulibTraject
       end
 
       def perform_deletes
-        target_deletes = Dir.glob("#{hourlies_directory}/**/*_deletes_*.txt")
+        target_deletes = Dir.glob("#{hourlies_directory}/**/*_deletes_*.txt").sort
 
         processed_deletes = redis.keys('hr:*').map { |e| e.gsub('hr:', '') }
         files_to_process = target_deletes - processed_deletes
@@ -37,7 +37,7 @@ module PsulibTraject
       end
 
       def perform_indexes
-        target_files = Dir.glob("#{hourlies_directory}/**/*.m*rc")
+        target_files = Dir.glob("#{hourlies_directory}/**/*.m*rc").sort
 
         indexed_files = redis.keys('hr:*').map { |e| e.gsub('hr:', '') }
         files_to_index = target_files - indexed_files
