@@ -366,6 +366,18 @@ RSpec.describe PsulibTraject::Processors::CallNumber::LC do
       end
     end
 
+    context "when 'sh' is present in call number" do
+      it "removes 'sh' and everything after" do
+        expect('G3824.S8G46 s06.S7 sh. 2A').to reduce_to('G3824.S8G46 s06.S7')
+      end
+    end
+
+    context "when 'god' is present in call number" do
+      it "removes 'god', everything after" do
+        expect('DB231.I54 god.2 1950').to reduce_to('DB231.I54')
+      end
+    end
+
     context 'when call number has multiple removeables' do
       describe 'multiple reductions' do
         context "when 'special issue' is present in call number" do

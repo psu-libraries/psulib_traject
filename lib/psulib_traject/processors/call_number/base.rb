@@ -37,6 +37,7 @@ module PsulibTraject::Processors::CallNumber
       (\d+)?a?( |.)(e|é)poca
       fig
       flat box
+      god
       grade
       half box
       half carton
@@ -77,7 +78,7 @@ module PsulibTraject::Processors::CallNumber
     ).freeze
 
     # Place patterns here that might interfere with other patterns (ex. 'e.' could interfere with 'page')
-    LAST_TO_CUT = "[^a-z]t|v\\.|no|k\\.|h\\.|ḥ\\.|t\\.|e\\.|g\\.|n\\.|#{ORDINALS}"
+    LAST_TO_CUT = "[^a-z]t|v\\.|no|sh|k\\.|h\\.|ḥ\\.|t\\.|e\\.|g\\.|n\\.|#{ORDINALS}"
 
     ADDL_VOL_PATTERN = /[:\/]?(#{ADDL_VOL_PARTS.join('|')}).*/i.freeze
     VOL_PARTS_ALL = "((index|ind)\s)?(#{VOL_PARTS}|#{MONTHS})"
