@@ -90,7 +90,7 @@ RSpec.describe PsulibTraject::Processors::CallNumber::LC do
 
       it 'drops data after the first volume designation' do
         expect('PN2007 .S589 NO.17 1998').to reduce_to('PN2007 .S589')
-        expect('PN2007 .K3 V.7:NO.4').to reduce_to('PN2007 .K3')
+        expect('PN2007 .K3 NO.4').to reduce_to('PN2007 .K3')
         expect('PN2007 .K3 V.8:NO.1-2 1972').to reduce_to('PN2007 .K3')
         expect('PN2007 .K3 V.5-6:NO.11-25 1967-1970').to reduce_to('PN2007 .K3')
         expect('PN2007 .S3 NO.14-15,34').to reduce_to('PN2007 .S3')
@@ -111,13 +111,13 @@ RSpec.describe PsulibTraject::Processors::CallNumber::LC do
       it 'handles multiple cutters' do
         expect('PN1993.5 .A35 A373 VOL.4').to reduce_to('PN1993.5 .A35 A373')
         expect('PN1993.5 .A1 S5595 V.2 2008').to reduce_to('PN1993.5 .A1 S5595')
-        expect('PN1993.5 .A75 C564 V.1:NO.1-4 2005').to reduce_to('PN1993.5 .A75 C564')
+        expect('PN1993.5 .A75 C564 NO.1-4 2005').to reduce_to('PN1993.5 .A75 C564')
         expect('PN1993.5 .L3 S78 V.1-2 2004-2005').to reduce_to('PN1993.5 .L3 S78')
 
         # When the year is first
         expect('PN1993.5 .F7 A3 2006:NO.297-300').to reduce_to('PN1993.5 .F7 A3 2006')
-        expect('JQ1519 .A5 A369 1990:NO.1-9+SUPPL.').to reduce_to('JQ1519 .A5 A369 1990')
-        expect('PN1993.5 .F7 A3 2005-2006 SUPPL.NO.27-30').to reduce_to('PN1993.5 .F7 A3 2005-2006 SUPPL')
+        expect('JQ1519 .A5 A369 1990:NO.1-9+SUPPL.').to reduce_to('JQ1519 .A5 A369 1990:NO.1-9+')
+        expect('PN1993.5 .F7 A3 2005-2006 SUPPL.NO.27-30').to reduce_to('PN1993.5 .F7 A3 2005-2006')
         expect('PN1993.5 .S6 S374 F 2001:JUL.-NOV.').to reduce_to('PN1993.5 .S6 S374 F 2001')
       end
 
@@ -143,7 +143,7 @@ RSpec.describe PsulibTraject::Processors::CallNumber::LC do
 
       it 'drops data after the first volume designation' do
         expect('PN2007 .S589 NO.17 1998').to serial_reduce_to('PN2007 .S589')
-        expect('PN2007 .K3 V.7:NO.4').to serial_reduce_to('PN2007 .K3')
+        expect('PN2007 .K3 NO.4').to serial_reduce_to('PN2007 .K3')
         expect('PN2007 .K3 V.8:NO.1-2 1972').to serial_reduce_to('PN2007 .K3')
         expect('PN2007 .K3 V.5-6:NO.11-25 1967-1970').to serial_reduce_to('PN2007 .K3')
         expect('PN2007 .S3 NO.14-15,34').to serial_reduce_to('PN2007 .S3')
@@ -190,7 +190,7 @@ RSpec.describe PsulibTraject::Processors::CallNumber::LC do
       end
 
       it 'drops the DVD disc number' do
-        expect('PN1997.A1M216 2014 DVD v.1 disc.1').to reduce_to('PN1997.A1M216 2014 DVD')
+        expect('PN1997.A1M216 2014 DVD v.1 disc.1').to reduce_to('PN1997.A1M216 2014 DVD v.1')
         expect('PN1995.9.J34Z38 2014 DVD disc.4').to reduce_to('PN1995.9.J34Z38 2014 DVD')
       end
     end
@@ -213,6 +213,193 @@ RSpec.describe PsulibTraject::Processors::CallNumber::LC do
 
       it 'preserves the T' do
         expect('PJ5129.A8T65 1921 Bd.11').to reduce_to('PJ5129.A8T65 1921')
+      end
+    end
+
+    context "when 'panel' is present in call number" do
+      it "removes 'panel' and everything after" do
+        expect('G3824.S863G475 1981.U5 panel.10').to reduce_to('G3824.S863G475 1981.U5')
+      end
+    end
+
+    context "when 'svar' is present in call number" do
+      it "removes 'svar' and everything after" do
+        expect('G3824.S8 svar.C4 1968').to reduce_to('G3824.S8')
+      end
+    end
+
+    context "when 'sheet' is present in call number" do
+      it "removes 'sheet' and everything after" do
+        expect('G3824.S823G475 1909.S2 sheet.2').to reduce_to('G3824.S823G475 1909.S2')
+      end
+    end
+
+    context "when 'page' is present in call number" do
+      it "removes 'page' and everything after" do
+        expect('G3824.S836G475 1980.U5 page.2').to reduce_to('G3824.S836G475 1980.U5')
+      end
+    end
+
+    context "when 'e.' is present in call number" do
+      it "removes 'e.' and everything after" do
+        expect('BX200.O75 e.37 1962').to reduce_to('BX200.O75')
+      end
+    end
+
+    context "when 't.' is present in call number" do
+      it "removes 't.' and everything after" do
+        expect('BX200.O75 t.1-3 1963').to reduce_to('BX200.O75')
+      end
+    end
+
+    context "when 'roc' is present in call number" do
+      it "removes 'roc' and everything after" do
+        expect('DB200.A7 roc.47 1994').to reduce_to('DB200.A7')
+      end
+    end
+
+    context "when 'n.' is present in call number" do
+      it "removes 'n.' and everything after" do
+        expect('P9.L55 n.s.6 2007').to reduce_to('P9.L55')
+      end
+    end
+
+    context "when 'cis' is present in call number" do
+      it "removes 'cis' and everything after" do
+        expect('DB200.P3 cis.1 1975').to reduce_to('DB200.P3')
+      end
+    end
+
+    context "when 'dil' is present in call number" do
+      it "removes 'dil' and everything after" do
+        expect('DB193.A7 dil.5 1862').to reduce_to('DB193.A7')
+      end
+    end
+
+    context "when 'Hft' is present in call number" do
+      it "removes 'Hft' and everything after" do
+        expect('DB200.5.S78 Hft.1-2').to reduce_to('DB200.5.S78')
+      end
+    end
+
+    context "when 'kn' is present in call number" do
+      it "removes 'kn' and everything after" do
+        expect('DB217.S75S7 kn.1').to reduce_to('DB217.S75S7')
+      end
+    end
+
+    context "when 'knj' is present in call number" do
+      it "removes 'knj' and everything after" do
+        expect('DB661.H522 knj.43 2004').to reduce_to('DB661.H522')
+      end
+    end
+
+    context "when 'rel' is present in call number" do
+      it "removes 'rel' and everything after" do
+        expect('KZ235.5.U55 rel.96-3').to reduce_to('KZ235.5.U55')
+      end
+    end
+
+    context "when 'ses' is present in call number" do
+      it "removes 'ses' and everything after" do
+        expect('DB879.P8A5 ses.2').to reduce_to('DB879.P8A5')
+      end
+    end
+
+    context "when 'anné' is present in call number" do
+      it "removes 'anné' and everything after" do
+        expect('DC1.R37 année 345').to reduce_to('DC1.R37')
+      end
+    end
+
+    context "when 'Nr' is present in call number" do
+      it "removes 'Nr' and everything after" do
+        expect('BS514.B5 Nr.184-187 2020').to reduce_to('BS514.B5')
+      end
+    end
+
+    context "when 'g.' is present in call number" do
+      it "removes 'g.' and everything after" do
+        expect('AP50.V53 g.17').to reduce_to('AP50.V53')
+      end
+    end
+
+    context "when 'año' is present in call number" do
+      it "removes 'año' and everything after" do
+        expect('AP60.M74 año.23').to reduce_to('AP60.M74')
+      end
+    end
+
+    context "when 'ano' is present in call number" do
+      it "removes 'ano' and everything after" do
+        expect('AP60.M74 ano.23').to reduce_to('AP60.M74')
+      end
+    end
+
+    context "when 'epoca' is present in call number" do
+      it "removes 'epoca', everything after, and the numbers before it" do
+        expect('AP63.B47 2a epoca').to reduce_to('AP63.B47')
+      end
+    end
+
+    context "when 'época' is present in call number" do
+      it "removes 'época', everything after, and the numbers before it" do
+        expect('AP63.B47 2a época').to reduce_to('AP63.B47')
+      end
+    end
+
+    context "when 'rik' is present in call number" do
+      it "removes 'rik' and everything after" do
+        expect('AP58.U5Z49 rik.39-40').to reduce_to('AP58.U5Z49')
+      end
+    end
+
+    context "when 'leto' is present in call number" do
+      it "removes 'leto' and everything after" do
+        expect('AP58.S55B4 leto 3-4 1934-1935').to reduce_to('AP58.S55B4')
+      end
+    end
+
+    context "when 'jahrg' is present in call number" do
+      it "removes 'jahrg', everything after, and the numbers before it" do
+        expect('DB200.5.S78 5.Jahrg. 1963').to reduce_to('DB200.5.S78')
+      end
+    end
+
+    context "when 'sh' is present in call number" do
+      it "removes 'sh' and everything after" do
+        expect('G3824.S8G46 s06.S7 sh. 2A').to reduce_to('G3824.S8G46 s06.S7')
+      end
+    end
+
+    context "when 'god' is present in call number" do
+      it "removes 'god', everything after" do
+        expect('DB231.I54 god.2 1950').to reduce_to('DB231.I54')
+      end
+    end
+
+    context 'when call number has multiple removeables' do
+      describe 'multiple reductions' do
+        context "when 'special issue' is present in call number" do
+          it "removes 'issue' and 'special' after two reduces" do
+            reduce_one = described_class.new('AP58.U5Z49 special issue 1974').reduce
+            expect(described_class.new(reduce_one).reduce).to eq 'AP58.U5Z49'
+          end
+        end
+
+        context "when ':NO. and SUPPL+' is present in call number" do
+          it "removes 'SUPPL+' and ':NO.' after two reduces" do
+            reduce_one = described_class.new('JQ1519 .A5 A369 1990:NO.1-9+SUPPL.').reduce
+            expect(described_class.new(reduce_one).reduce).to eq 'JQ1519 .A5 A369 1990'
+          end
+        end
+
+        context "when 'pt. and dil.' is present in call number" do
+          it "removes 'pt.' and 'dil.' after two reduces" do
+            reduce_one = described_class.new('DB193.A7 dil.37 pt.1 1941').reduce
+            expect(described_class.new(reduce_one).reduce).to eq 'DB193.A7'
+          end
+        end
       end
     end
   end
