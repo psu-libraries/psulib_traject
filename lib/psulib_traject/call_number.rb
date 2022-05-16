@@ -26,26 +26,21 @@ module PsulibTraject
       @value = base_value
     end
 
-    def forward_shelfkey
-      shelf_key.forward
-    end
-
-    def reverse_shelfkey
-      shelf_key.reverse
+    def normalized_shelfkey
+      shelf_key.normalized
     end
 
     def not_browsable?
       return true unless lc? || dewey?
 
-      forward_shelfkey.nil? && reverse_shelfkey.nil?
+      normalized_shelfkey.nil?
     end
 
     def keymap
       {
         call_number: value,
         classification: classification,
-        forward_key: forward_shelfkey,
-        reverse_key: reverse_shelfkey
+        key: normalized_shelfkey
       }
     end
 
@@ -78,12 +73,8 @@ module PsulibTraject
       "call_number_#{classification_to_field}_ssm"
     end
 
-    def forward_shelfkey_field
-      "forward_#{classification_to_field}_shelfkey"
-    end
-
-    def reverse_shelfkey_field
-      "reverse_#{classification_to_field}_shelfkey"
+    def shelfkey_field
+      "#{classification_to_field}_shelfkey"
     end
 
     private
