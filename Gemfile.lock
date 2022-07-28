@@ -141,7 +141,7 @@ GEM
     raabro (1.4.0)
     racc (1.5.2)
     racc (1.5.2-java)
-    rack (2.2.3)
+    rack (2.2.3.1)
     rainbow (3.0.0)
     rake (13.0.3)
     redis (4.5.1)
