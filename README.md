@@ -38,7 +38,7 @@ For local development, you can change the settings by adding configuration files
 
 ### Solr
 
-Create 2 files: `config/settings.local.yml` and `config/test/test.local.yml` and add the following lines to each:
+Create 2 files: `config/settings.local.yml` and `config/settings/test.local.yml` and add the following lines to each:
     
     solr:
       url: http://localhost:8983/solr/
