@@ -196,6 +196,21 @@ RSpec.describe 'Macros' do
                                           '"notes":"Adobe Acrobat Reader required Another note"}']
       end
     end
+
+    context 'A record with a url link that directs to the Special Collections Materials, label and notes' do
+      let(:url_856_special_c) do
+        { '856' => { 'ind1' => '4', 'ind2' => '2', 'subfields' => [{ 'u' => 'http://n2t.net/ark:/42409/fa812345' },
+                                                                   { 'y' => 'View Finding Aid' }] } }
+      end
+
+      let(:result_special_c) { indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_special_c], 'leader' => leader)) }
+
+      it 'produces a supplemental link with "Special Collections Materials" as text' do
+        expect(result_special_c['suppl_links_struct']).to match [
+          '{"prefix":"","text":"Special Collections Materials","url":"http://n2t.net/ark:/42409/fa812345","notes":""}'
+        ]
+      end
+    end
   end
 
   describe '#include_psu_theses_only' do

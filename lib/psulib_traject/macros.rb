@@ -186,7 +186,7 @@ module PsulibTraject
     private
 
       def special_collections_text(link)
-        'Special Collections Materials' if link.match?(/ark:\/42409\/fa8/)
+        return 'Special Collections Materials' if link.include?('ark:/42409/fa8')
 
         nil
       end
