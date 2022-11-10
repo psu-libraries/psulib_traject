@@ -197,7 +197,7 @@ RSpec.describe 'Macros' do
       end
     end
 
-    context 'A record with a url link that directs to the Special Collections Materials, label and notes' do
+    context 'A record with a url link that directs to the Special Collections Materials' do
       let(:url_856_special_c) do
         { '856' => { 'ind1' => '4', 'ind2' => '2', 'subfields' => [{ 'u' => 'http://n2t.net/ark:/42409/fa812345' },
                                                                    { 'y' => 'View Finding Aid' }] } }
