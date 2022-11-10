@@ -60,7 +60,7 @@ module PsulibTraject
     def generate_link(link, link_data, url_match)
       {
         prefix: link_data[:prefix] || '',
-        text: link_data[:text] || link_domain(url_match),
+        text: special_collections_text(link) || link_data[:text] || link_domain(url_match),
         url: link, notes: link_data[:notes]
       }.to_json
     end
@@ -184,6 +184,12 @@ module PsulibTraject
     end
 
     private
+
+      def special_collections_text(link)
+        return 'Special Collections Materials' if link.include?('ark:/42409/fa8')
+
+        nil
+      end
 
       def psu_thesis?(record)
         record.fields('949').each do |field|
