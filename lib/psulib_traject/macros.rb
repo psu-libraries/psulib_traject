@@ -16,7 +16,7 @@ module PsulibTraject
         return nil unless record.is_a? MARC::Record
 
         genres = []
-        vocabulary = %w[lcgft fast]
+        vocabulary = %w[lcgft fast rbgenr rbbin rbprov rbpub rbpri aat rbmscv]
         Traject::MarcExtractor.cached(fields).collect_matching_lines(record) do |field, spec, extractor|
           genre = extractor.collect_subfields(field, spec).first
           include_genre = true
