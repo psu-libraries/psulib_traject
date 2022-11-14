@@ -265,7 +265,7 @@ to_field 'subject_browse_facet', process_subject_browse_facet(
 to_field 'genre_tsim', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz')
 
 ## Genre facet (sidebar)
-to_field 'genre_facet', process_genre('650|*0|v:655|*0|abcvxyz:655|*7|ay')
+to_field 'genre_facet', process_genre('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz')
 
 ## Genre display
 to_field 'genre_display_ssm', process_genre('655|*0|abcvxyz:655|*7|abcvxyz')
