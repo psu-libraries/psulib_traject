@@ -238,7 +238,7 @@ to_field 'language_facet', marc_languages('008[35-37]')
 to_field 'subject_tsim', extract_marc('600abcdfklmnopqrtvxyz:610abfklmnoprstvxyz:611abcdefgklnpqstvxyz:630adfgklmnoprstvxyz:647acdg:648a:650abcd:651a:653a:654ab')
 
 ## Other Subject
-to_field 'subject_other_display_ssm', extract_marc('653a'), split(';'), trim_punctuation
+to_field 'subject_other_display_ssm', extract_marc('653a'), strip, split(';'), trim_punctuation
 
 ## Additional subject fields
 to_field 'subject_addl_tsim', extract_marc('600vxyz:610vxyz:611vxyz:630vxyz:647vxyz:648vxyz:650vxyz:651vxyz:654vyz')
