@@ -17,7 +17,7 @@ module PsulibTraject
 
         genres = []
         vocabulary = %w[lcgft fast rbgenr rbbin rbprov rbpub rbpri aat rbmscv]
-        Traject::MarcExtractor.cached(fields).collect_matching_lines(record) do |field, spec, extractor|
+        Traject::MarcExtractor.cached(fields, { separator: ' - ' }).collect_matching_lines(record) do |field, spec, extractor|
           genre = extractor.collect_subfields(field, spec).first
           include_genre = true
           unless genre.nil?
