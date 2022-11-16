@@ -271,7 +271,7 @@ to_field 'genre_facet', process_genre('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz')
 to_field 'genre_display_ssm', process_genre('655|*0|abcvxyz:655|*7|abcvxyz')
 
 ## For genre links
-to_field 'genre_full_facet', extract_marc('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz'), trim_punctuation
+to_field 'genre_full_facet', process_genre('650|*0|v:655|*0|abcvxyz:655|*7|abcvxyz')
 
 # Call Number fields
 to_field 'lc_1letter_facet', extract_marc('050a') do |_record, accumulator|
