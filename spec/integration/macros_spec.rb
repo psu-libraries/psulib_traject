@@ -252,15 +252,22 @@ RSpec.describe 'Macros' do
   end
 
   describe '#process_genre' do
-    let(:genre650) { { '650' => { 'ind1' => '', 'ind2' => '0', 'subfields' => [{ 'v' => 'Maps' }, { 'z' => 'Tippah County' }] } } }
-    let(:genre655_fast) { { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Fiction films' }, { 'b' => '1900' }, { '2' => 'fast' }, { 'z' => 'Germany' }] } } }
-    let(:genre655_lcgft) { { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Drama.' }, { '2' => 'lcgft' }] } } }
-    let(:genre655_aat) { { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Novels' }, { '2' => 'aat' }] } } }
-    let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => [genre650, genre655_fast, genre655_lcgft, genre655_aat], 'leader' => leader)) }
+    let(:genre_fields) { [{ '650' => { 'ind1' => '', 'ind2' => '0', 'subfields' => [{ 'v' => 'Maps' }, { 'z' => 'Tippah County' }] } },
+                          { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Fiction films' }, { 'b' => '1900' }, { '2' => 'fast' }, { 'z' => 'Germany' }] } },
+                          { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Drama.' }, { '2' => 'lcgft' }] } },
+                          { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Novels' }, { '2' => 'aat' }] } },
+                          { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Bogus' }, { '2' => 'bogus' }] } },
+                          { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Periodicals' }, { '2' => 'rbgenr' }] } },
+                          { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Rbbin' }, { '2' => 'rbbin' }] } },
+                          { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Rbprov' }, { '2' => 'rbprov' }] } },
+                          { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Rbpub' }, { '2' => 'rbpub' }] } },
+                          { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Rbpri' }, { '2' => 'rbpri' }] } },
+                          { '655' => { 'ind1' => '', 'ind2' => '7', 'subfields' => [{ 'a' => 'Rbmscv' }, { '2' => 'rbmscv' }] } }] }
+    let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => genre_fields, 'leader' => leader)) }
 
-    it 'limits 655 to fast and lcgft genres' do
-      expect(result['genre_display_ssm']).to include('Fiction films 1900 Germany')
-      expect(result['genre_display_ssm']).to include('Drama')
+    it 'limits 655 genres and separates multiple internal genres with a hyphen' do
+      expect(result['genre_display_ssm']).to eq(['Fiction films - 1900 - Germany', 'Drama', 'Novels',
+                                                 'Periodicals', 'Rbbin', 'Rbprov', 'Rbpub', 'Rbpri', 'Rbmscv'])
     end
   end
 
