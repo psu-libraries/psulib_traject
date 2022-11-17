@@ -127,4 +127,16 @@ RSpec.describe 'Config' do
       expect(result['ht_access_ss']).to contain_exactly 'allow'
     end
   end
+
+  describe 'extracting other subjects' do
+    let(:other_subjects_653) do
+      { '653' => { 'subfields' => [{ 'a' => 'One;Two ; Three; Four; ' }] } }
+    end
+
+    it 'removes leading and trailing whitespace and separates other subjects on ";"' do
+      result = indexer.map_record(MARC::Record.new_from_hash('fields' => [other_subjects_653], 'leader' => leader))
+
+      expect(result['subject_other_display_ssm']).to eq ['One', 'Two', 'Three', 'Four']
+    end
+  end
 end
