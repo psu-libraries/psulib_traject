@@ -599,19 +599,19 @@ to_field 'dedication_ssim', extract_marc('995abcd3n')
 # Serials fields
 #
 # Preceding and Succeeding Entries display
-to_field 'serials_continues_display_ssim', extract_marc('780|00|iabdghkmnopqrstuxyz3:780|02|iabdghkmnopqrstuxyz3')
-to_field 'serials_continued_by_display_ssim', extract_marc('785|00|iabdghkmnopqrstuxyz3:785|02|iabdghkmnopqrstuxyz3')
-to_field 'serials_continues_in_part_display_ssim', extract_marc('780|01|iabdghkmnopqrstuxyz3:780|03|iabdghkmnopqrstuxyz3')
-to_field 'serials_continued_in_part_by_display_ssim', extract_marc('785|01|iabdghkmnopqrstuxyz3:785|03|iabdghkmnopqrstuxyz3')
-to_field 'serials_formed_from_display_ssim', extract_marc('780|04|iabdghkmnopqrstuxyz3')
-to_field 'serials_absorbs_display_ssim', extract_marc('780|05|iabdghkmnopqrstuxyz3')
-to_field 'serials_absorbed_by_display_ssim', extract_marc('785|04|iabdghkmnopqrstuxyz3')
-to_field 'serials_absorbs_in_part_display_ssim', extract_marc('780|06|iabdghkmnopqrstuxyz3')
-to_field 'serials_absorbed_in_part_by_display_ssim', extract_marc('785|05|iabdghkmnopqrstuxyz3')
-to_field 'serials_separated_from_display_ssim', extract_marc('780|07|iabdghkmnopqrstuxyz3')
-to_field 'serials_split_into_display_ssim', extract_marc('785|06|iabdghkmnopqrstuxyz3')
-to_field 'serials_merged_to_form_display_ssim', extract_marc('785|07|iabdghkmnopqrstuxyz3')
-to_field 'serials_changed_back_to_display_ssim', extract_marc('785|08|iabdghkmnopqrstuxyz3')
+to_field 'serials_continues_display_ssim', extract_marc('780|00|t:780|02|t')
+to_field 'serials_continued_by_display_ssim', extract_marc('785|00|t:785|02|t')
+to_field 'serials_continues_in_part_display_ssim', extract_marc('780|01|t:780|03|t')
+to_field 'serials_continued_in_part_by_display_ssim', extract_marc('785|01|t:785|03|t')
+to_field 'serials_formed_from_display_ssim', extract_marc('780|04|t')
+to_field 'serials_absorbs_display_ssim', extract_marc('780|05|t')
+to_field 'serials_absorbed_by_display_ssim', extract_marc('785|04|t')
+to_field 'serials_absorbs_in_part_display_ssim', extract_marc('780|06|t')
+to_field 'serials_absorbed_in_part_by_display_ssim', extract_marc('785|05|t')
+to_field 'serials_separated_from_display_ssim', extract_marc('780|07|t')
+to_field 'serials_split_into_display_ssim', extract_marc('785|06|t')
+to_field 'serials_merged_to_form_display_ssim', extract_marc('785|07|t')
+to_field 'serials_changed_back_to_display_ssim', extract_marc('785|08|t')
 
 # 799a - Sublocation
 # From our catalog experts: "The data in this field corresponds to "collections" within Special Collections, and
