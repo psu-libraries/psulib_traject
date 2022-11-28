@@ -1,4 +1,4 @@
-FROM jruby:9.2.11.1-jdk14
+FROM jruby:9.3.9.0
 WORKDIR /app
 ARG UID=3000
 
