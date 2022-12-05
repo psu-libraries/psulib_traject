@@ -576,9 +576,6 @@ end
 # 699a Thesis Department
 to_field 'thesis_dept_facet', extract_marc('699a'), trim_punctuation, include_psu_theses_only
 
-# 773 - "Part Of"
-to_field 'part_of_ssm', extract_marc('773|0*|abdghiklmnopqrstuwxyz34', separator: nil), trim_punctuation
-
 # Place
 #
 # UP Library facet
