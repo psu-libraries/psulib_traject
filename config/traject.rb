@@ -17,6 +17,7 @@ settings do
   provide 'solr.url', PsulibTraject::SolrManager.new.query_url.to_s
   provide 'log.batch_size', ConfigSettings.log.batch_size
   provide 'solr.version', ConfigSettings.solr.version
+  provide 'log.level', ConfigSettings.log.level
   provide 'log.file', ConfigSettings.log.file
   provide 'log.error_file', ConfigSettings.log.error_file
   provide 'solr_writer.commit_on_close', ConfigSettings.solr_writer.commit_on_close
