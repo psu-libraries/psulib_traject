@@ -15,9 +15,11 @@ module PsulibTraject
       end
 
       def perform_deletes
+        current_collection = PsulibTraject::SolrManager.new.current_collection
+
         target_deletes = Dir.glob("#{hourlies_directory}/**/*_deletes_*.txt").sort
 
-        processed_deletes = redis.keys('hr:*').map { |e| e.gsub('hr:', '') }
+        processed_deletes = redis.keys("#{current_collection}:*").map { |e| e.gsub("#{current_collection}:", '') }
         files_to_process = target_deletes - processed_deletes
 
         indexer.logger.info "Found #{files_to_process.length} files to process for deletes"
@@ -27,7 +29,8 @@ module PsulibTraject
             .read(file_name)
             .split("\n")
             .map { |id| delete(id) }
-          redis.set("hr:#{file_name}", true)
+          redis.set("#{current_collection}:#{file_name}", true)
+          redis.expire("#{current_collection}:#{file_name}", ConfigSettings.hourlies_skip_expire_seconds.to_i)
         end
       end
 
@@ -37,9 +40,10 @@ module PsulibTraject
       end
 
       def perform_indexes
+        current_collection = PsulibTraject::SolrManager.new.current_collection
         target_files = Dir.glob("#{hourlies_directory}/**/*.m*rc").sort
 
-        indexed_files = redis.keys('hr:*').map { |e| e.gsub('hr:', '') }
+        indexed_files = redis.keys("#{current_collection}:*").map { |e| e.gsub("#{current_collection}:", '') }
         files_to_index = target_files - indexed_files
 
         indexer.logger.info "Found #{files_to_index.length} files to index"
@@ -49,7 +53,8 @@ module PsulibTraject
 
         files_to_index.each do |file_name|
           indexer.logger.info "marking #{file_name} as done"
-          redis.set("hr:#{file_name}", true)
+          redis.set("#{current_collection}:#{file_name}", true)
+          redis.expire("#{current_collection}:#{file_name}", ConfigSettings.hourlies_skip_expire_seconds.to_i)
         end
       end
     end

@@ -17,6 +17,9 @@ commit_timeout: 10000
 symphony_data_path: "<%= ENV.fetch('SYMPHONY_DATA_PATH', '/data/symphony_data') %>"
 # Folder within `symphony_data_path` where hourlies are stored
 symphony_hourlies_subdir: hourlies
+# How long to keep the hourlies skip keys
+# we keep hourlies for 7 days, so we keep the lock for 10 to overlap
+hourlies_skip_expire_seconds: 864000
 hathi_etas: false
 hathi_overlap_path: "<%= ENV.fetch('HATHI_OVERLAP_PATH', '/data/hathitrust_data/overlap.tsv') %>"
 marc4j_reader:
