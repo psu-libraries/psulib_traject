@@ -16,9 +16,10 @@ namespace :traject do
     PsulibTraject::Workers::HourlyIndexer.perform_now
   end
 
-  desc 'Clear redis of hourly semaphores'
+  desc 'Clear redis of hourly skip list'
   task :clear_hourlies do
+    current_collection = PsulibTraject::SolrManager.new.current_collection
     redis = Redis.new
-    redis.keys('hr:*').map { |key| redis.del(key) }
+    redis.keys("#{current_collection}:*").map { |key| redis.del(key) }
   end
 end
