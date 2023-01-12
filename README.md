@@ -69,9 +69,7 @@ If you need to reconfigure Solr:
 Convert marc records and import into Solr
 
     $ bundle exec traject -c config/traject.rb solr/sample_data/sample_psucat.mrc 
-   
-You can download [other sample files from Box](https://psu.app.box.com/folder/53004724072).
-   
+      
 ## Traject in debug mode
 
 For testing purposes you can run traject with the `--debug-mode` flag to
