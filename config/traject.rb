@@ -617,3 +617,8 @@ to_field 'serials_changed_back_to_display_ssim', extract_marc('785|08|t')
 # From our catalog experts: "The data in this field corresponds to "collections" within Special Collections, and
 # the 799 data lets their staff know which shelf (or range of shelves) to check for the call number in question.
 to_field 'sublocation_ssm', extract_marc('799a')
+
+# IIIF Manifest url
+#
+# 856|*1|u if subfield y is IIIF Manifest
+to_field 'iiif_manifest_ssim', extract_iiif_manifest
