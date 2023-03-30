@@ -303,4 +303,63 @@ RSpec.describe 'Macros' do
       end
     end
   end
+
+  describe '#extract_iiif_manifest' do
+    context 'A record with an indicator 2 of 1 and subfield y IIIF Manifest' do
+      let(:url_856_iiif) do
+        { '856' => { 'ind2' => '1', 'subfields' => [{ 'u' => 'http://iiif.url' }, { 'y' => 'IIIF manifest' }] } }
+      end
+
+      let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => [url_856_iiif], 'leader' => leader)) }
+
+      it 'produces iiif manifest field with url' do
+        expect(result['iiif_manifest_ssim']).to match ['http://iiif.url']
+      end
+    end
+
+    context 'A record with multiple IIIF manifest urls' do
+      let(:url_856_iiif) do
+        [
+          { '856' => { 'ind2' => '1', 'subfields' => [{ 'u' => 'http://iiif.url' }, { 'y' => 'IIIF manifest' }] } },
+          { '856' => { 'ind2' => '1', 'subfields' => [{ 'u' => 'http://iiif.other.url' }, { 'y' => 'IIIF manifest' }] } }
+        ]
+      end
+
+      let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => url_856_iiif, 'leader' => leader)) }
+
+      it 'produces iiif manifest field with multiple urls' do
+        expect(result['iiif_manifest_ssim']).to match ['http://iiif.url', 'http://iiif.other.url']
+      end
+    end
+
+    context 'A record with one IIIF manifest url and another non IIIF url' do
+      let(:url_856_iiif) do
+        [
+          { '856' => { 'ind2' => '1', 'subfields' => [{ 'u' => 'http://non.iiif.url' }, { 'y' => 'Non IIIF manifest' }] } },
+          { '856' => { 'ind2' => '1', 'subfields' => [{ 'u' => 'http://iiif.url' }, { 'y' => 'IIIF manifest' }] } }
+        ]
+      end
+
+      let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => url_856_iiif, 'leader' => leader)) }
+
+      it 'produces iiif manifest field with one url' do
+        expect(result['iiif_manifest_ssim']).to match ['http://iiif.url']
+      end
+    end
+
+    context 'A record without a IIIF manifest url' do
+      let(:url_856) do
+        [
+          { '856' => { 'ind2' => '0', 'subfields' => [{ 'u' => 'http://non.iiif.url' }, { 'y' => 'Non IIIF manifest' }] } },
+          { '856' => { 'ind2' => '0', 'subfields' => [{ 'u' => 'http://non.iiif.other.url' }, { 'y' => 'IIIF manifest' }] } }
+        ]
+      end
+
+      let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => url_856, 'leader' => leader)) }
+
+      it 'produces iiif manifest field with one url' do
+        expect(result['iiif_manifest_ssim']).to be_nil
+      end
+    end
+  end
 end

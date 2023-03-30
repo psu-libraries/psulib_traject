@@ -183,6 +183,19 @@ module PsulibTraject
       end
     end
 
+    def extract_iiif_manifest
+      lambda do |record, accumulator|
+        return unless record.fields('856').any?
+
+        record.fields('856').each do |field|
+          next unless iiif_manifest_exists?(field)
+
+          accumulator << collect_subfield_values(field: field, code: 'u').first
+          accumulator.uniq.compact!
+        end
+      end
+    end
+
     private
 
       def psu_thesis?(record)
@@ -198,6 +211,11 @@ module PsulibTraject
       # Ignore dates below MIN_YEAR (default 500) or above MAX_YEAR (this year plus 6 years)
       def pub_date_in_range(pub_date)
         pub_date && pub_date >= MIN_YEAR && pub_date <= MAX_YEAR ? pub_date : nil
+      end
+
+      def iiif_manifest_exists?(field)
+        field.indicator2 == '1' &&
+          collect_subfield_values(field: field, code: 'y')&.first&.casecmp('iiif manifest')&.zero?
       end
   end
 end
