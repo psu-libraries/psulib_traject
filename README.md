@@ -18,7 +18,7 @@ Follow these instructions to [install JRuby](https://github.com/psu-libraries/ps
 do not already have it.
 
     $ ruby --version
-      jruby 9.2.11.1
+      jruby 9.3.9.0
 
 ## Development Setup
 
