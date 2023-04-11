@@ -22,7 +22,7 @@ module PsulibTraject
     end
 
     def resolve_base
-      return [] if online? || holdings.empty?
+      return [] if not_in_the_library? || holdings.empty?
 
       holdings.reject! do |call_number|
         call_number.exclude? || call_number.not_browsable?
@@ -39,8 +39,8 @@ module PsulibTraject
 
     private
 
-      def online?
-        context.output_hash['access_facet']&.include?('Online')
+      def not_in_the_library?
+        !context.output_hash['access_facet']&.include?('In the Library')
       end
 
       # assuming each 949 has only one subfield a, w and l
