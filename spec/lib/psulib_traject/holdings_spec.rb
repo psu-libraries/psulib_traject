@@ -31,13 +31,37 @@ RSpec.describe PsulibTraject::Holdings do
   end
 
   describe '#call' do
+    let(:context) { instance_spy('Traject::Indexer::Context',
+                                 output_hash: { 'access_facet' => ['Online', 'In the Library', 'Free to Read'] }) }
+
     context 'with an empty record' do
       it { is_expected.to be_empty }
     end
 
-    context 'with an online record' do
+    context 'with an online record that is also "In the Library"' do
+      let(:fields) do
+        [MARC::DataField.new('949', '', '', ['a', 'AB123 .C456 2000 LC Call Number'], ['w', 'LC'], ['l', 'Location'])]
+      end
+
+      it { is_expected.to contain_exactly 'AB123 .C456 2000 LC Call Number' }
+    end
+
+    context 'with an online record that is not "In the Library"' do
+      let(:fields) do
+        [MARC::DataField.new('949', '', '', ['a', 'AB123 .C456 2000 LC Call Number'], ['w', 'LC'], ['l', 'Location'])]
+      end
       let(:context) { instance_spy('Traject::Indexer::Context',
-                                   output_hash: { access_facet: ['Online', 'In the Library', 'Free to Read'] }) }
+                                   output_hash: { 'access_facet' => ['Online', 'Free to Read'] }) }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'with a record that is not online or "In the Library"' do
+      let(:fields) do
+        [MARC::DataField.new('949', '', '', ['a', 'AB123 .C456 2000 LC Call Number'], ['w', 'LC'], ['l', 'Location'])]
+      end
+      let(:context) { instance_spy('Traject::Indexer::Context',
+                                   output_hash: { 'access_facet' => ['Free to Read'] }) }
 
       it { is_expected.to be_empty }
     end
