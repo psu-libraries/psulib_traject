@@ -1,15 +1,15 @@
 require 'open-uri'
 require 'json'
-require 'pry-byebug'
 
 module UpdateLocations
   def self.call
     File.open("./lib/translation_maps/locations.properties", "w") do |file|
       file.truncate(0)
-      json = JSON.parse(response.read.to_s)
-      binding.pry
       open(url, headers) do |response|
-        JSON.parse(response.read.to_s).each do |line|
+        json = JSON.parse(response.read.to_s)
+        json_sorted = json.sort_by{|i| i["fields"]["displayName"] }
+        json_sorted_uniqd = json_sorted.uniq{|i| i["fields"]["displayName"] }
+        json_sorted_uniqd.each do |line|
           file.write "#{line["fields"]["displayName"]} = #{line["fields"]["translatedDescription"]}\n"
         end
       end
@@ -31,3 +31,5 @@ module UpdateLocations
       'https://cat.libraries.psu.edu:28443/symwsbc/policy/location/simpleQuery?key=*&includeFields=displayName%2Cdescription%2CtranslatedDescription'
     end
 end
+
+UpdateLocations.call
