@@ -7,7 +7,7 @@ module UpdateLocations
   module_function
 
   def call
-    File.open('./lib/translation_maps/locations.properties', 'w') do |file|
+    File.open(location_file_path, 'w') do |file|
       file.truncate(0)
       json = JSON.parse(response.to_s)
       json_sorted = json.sort_by { |i| i['fields']['displayName'] }
@@ -36,5 +36,9 @@ module UpdateLocations
 
   def url
     URI.parse('https://cat.libraries.psu.edu:28443/symwsbc/policy/location/simpleQuery?key=*&includeFields=displayName,description,translatedDescription')
+  end
+
+  def location_file_path
+    './lib/translation_maps/locations.properties'
   end
 end
