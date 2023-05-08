@@ -19,28 +19,28 @@ module UpdateLocations
 
     private
 
-    def response
-      http = Net::HTTP.new(url.host, url.port)
-      http.use_ssl = (url.scheme == 'https')
-      request = Net::HTTP::Get.new(url, headers)
-      http.request(request).body
-    end
+      def response
+        http = Net::HTTP.new(url.host, url.port)
+        http.use_ssl = (url.scheme == 'https')
+        request = Net::HTTP::Get.new(url, headers)
+        http.request(request).body
+      end
 
-    def headers
-      {
-        'Accept' => 'application/json',
-        'Content-Type' => 'application/json',
-        'sd-originating-app-id' => 'DHCTemplate',
-        'x-sirs-clientID' => 'PSUCATALOG'
-      }
-    end
+      def headers
+        {
+          'Accept' => 'application/json',
+          'Content-Type' => 'application/json',
+          'sd-originating-app-id' => 'DHCTemplate',
+          'x-sirs-clientID' => 'PSUCATALOG'
+        }
+      end
 
-    def url
-      URI.parse('https://cat.libraries.psu.edu:28443/symwsbc/policy/location/simpleQuery?key=*&includeFields=displayName,description,translatedDescription')
-    end
+      def url
+        URI.parse('https://cat.libraries.psu.edu:28443/symwsbc/policy/location/simpleQuery?key=*&includeFields=displayName,description,translatedDescription')
+      end
 
-    def location_file_path
-      './lib/translation_maps/locations.properties'
-    end
+      def location_file_path
+        './lib/translation_maps/locations.properties'
+      end
   end
 end
