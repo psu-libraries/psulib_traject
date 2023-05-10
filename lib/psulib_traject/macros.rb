@@ -157,9 +157,7 @@ module PsulibTraject
 
     # Extract OCLC number
     def extract_oclc_number
-      lambda do |record, accumulator|
-        Processors::OclcExtract.new(record, accumulator).extract_primary_oclc
-      end
+      
     end
 
     def exclude_locations
