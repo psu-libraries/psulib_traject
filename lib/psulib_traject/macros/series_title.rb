@@ -8,13 +8,11 @@ module PsulibTraject::Macros::SeriesTitle
 
       if fields.tags.include?('830')
         index_string << '830adfghklmnoprstvwxy3'
-        if fields.tags.include?('490') && record.fields('490').first.indicator1 == " " || record.fields('490').first.indicator1 == '0'
+        if fields.tags.include?('490') && record.fields('490').first.indicator1 == ' ' || record.fields('490').first.indicator1 == '0'
           index_string << ':490avlx'
         end
-      else
-        if fields.tags.include?('490')
-          index_string << '490avlx'
-        end
+      elsif fields.tags.include?('490')
+        index_string << '490avlx'
       end
 
       if fields.tags.include?('440')
