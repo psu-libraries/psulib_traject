@@ -162,7 +162,7 @@ to_field 'title_sort', marc_sortable_title
 ## Series Titles
 to_field 'series_title_tsim', extract_marc('440av:490anpv:830anpv')
 to_field 'series_title_strict_tsim', extract_marc('440a:490a:830a'), trim_punctuation
-to_field 'series_title_display_ssm', extract_series_title
+to_field 'series_title_display_ssm', extract_series_title_display
 
 # Author fields
 #
