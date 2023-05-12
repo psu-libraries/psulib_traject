@@ -8,7 +8,7 @@ module PsulibTraject::Macros::SeriesTitle
 
       if fields.tags.include?('830')
         index_string << '830adfghklmnoprstvwxy3'
-        if append_409?(fields, record)
+        if append_490?(fields, record)
           index_string << ':490avlx'
         end
       elsif fields.tags.include?('490')
@@ -29,7 +29,7 @@ module PsulibTraject::Macros::SeriesTitle
 
   private
 
-    def append_409?(fields, record)
+    def append_490?(fields, record)
       fields.tags.include?('490') &&
         record.fields('490').first&.indicator1 == ' ' ||
         record.fields('490').first&.indicator1 == '0'
