@@ -9,7 +9,7 @@ RSpec.describe PsulibTraject::Macros::SeriesTitle do
 
       it 'stores the 830 data in the series_title_display_ssm' do
         expect(result['series_title_display_ssm']).to eq(
-          ["Series Title With 830 4"]
+          ['Series Title With 830 4']
         )
       end
     end
@@ -19,7 +19,7 @@ RSpec.describe PsulibTraject::Macros::SeriesTitle do
 
       it 'stores the 830 data in the series_title_display_ssm' do
         expect(result['series_title_display_ssm']).to eq(
-          ["Series Title With 830 4"]
+          ['Series Title With 830 4']
         )
       end
     end
@@ -29,7 +29,7 @@ RSpec.describe PsulibTraject::Macros::SeriesTitle do
 
       it 'stores the 830 and 490 data in the series_title_display_ssm' do
         expect(result['series_title_display_ssm']).to eq(
-          ["Series Title With 830 4", "Series Title With 490 4"]
+          ['Series Title With 830 4', 'Series Title With 490 4']
         )
       end
     end
@@ -39,7 +39,7 @@ RSpec.describe PsulibTraject::Macros::SeriesTitle do
 
       it 'stores the 440 data in the series_title_display_ssm' do
         expect(result['series_title_display_ssm']).to eq(
-          ["Series Title With 440 1"]
+          ['Series Title With 440 1']
         )
       end
     end
@@ -49,7 +49,7 @@ RSpec.describe PsulibTraject::Macros::SeriesTitle do
 
       it 'stores the 490 data in the series_title_display_ssm' do
         expect(result['series_title_display_ssm']).to eq(
-          ["Series Title With 490 4"]
+          ['Series Title With 490 4']
         )
       end
     end
@@ -59,7 +59,7 @@ RSpec.describe PsulibTraject::Macros::SeriesTitle do
 
       it 'stores the 440 data in the series_title_display_ssm' do
         expect(result['series_title_display_ssm']).to eq(
-          ["Series Title With 440 1"]
+          ['Series Title With 440 1']
         )
       end
     end
@@ -69,7 +69,7 @@ RSpec.describe PsulibTraject::Macros::SeriesTitle do
 
       it 'stores the 440 data in the series_title_display_ssm' do
         expect(result['series_title_display_ssm']).to eq(
-          ["Series Title With 440 1"]
+          ['Series Title With 440 1']
         )
       end
     end
