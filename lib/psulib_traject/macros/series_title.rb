@@ -31,7 +31,7 @@ module PsulibTraject::Macros::SeriesTitle
 
     def append_490?(fields, record)
       fields.tags.include?('490') &&
-        record.fields('490').first&.indicator1 == ' ' ||
-        record.fields('490').first&.indicator1 == '0'
+        (record.fields('490').first&.indicator1 == ' ' ||
+        record.fields('490').first&.indicator1 == '0')
     end
 end
