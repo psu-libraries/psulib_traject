@@ -54,7 +54,7 @@ RSpec.describe PsulibTraject::Macros::SeriesTitle do
       end
     end
 
-    context 'when an 490 field and 440 field are present' do
+    context 'when a 490 field and 440 field are present' do
       let(:record) { MarcBot.build(:series_title_490_and_440) }
 
       it 'stores the 440 data in the series_title_display_ssm' do
