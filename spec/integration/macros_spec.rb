@@ -202,6 +202,7 @@ RSpec.describe 'Macros' do
     let(:thesis_dept_699) do
       { '699' => { 'subfields' => [{ 'a' => 'Acoustics.' }] } }
     end
+    let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => [thesis_dept_699, code_949], 'leader' => leader)) }
 
     context 'when a record has no 949t fields' do
       let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => [thesis_dept_699], 'leader' => leader)) }
@@ -216,36 +217,28 @@ RSpec.describe 'Macros' do
         { '949' => { 'subfields' => [{ 'a' => 'Thesis 2011mOrr,A', 't' => 'THESIS-B' }] } }
       end
 
-      let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => [thesis_dept_699, code_949], 'leader' => leader)) }
-
       it 'does not index the theses department data' do
         expect(result['thesis_dept_facet']).to be_nil
       end
     end
 
-    context 'when a record does have a PSU thesis code' do
-      context 'when thesis code is THESIS-D' do
-        let(:code_949) do
-          { '949' => { 'subfields' => [{ 'a' => 'Thesis 2011mOrr,A', 't' => 'THESIS-D' }] } }
-        end
-
-        let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => [thesis_dept_699, code_949], 'leader' => leader)) }
-
-        it 'indexes the theses department data' do
-          expect(result['thesis_dept_facet']).to eq ['Acoustics']
-        end
+    context 'when thesis code is THESIS-D' do
+      let(:code_949) do
+        { '949' => { 'subfields' => [{ 'a' => 'Thesis 2011mOrr,A', 't' => 'THESIS-D' }] } }
       end
 
-      context 'when thesis code is THESIS-M' do
-        let(:code_949) do
-          { '949' => { 'subfields' => [{ 'a' => 'Thesis 2011mOrr,A', 't' => 'THESIS-M' }] } }
-        end
+      it 'indexes the theses department data' do
+        expect(result['thesis_dept_facet']).to eq ['Acoustics']
+      end
+    end
 
-        let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => [thesis_dept_699, code_949], 'leader' => leader)) }
+    context 'when thesis code is THESIS-M' do
+      let(:code_949) do
+        { '949' => { 'subfields' => [{ 'a' => 'Thesis 2011mOrr,A', 't' => 'THESIS-M' }] } }
+      end
 
-        it 'indexes the theses department data' do
-          expect(result['thesis_dept_facet']).to eq ['Acoustics']
-        end
+      it 'indexes the theses department data' do
+        expect(result['thesis_dept_facet']).to eq ['Acoustics']
       end
     end
   end
