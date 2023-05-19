@@ -45,6 +45,7 @@ Create 2 files: `config/settings.local.yml` and `config/settings/test.local.yml`
       port: 8983
 
 Change the URL and port numbers if you want to use a different port.
+You will also need to set your environment variables with the Solr username and password.
 
 ### Traject
 
