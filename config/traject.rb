@@ -222,14 +222,10 @@ to_field 'copyright_display_ssm', extract_marc('264|*4|c')
 to_field 'cartographic_mathematical_data_ssm', extract_marc('255abcdefg')
 to_field 'other_edition_ssm', extract_marc('775|0*|iabcdefghkmnor')
 to_field 'collection_facet', extract_marc('793a')
-# use formatted *_vern in *_display_ssm if exists
-# otherwise use *_latin as *_display_ssm
-to_field 'publication_latin', extract_marc('260abcefg3:264|*1|abc3', alternate_script: false) # display in search results
-to_field 'publication_vern', extract_marc('260abcefg3:264|*1|abc3', alternate_script: :only) # display in search results
-to_field 'overall_imprint_latin', extract_marc('260abcefg3:264|*0|abc3:264|*1|abc3:264|*2|abc3:264|*3|abc3', alternate_script: false) # display on single item page
-to_field 'overall_imprint_vern', extract_marc('260abcefg3:264|*0|abc3:264|*1|abc3:264|*2|abc3:264|*3|abc3', alternate_script: :only) # display on single item page
-to_field 'edition_latin', extract_marc('250ab3', alternate_script: false)
-to_field 'edition_vern', extract_marc('250ab3', alternate_script: :only)
+to_field 'publication_display_ssm', extract_marc('260abcefg3:264|*1|abc3') # display in search results
+to_field 'overall_imprint_display_ssm', extract_marc('260abcefg3:264|*0|abc3:264|*1|abc3:264|*2|abc3:264|*3|abc3') # display on single item page
+to_field 'edition_display_ssm', extract_marc('250ab3')
+# processes display fields to help format vernacular display
 each_record do |_record, context|
   PsulibTraject::Processors::PubDisplay.new('publication', context).call
   PsulibTraject::Processors::PubDisplay.new('overall_imprint', context).call

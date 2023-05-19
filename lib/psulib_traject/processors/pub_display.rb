@@ -8,39 +8,27 @@ module PsulibTraject::Processors
     end
 
     def call
-      if vern.nil?
-        context.output_hash[final] = latin
-        # remove duplicate latin version
-        context.output_hash.delete("#{field}_latin")
-      else
-        context.output_hash[final] = [latin.first, vern_clean]
-        # remove duplicate versions
-        context.output_hash.delete("#{field}_latin")
-        context.output_hash.delete("#{field}_vern")
-      end
+      return if final.nil?
+
+      final[1] = vern_clean unless vern.nil?
     end
 
     private
 
       attr_accessor :context, :field
 
-      def latin
-        context.output_hash["#{field}_latin"]
-      end
-
       def vern
-        context.output_hash["#{field}_vern"]
+        final.length <= 1 ? nil : final[1]
       end
 
       def final
-        "#{field}_display_ssm"
+        context.output_hash["#{field}_display_ssm"]
       end
 
       def vern_clean
-        vern_value = vern.first
-        return vern_value unless /[\u0621-\u064A]+\.$/.match?(vern_value) # regex to check for arabic
+        return vern unless /[\u0621-\u064A]+\.$/.match?(vern) # regex to check for arabic
 
-        vern_value = vern_value.gsub('.', '')
+        vern_value = vern.gsub('.', '')
         ".#{vern_value}"
       end
   end
