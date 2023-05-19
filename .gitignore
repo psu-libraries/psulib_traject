@@ -26,5 +26,6 @@ config/environments/*.local.yml
 .bash_history
 .cache
 .local
+.envrc
 data/
 vendor/**/*
