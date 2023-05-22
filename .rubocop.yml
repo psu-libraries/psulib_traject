@@ -49,6 +49,7 @@ RSpec/NestedGroups:
     - 'spec/lib/psulib_traject/processors/call_number/lc_spec.rb'
     - 'spec/lib/psulib_traject/processors/call_number/dewey_spec.rb'
     - 'spec/lib/psulib_traject/processors/title_display_spec.rb'
+    - 'spec/lib/psulib_traject/processors/pub_display_spec.rb'
 
 RSpec/ExpectActual:
   Exclude:

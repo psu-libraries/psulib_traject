@@ -218,13 +218,19 @@ to_field 'publisher_manufacturer_tsim', extract_marc('260b:264|*1|b:260f:264|*3|
 to_field 'pub_date_itsi', process_publication_date
 
 ## Publication fields for display
-to_field 'publication_display_ssm', extract_marc('260abcefg3:264|*1|abc3') # display in search results
-to_field 'overall_imprint_display_ssm', extract_marc('260abcefg3:264|*0|abc3:264|*1|abc3:264|*2|abc3:264|*3|abc3') # display on single item page
 to_field 'copyright_display_ssm', extract_marc('264|*4|c')
-to_field 'edition_display_ssm', extract_marc('250ab3')
 to_field 'cartographic_mathematical_data_ssm', extract_marc('255abcdefg')
 to_field 'other_edition_ssm', extract_marc('775|0*|iabcdefghkmnor')
 to_field 'collection_facet', extract_marc('793a')
+to_field 'publication_display_ssm', extract_marc('260abcefg3:264|*1|abc3') # display in search results
+to_field 'overall_imprint_display_ssm', extract_marc('260abcefg3:264|*0|abc3:264|*1|abc3:264|*2|abc3:264|*3|abc3') # display on single item page
+to_field 'edition_display_ssm', extract_marc('250ab3')
+# processes display fields to help format vernacular display
+each_record do |_record, context|
+  PsulibTraject::Processors::PubDisplay.new('publication', context).call
+  PsulibTraject::Processors::PubDisplay.new('overall_imprint', context).call
+  PsulibTraject::Processors::PubDisplay.new('edition', context).call
+end
 
 ## Publication fields for Illiad and Aeon
 to_field 'pub_date_illiad_ssm', extract_marc('260c:264|*1|c'), trim_punctuation
