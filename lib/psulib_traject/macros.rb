@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 NOT_FULLTEXT = /addendum|appendices|appendix|appendixes|cover|excerpt|executive summary|index/i.freeze
-PSU_THESIS_CODE = /THESIS-B|THESIS-D|THESIS-M/.freeze
+PSU_THESIS_CODE = /THESIS-D|THESIS-M/.freeze
 ESTIMATE_TOLERANCE = 15
 MIN_YEAR = 500
 MAX_YEAR = Time.new.year + 6
