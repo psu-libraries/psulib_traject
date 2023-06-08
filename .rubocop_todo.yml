@@ -26,6 +26,19 @@ Metrics/CyclomaticComplexity:
 # Configuration parameters: IgnoredMethods.
 Metrics/PerceivedComplexity:
   Max: 11
+  
+Naming/VariableNumber:
+  Exclude:
+    - 'spec/records/subjects.rb'
+    - 'spec/records/series_titles.rb'
+    - 'spec/lib/psulib_traject/macros/subjects_spec.rb'
+    - 'spec/lib/psulib_traject/macros/series_title_spec.rb'
+    - 'spec/integration/title_spec.rb'
+    - 'spec/integration/publication_spec.rb'
+    - 'spec/integration/macros_spec.rb'
+    - 'spec/integration/config_spec.rb'
+    - 'lib/psulib_traject/processors/media_type.rb'
+
 
 # Offense count: 2
 # Configuration parameters: MinSize.
@@ -48,6 +61,13 @@ RSpec/DescribeClass:
   Exclude:
     - 'spec/integration/access_facet_spec.rb'
     - 'spec/integration/bound_with_spec.rb'
+
+RSpec/IndexedLet:
+  Exclude:
+    - 'spec/integration/audience_spec.rb'
+    - 'spec/integration/config_spec.rb'
+    - 'spec/integration/macros_spec.rb'
+    - 'spec/lib/psulib_traject/holdings_spec.rb'
 
 # Offense count: 21
 # Configuration parameters: AllowSubject.

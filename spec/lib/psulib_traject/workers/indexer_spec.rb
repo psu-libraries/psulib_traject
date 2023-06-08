@@ -11,7 +11,7 @@ RSpec.describe PsulibTraject::Workers::Indexer do
 
   let(:mock_traject_indexer) do
     instance_spy(
-      Traject::Indexer::MarcIndexer,
+      'Traject::Indexer::MarcIndexer',
       logger: Logger.new(dev_null),
       settings: { 'solr.url' => 'http://localhost:8993/solr/psul_catalog' }
     )

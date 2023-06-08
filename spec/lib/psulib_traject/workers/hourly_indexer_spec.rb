@@ -37,7 +37,7 @@ RSpec.describe PsulibTraject::Workers::HourlyIndexer do
       )
         .to_return(
           status: 200,
-          body: { "aliases": {} }.to_json,
+          body: { aliases: {} }.to_json,
           headers: {}
         )
     end

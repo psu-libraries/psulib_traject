@@ -11,7 +11,7 @@ namespace :solr do
 
     solr_files.each do |file|
       response = Faraday.get url_for_file("solr/conf/#{file}")
-      File.open("#{solr_conf_dir}/#{file}", 'w+') { |f| f.write(response.body) }
+      File.write("#{solr_conf_dir}/#{file}", response.body)
     end
   end
 

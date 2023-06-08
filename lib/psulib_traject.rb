@@ -48,7 +48,7 @@ module PsulibTraject
     config.use_env = true
     config.env_prefix = 'SETTINGS'
     config.env_separator = '__'
-    config.load_and_set_settings(Config.setting_files('config', ENV['RUBY_ENVIRONMENT']))
+    config.load_and_set_settings(Config.setting_files('config', ENV.fetch('RUBY_ENVIRONMENT', nil)))
   end
 
   class << self

@@ -19,7 +19,7 @@ module PsulibTraject::Macros::SeriesTitle
         index_string = ['440anpvx']
       end
 
-      extractor = Traject::MarcExtractor.new(index_string.join(''))
+      extractor = Traject::MarcExtractor.new(index_string.join)
       extractor.extract(record).each do |item|
         accumulator << item
       end
