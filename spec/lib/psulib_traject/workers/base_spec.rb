@@ -5,7 +5,7 @@ require 'spec_helper'
 RSpec.describe PsulibTraject::Workers::Base do
   before do
     class TestWorker < PsulibTraject::Workers::Base
-      def perform(_arg1, _arg2, options: [])
+      def perform(_arg1, _arg2, options = [])
         true
       end
     end

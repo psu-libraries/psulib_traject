@@ -66,7 +66,7 @@ module PsulibTraject
 
     def serial?
       SERIAL_ITEM_TYPES.include?(item_type) ||
-        item_type == 'MICROFORM' && %w(ab as).include?(leader[6..7])
+        (item_type == 'MICROFORM' && %w(ab as).include?(leader[6..7]))
     end
 
     def solr_field

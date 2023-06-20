@@ -69,7 +69,7 @@ RSpec.describe 'Title' do
     let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => [fields], 'leader' => leader)) }
 
     it 'returns with trailing -- chomped' do
-      expect(result[field]).not_to eq nil
+      expect(result[field]).not_to be_nil
       expect(result[field]).to(all(not_include(' --')))
     end
   end

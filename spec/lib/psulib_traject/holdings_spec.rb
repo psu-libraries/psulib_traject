@@ -15,10 +15,10 @@ RSpec.describe PsulibTraject::Holdings do
   end
   let(:context) { instance_spy('Traject::Indexer::Context', output_hash: {}) }
 
-  let(:mocked_lc_holding) { instance_spy(PsulibTraject::Processors::CallNumber::LC, reduce: 'AB123 .C456 2000 LC Call Number') }
-  let(:mocked_lcper_holding) { instance_spy(PsulibTraject::Processors::CallNumber::LC, reduce: 'AB123 .C456 2000 LCPER Call Number') }
-  let(:mocked_dewey_holding) { instance_spy(PsulibTraject::Processors::CallNumber::Dewey, reduce: '123.1A23a Dewey Call Number') }
-  let(:mocked_other_holding) { instance_spy(PsulibTraject::Processors::CallNumber::Other, reduce: 'ASIS Call Number') }
+  let(:mocked_lc_holding) { instance_spy('PsulibTraject::Processors::CallNumber::LC', reduce: 'AB123 .C456 2000 LC Call Number') }
+  let(:mocked_lcper_holding) { instance_spy('PsulibTraject::Processors::CallNumber::LC', reduce: 'AB123 .C456 2000 LCPER Call Number') }
+  let(:mocked_dewey_holding) { instance_spy('PsulibTraject::Processors::CallNumber::Dewey', reduce: '123.1A23a Dewey Call Number') }
+  let(:mocked_other_holding) { instance_spy('PsulibTraject::Processors::CallNumber::Other', reduce: 'ASIS Call Number') }
 
   before do
     allow(PsulibTraject::Processors::CallNumber::LC).to receive(:new).with('AB123 .C456 2000 LC Call Number', serial: false)
@@ -128,16 +128,16 @@ RSpec.describe PsulibTraject::Holdings do
         ]
       end
 
-      let(:mocked_lc_holding_1) { instance_spy(PsulibTraject::Processors::CallNumber::LC, reduce: 'AB123 .C456 2000 LC Call Number v.1') }
-      let(:mocked_lc_holding_2) { instance_spy(PsulibTraject::Processors::CallNumber::LC, reduce: 'AB123 .C456 2000 LC Call Number v.2') }
+      let(:mocked_lc_holding1) { instance_spy('PsulibTraject::Processors::CallNumber::LC', reduce: 'AB123 .C456 2000 LC Call Number v.1') }
+      let(:mocked_lc_holding2) { instance_spy('PsulibTraject::Processors::CallNumber::LC', reduce: 'AB123 .C456 2000 LC Call Number v.2') }
 
       before do
         allow(PsulibTraject::Processors::CallNumber::LC).to receive(:new).with('AB123 .C456 2000 LC Call Number v.1', serial: false)
-          .and_return(mocked_lc_holding_1)
+          .and_return(mocked_lc_holding1)
         allow(PsulibTraject::Processors::CallNumber::LC).to receive(:new).with('AB123 .C456 2000 LC Call Number v.2', serial: false)
-          .and_return(mocked_lc_holding_2)
-        allow(mocked_lc_holding_1).to receive(:reduce).and_return('AB123 .C456 2000 LC Call Number')
-        allow(mocked_lc_holding_2).to receive(:reduce).and_return('AB123 .C456 2000 LC Call Number')
+          .and_return(mocked_lc_holding2)
+        allow(mocked_lc_holding1).to receive(:reduce).and_return('AB123 .C456 2000 LC Call Number')
+        allow(mocked_lc_holding2).to receive(:reduce).and_return('AB123 .C456 2000 LC Call Number')
       end
 
       it { is_expected.to contain_exactly 'AB123 .C456 2000 LC Call Number' }

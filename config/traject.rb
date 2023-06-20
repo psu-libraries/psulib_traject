@@ -31,8 +31,8 @@ settings do
     provide 'processing_thread_pool', ConfigSettings.processing_thread_pool
   end
 end
-ATOZ = ('a'..'z').to_a.join('')
-ATOU = ('a'..'u').to_a.join('')
+ATOZ = ('a'..'z').to_a.join
+ATOU = ('a'..'u').to_a.join
 
 ht_overlap = PsulibTraject::HathiOverlapReducer.new(ConfigSettings.hathi_overlap_path)
 ht_overlap_hash = ht_overlap.hashify
@@ -353,7 +353,7 @@ to_field 'audience_ssm' do |record, accumulator|
         audience_value = subfield.value
       end
     end
-    accumulator << qualifier + audience_value
+    accumulator << (qualifier + audience_value)
   end
 end
 
@@ -575,7 +575,7 @@ to_field 'bound_with_struct' do |record, accumulator|
       end
     end
 
-    accumulator << bound_with_arr.compact.inject(:merge).to_json
+    accumulator << bound_with_arr.compact.reduce(:merge).to_json
   end
 end
 

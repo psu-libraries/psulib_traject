@@ -57,13 +57,13 @@ RSpec.describe UpdateLocations do
             }
           }
         ]")
-      File.delete(location_file_path) if File.exists?(location_file_path)
-      File.open(location_file_path, 'w') { |f| f.write('Stuff to be deleted') }
+      FileUtils.rm_f(location_file_path)
+      File.write(location_file_path, 'Stuff to be deleted')
       allow(described_class).to receive(:location_file_path).and_return(location_file_path)
     end
 
     after do
-      File.delete(location_file_path) if File.exists?(location_file_path)
+      FileUtils.rm_f(location_file_path)
     end
 
     it 'pulls locations data, sorts + uniques the data, and updates locations.properties with this data' do

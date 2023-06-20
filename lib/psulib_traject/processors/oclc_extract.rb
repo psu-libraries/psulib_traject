@@ -34,7 +34,7 @@ module PsulibTraject
         def get_035_primary_oclc(field, accumulator)
           unless field&.[]('a').nil?
             if includes_oclc_indicators?(field['a'])
-              subfield = PsulibTraject.regex_split(field['a'], //).map { |x| x[/\d+/] }.compact.join('')
+              subfield = PsulibTraject.regex_split(field['a'], //).map { |x| x[/\d+/] }.compact.join
             end
             accumulator << subfield
           end
@@ -53,7 +53,7 @@ module PsulibTraject
           field.subfields.each do |subfield|
             if subfield.code == 'z' && !subfield.value.nil? &&
                 !subfield.value.empty? && includes_oclc_indicators?(subfield.value)
-              subfield_cleaned = PsulibTraject.regex_split(subfield.value, //).map { |x| x[/\d+/] }.compact.join('')
+              subfield_cleaned = PsulibTraject.regex_split(subfield.value, //).map { |x| x[/\d+/] }.compact.join
               accumulator << subfield_cleaned
             end
           end

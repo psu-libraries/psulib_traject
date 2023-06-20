@@ -56,6 +56,10 @@ RSpec/ExpectActual:
     - 'spec/lib/psulib_traject/processors/call_number/lc_spec.rb'
     - 'spec/lib/psulib_traject/processors/call_number/dewey_spec.rb'
 
+
+RSpec/VerifiedDoubleReference:
+  EnforcedStyle: string
+  
 Style/StringConcatenation:
   Exclude:
     - 'spec/lib/psulib_traject/processors/title_display_spec.rb'

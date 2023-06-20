@@ -48,7 +48,7 @@ module PsulibTraject::Processors
     end
 
     def date_to_resolve(date1_str, date2_str)
-      date2_str.to_i != 0 ? date2_str : date1_str
+      date2_str.to_i.zero? ? date1_str : date2_str
     end
 
     # For when we are dealing with ranges.

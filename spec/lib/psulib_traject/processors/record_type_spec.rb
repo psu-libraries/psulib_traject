@@ -3,11 +3,12 @@
 RSpec.describe PsulibTraject::Processors::RecordType do
   let(:current_formats) { [] }
   let(:microfilm) { Traject::TranslationMap.new('formats_949t')['MICROFORM'] }
+  let(:record_struct) { Struct.new(:leader) }
 
   describe '::call' do
     subject { described_class.call(record: record, current_formats: current_formats) }
 
-    let(:record) { OpenStruct.new(leader: '      ta') }
+    let(:record) { record_struct.new('      ta') }
 
     context 'with existing non-microfilm formats' do
       let(:current_formats) do
@@ -32,7 +33,7 @@ RSpec.describe PsulibTraject::Processors::RecordType do
   describe '#resolve' do
     subject { described_class.new(record, current_formats).resolve }
 
-    let(:record) { OpenStruct.new(leader: '      ta') }
+    let(:record) { record_struct.new('      ta') }
 
     it { is_expected.to eq('Archives/Manuscripts') }
   end
@@ -43,31 +44,31 @@ RSpec.describe PsulibTraject::Processors::RecordType do
     subject { described_class.new(record, current_formats).send(:bibliographic_level) }
 
     context 'with b leader' do
-      let(:record) { OpenStruct.new(leader: '       b') }
+      let(:record) { record_struct.new('       b') }
 
       it { is_expected.to eq('Journal/Periodical') }
     end
 
     context 'with s leader' do
-      let(:record) { OpenStruct.new(leader: '       s') }
+      let(:record) { record_struct.new('       s') }
 
       it { is_expected.to eq('Journal/Periodical') }
     end
 
     context 'with c leader' do
-      let(:record) { OpenStruct.new(leader: '       c') }
+      let(:record) { record_struct.new('       c') }
 
       it { is_expected.to eq('Archives/Manuscripts') }
     end
 
     context 'with d leader' do
-      let(:record) { OpenStruct.new(leader: '       d') }
+      let(:record) { record_struct.new('       d') }
 
       it { is_expected.to eq('Book') }
     end
 
     context 'with empty leader' do
-      let(:record) { OpenStruct.new(leader: '        ') }
+      let(:record) { record_struct.new('        ') }
 
       it { is_expected.to be_nil }
     end
