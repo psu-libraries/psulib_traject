@@ -4,8 +4,11 @@ ARG UID=3000
 
 ENV BUNDLE_PATH=/app/vendor/bundle
 
-RUN apt-get update && apt-get install --no-install-recommends -y gcc &&  \
-        rm -rf /var/lib/apt/lists*
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    gcc \
+    netbase \
+    &&  \
+    rm -rf /var/lib/apt/lists*
 
 RUN useradd -u $UID app -d /app
 RUN mkdir /app/tmp
