@@ -9,8 +9,8 @@ gem 'marc'
 gem 'rake'
 gem 'rsolr'
 gem 'shelvit'
-gem 'sidekiq'
-gem 'sidekiq-scheduler'
+gem 'sidekiq', '~> 6.5'
+gem 'sidekiq-scheduler', '~> 4.0'
 gem 'traject'
 gem 'traject-marc4j_reader', platform: :jruby
 gem 'whenever', require: false
