@@ -7,7 +7,7 @@ RSpec.describe PsulibTraject::Workers::HourlyIndexer do
 
   before(:all) do
     redis = Redis.new
-    redis.keys('hr:*').map { |key| redis.del(key) }
+    redis.keys.map { |key| redis.del(key) }
   end
 
   before do
