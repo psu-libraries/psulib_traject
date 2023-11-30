@@ -517,8 +517,7 @@ to_field 'associated_materials_ssm', extract_marc('544|0*|abcden3')
 to_field 'related_materials_ssm', extract_marc('544|1*|abcden3:544| *|abcden3')
 
 # 545 - Biographical/Historical Note
-to_field 'administrative_history_note_ssm', extract_marc('545| *|abu:545|1*|abu')
-to_field 'biographical_sketch_note_ssm', extract_marc('545|0*|abu')
+to_field 'bio_admin_sketch_note_ssm', extract_marc('545abu')
 
 # 546 - Language Note
 to_field 'language_note_ssm', extract_marc('546ab3')
