@@ -18,7 +18,7 @@ namespace :traject do
 
   desc 'Clear redis of hourly skip list'
   task :clear_hourlies do
-    current_collection = PsulibTraject::SolrManager.new.current_collection
+    current_collection = ConfigSettings.solr.collection
     redis = Redis.new
     redis.keys("#{current_collection}:*").map { |key| redis.del(key) }
   end

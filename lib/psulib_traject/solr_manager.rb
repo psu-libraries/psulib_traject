@@ -10,11 +10,6 @@ module PsulibTraject
       collections_with_prefix.max_by(&:version_number)
     end
 
-    def current_collection
-      resp = connection.get('/solr/admin/collections?action=LISTALIASES')
-      JSON.parse(resp.body)&.dig('aliases')&.dig(ConfigSettings.solr.collection) || ConfigSettings.solr.collection
-    end
-
     def query_url
       query_url = "#{url}/#{ConfigSettings.solr.collection}"
       return query_url if ConfigSettings.solr.username.empty? && ConfigSettings.solr.password.empty?

@@ -32,14 +32,6 @@ RSpec.describe PsulibTraject::Workers::HourlyIndexer do
           body: '',
           headers: {}
         )
-      stub_request(
-        :get, /.*#{ConfigSettings.solr.host}:#{ConfigSettings.solr.port}\/solr\/admin\/collections\?action=LISTALIASES/
-      )
-        .to_return(
-          status: 200,
-          body: { aliases: {} }.to_json,
-          headers: {}
-        )
     end
 
     it 'submits jobs for each hourly file' do

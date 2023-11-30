@@ -15,7 +15,7 @@ module PsulibTraject
       end
 
       def perform_deletes
-        current_collection = PsulibTraject::SolrManager.new.current_collection
+        current_collection = ConfigSettings.solr.collection
 
         target_deletes = Dir.glob("#{hourlies_directory}/**/*_deletes_*.txt").sort
 
