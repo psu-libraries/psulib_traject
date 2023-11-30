@@ -40,7 +40,7 @@ module PsulibTraject
       end
 
       def perform_indexes
-        current_collection = PsulibTraject::SolrManager.new.current_collection
+        current_collection = ConfigSettings.solr.collection
         target_files = Dir.glob("#{hourlies_directory}/**/*.m*rc").sort
 
         indexed_files = redis.keys("#{current_collection}:*").map { |e| e.gsub("#{current_collection}:", '') }
