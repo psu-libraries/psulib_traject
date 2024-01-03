@@ -70,7 +70,6 @@ module PsulibTraject::Processors
           results << 'Blu-ray' if field_538a&.match?(Regexp.union(/Bluray/i, /Blu-ray/i, /Blu ray/i))
           results << 'Videocassette (VHS)' if /VHS/i.match?(field_538a)
           results << 'DVD' if /DVD/i.match?(field_538a)
-          results << 'Laser disc' if field_538a&.match?(Regexp.union(/CAV/i, /CLV/i))
           results << 'Video CD' if field_538a&.match?(Regexp.union(/VCD/i, /Video CD/i, /VideoCD/i))
         end
       end
