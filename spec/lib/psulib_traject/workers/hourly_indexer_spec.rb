@@ -42,17 +42,6 @@ RSpec.describe PsulibTraject::Workers::HourlyIndexer do
         )
     end
 
-    it 'submits jobs for each hourly file' do
-      indexer.perform_async
-      expect(indexer).to have_enqueued_sidekiq_job
-    end
-
-    it 'increases the size of the job queue' do
-      expect {
-        indexer.perform_async
-      }.to change(indexer.jobs, :size).by(1)
-    end
-
     it 'performs Indexer jobs' do
       indexer.perform_now
       expect(WebMock).to have_requested(
@@ -67,15 +56,6 @@ RSpec.describe PsulibTraject::Workers::HourlyIndexer do
         :post, "http://#{ConfigSettings.solr.host}:#{ConfigSettings.solr.port}/solr/psul_catalog/update/json"
       )
         .with(body: '{"delete":"1235"}').times(1)
-      expect(PsulibTraject::Workers::Indexer.jobs.size).to eq(0)
-    end
-
-    it 'does not perform the job a second time' do
-      indexer.perform_now
-      expect(WebMock).to have_requested(
-        :post, "http://#{ConfigSettings.solr.host}:#{ConfigSettings.solr.port}/solr/psul_catalog/update/json"
-      ).times(0)
-      expect(PsulibTraject::Workers::Indexer.jobs.size).to eq(0)
     end
   end
 end

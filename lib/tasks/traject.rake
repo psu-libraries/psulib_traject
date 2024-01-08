@@ -1,12 +1,7 @@
 # frozen_string_literal: true
 
 namespace :traject do
-  desc 'Index a file or folder of files async with sidekiq'
-  task :index_async, [:path, :collection] do |_task, args|
-    PsulibTraject::Workers::Indexer.perform_async(args.path, args.collection)
-  end
-
-  desc 'Index a file or folder of files without sidekiq'
+  desc 'Index a file or folder of files'
   task :index, [:path] do |_task, args|
     PsulibTraject::Workers::Indexer.perform_now(args.path, args.collection)
   end
