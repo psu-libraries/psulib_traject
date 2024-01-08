@@ -7,7 +7,7 @@ namespace :traject do
   end
 
   desc 'Run incrementals'
-  task :incremenatals do
+  task :incrementals do
     PsulibTraject::Workers::IncrementalIndexer.perform_now
   end
 
