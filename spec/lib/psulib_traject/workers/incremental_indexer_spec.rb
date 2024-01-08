@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe PsulibTraject::Workers::HourlyIndexer do
+RSpec.describe PsulibTraject::Workers::IncrementalIndexer do
   let(:indexer) { described_class }
 
   before(:all) do

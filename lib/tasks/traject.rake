@@ -6,13 +6,13 @@ namespace :traject do
     PsulibTraject::Workers::Indexer.perform_now(args.path, args.collection)
   end
 
-  desc 'Run Hourlies'
-  task :hourlies do
-    PsulibTraject::Workers::HourlyIndexer.perform_now
+  desc 'Run incrementals'
+  task :incremenatals do
+    PsulibTraject::Workers::IncrementalIndexer.perform_now
   end
 
-  desc 'Clear redis of hourly skip list'
-  task :clear_hourlies do
+  desc 'Clear redis of incremental skip list'
+  task :clear_incrementals do
     current_collection = PsulibTraject::SolrManager.new.current_collection
     redis = Redis.new
     redis.keys("#{current_collection}:*").map { |key| redis.del(key) }

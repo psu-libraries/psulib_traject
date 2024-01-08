@@ -38,7 +38,7 @@ module PsulibTraject
   require 'psulib_traject/solr_manager'
   require 'psulib_traject/subject_heading'
   require 'psulib_traject/workers/base'
-  require 'psulib_traject/workers/hourly_indexer'
+  require 'psulib_traject/workers/incremental_indexer'
   require 'psulib_traject/workers/indexer'
 
   Config.setup do |config|
