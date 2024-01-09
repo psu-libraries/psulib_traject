@@ -11,6 +11,11 @@ namespace :traject do
     PsulibTraject::Workers::IncrementalIndexer.perform_now
   end
 
+  desc 'Run incrementals as hourlies'
+  task :hourlies do
+    PsulibTraject::Workers::IncrementalIndexer.perform_now
+  end
+
   desc 'Clear redis of incremental skip list'
   task :clear_incrementals do
     current_collection = PsulibTraject::SolrManager.new.current_collection
