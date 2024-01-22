@@ -7,10 +7,9 @@ gem 'library_stdnums'
 gem 'mail'
 gem 'marc'
 gem 'rake'
+gem 'redis'
 gem 'rsolr'
 gem 'shelvit'
-gem 'sidekiq', '~> 6.5'
-gem 'sidekiq-scheduler', '~> 4.0'
 gem 'traject'
 gem 'traject-marc4j_reader', platform: :jruby
 gem 'whenever', require: false
@@ -26,7 +25,6 @@ group :development, :test do
   gem 'pry-debugger-jruby', platform: :jruby
   gem 'rspec'
   gem 'rspec-its'
-  gem 'rspec-sidekiq'
   gem 'rubocop', '~> 1.5'
   gem 'rubocop-performance', '~> 1.1'
   gem 'rubocop-rspec', '~> 2'
