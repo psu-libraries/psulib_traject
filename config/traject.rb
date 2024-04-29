@@ -68,14 +68,17 @@ end
 to_field 'isbn_ssm', extract_marc('020aqz', separator: ' '), trim_punctuation
 
 ## ISSN
-to_field 'issn_sim', extract_marc('022a:022l:022m:022y:022z', separator: nil) do |_record, accumulator|
+to_field 'issn_sim', extract_marc('022a:022l:022m:022y:022z:023a:023z', separator: nil) do |_record, accumulator|
   original = accumulator.dup
   accumulator.map! { |x| StdNum::ISSN.normalize(x) }
   accumulator << original
   accumulator.flatten!
   accumulator.uniq!
 end
+
 to_field 'issn_ssm', extract_marc('022a', separator: nil)
+
+to_field 'grouping_issn_ssm', extract_marc('023a', separator: nil)
 
 # OCLC number
 #
