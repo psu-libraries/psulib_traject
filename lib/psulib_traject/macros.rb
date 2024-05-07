@@ -70,6 +70,11 @@ module PsulibTraject
       url_match[1]
     end
 
+    # Returns a boolean of whether a given text contains our ARK prefix
+    def ark_prefix_match(text)
+      /^ark:\/42409/.match?(text)
+    end
+
     def link_domain(link)
       serial_solutions_link?(link) ? 'serialssolutions.com' : link
     end
