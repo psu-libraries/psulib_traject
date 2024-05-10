@@ -308,7 +308,7 @@ end
 
 # Call Number Browse
 #
-## Determines a base call number from the record's holdings and creates forward and reverse shelfkeys for LC, LCPER and DEWEY
+## Determines a base call number from the record's holdings and creates forward and reverse shelfkeys for LC, LCPER, DEWEY, and SUDOC
 each_record do |record, context|
   call_numbers = PsulibTraject::Holdings.call(record: record, context: context)
   next if call_numbers.empty?
