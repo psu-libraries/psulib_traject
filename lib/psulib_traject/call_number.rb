@@ -27,6 +27,7 @@ module PsulibTraject
     end
 
     def normalized_shelfkey
+      # SUDOC cannot be normalized by Shelvit
       return shelf_key.call_number if sudoc?
 
       shelf_key.normalized
