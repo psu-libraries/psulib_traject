@@ -629,7 +629,15 @@ to_field 'serials_changed_back_to_display_ssim', extract_marc('785|08|t')
 # 799a - Sublocation
 # From our catalog experts: "The data in this field corresponds to "collections" within Special Collections, and
 # the 799 data lets their staff know which shelf (or range of shelves) to check for the call number in question.
-to_field 'sublocation_ssm', extract_marc('799a')
+to_field 'sublocation_ssm', extract_marc('799a') do |record, accumulator|
+  record.fields('857').each do |field|
+    field.each do |subfield|
+      if ark_prefix_match(subfield.value) && subfield.code == 'u'
+        accumulator << subfield.value
+      end
+    end
+  end
+end
 
 # IIIF Manifest url
 #

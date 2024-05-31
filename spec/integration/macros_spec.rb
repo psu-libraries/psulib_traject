@@ -369,4 +369,24 @@ RSpec.describe 'Macros' do
       end
     end
   end
+
+  describe '#ark_prefix_match' do
+    let(:dummy) { Class.new { extend PsulibTraject::Macros } }
+
+    context 'when the value begins with our ark code' do
+      good_code = 'ark:/42409/abcdefg'
+
+      it 'returns true' do
+        expect(dummy.ark_prefix_match(good_code)).to be(true)
+      end
+    end
+
+    context 'when the value does not begins with our ark code' do
+      bad_code = 'smurf:/12345/abcdefg'
+
+      it 'returns false' do
+        expect(dummy.ark_prefix_match(bad_code)).to be(false)
+      end
+    end
+  end
 end
