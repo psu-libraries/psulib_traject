@@ -106,9 +106,17 @@ RSpec.describe PsulibTraject::CallNumber do
   end
 
   describe '#normalized_shelfkey' do
-    subject { described_class.new(value: 'AB123 .C456 2000') }
+    context 'when the call number is a sudoc call number' do
+      subject { described_class.new(value: 'HE 20.427:C 76/2/KIT.', classification: 'SUDOC') }
 
-    its(:normalized_shelfkey) { is_expected.to eq('AB.0123.C456.2000') }
+      its(:normalized_shelfkey) { is_expected.to eq('HE 20.427:C 76/2/KIT.') }
+    end
+
+    context 'when the call number is not a sudoc call number' do
+      subject { described_class.new(value: 'AB123 .C456 2000', classification: 'LC') }
+
+      its(:normalized_shelfkey) { is_expected.to eq('AB.0123.C456.2000') }
+    end
   end
 
   describe '#solr_field' do
@@ -136,7 +144,7 @@ RSpec.describe PsulibTraject::CallNumber do
       it { is_expected.to be_not_browsable }
     end
 
-    context 'when a call number that is not LC or Dewey' do
+    context 'when a call number that is not LC, Dewey, or SUDOC' do
       subject { described_class.new(value: 'AB123 .C456 2000', classification: 'ASIS') }
 
       it { is_expected.to be_not_browsable }

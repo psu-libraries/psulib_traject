@@ -27,11 +27,14 @@ module PsulibTraject
     end
 
     def normalized_shelfkey
+      # SUDOC cannot be normalized by Shelvit
+      return shelf_key.call_number if sudoc?
+
       shelf_key.normalized
     end
 
     def not_browsable?
-      return true unless lc? || dewey?
+      return true unless lc? || dewey? || sudoc?
 
       normalized_shelfkey.nil?
     end
@@ -100,6 +103,10 @@ module PsulibTraject
 
       def dewey?
         classification == 'DEWEY'
+      end
+
+      def sudoc?
+        classification == 'SUDOC'
       end
 
       def classification_to_field
