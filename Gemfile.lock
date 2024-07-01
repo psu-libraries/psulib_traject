@@ -141,7 +141,8 @@ GEM
     redis-client (0.19.1)
       connection_pool
     regexp_parser (2.8.0)
-    rexml (3.2.5)
+    rexml (3.3.1)
+      strscan
     rsolr (2.3.0)
       builder (>= 2.1.2)
       faraday (>= 0.9.0)
@@ -198,6 +199,8 @@ GEM
     slop (4.9.1)
     spoon (0.0.6)
       ffi
+    strscan (3.1.0)
+    strscan (3.1.0-java)
     traject (3.5.0)
       concurrent-ruby (>= 0.8.0)
       dot-properties (>= 0.1.1)
@@ -233,6 +236,7 @@ PLATFORMS
   universal-java-15
   universal-java-17
   universal-java-19
+  universal-java-21
   x86_64-darwin-20
   x86_64-linux
 
