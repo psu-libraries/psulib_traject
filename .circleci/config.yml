@@ -23,7 +23,7 @@ jobs:
       - image: harbor.k8s.libraries.psu.edu/library/ci-utils:$CI_UTILS_IMG_TAG
         user: root
     steps:
-      - setup_remote_docker
+      - setup_remote_docker:
           docker_layer_caching: true
       - checkout
       - docker/check:
