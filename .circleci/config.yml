@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
-  ruby: circleci/ruby@0.1.2 
-  docker: circleci/docker@1.5.0
+  ruby: cimg/ruby@3.1.6
+  docker: circleci/docker@2.6.0
 
 jobs:
   release:
@@ -23,8 +23,7 @@ jobs:
       - image: harbor.k8s.libraries.psu.edu/library/ci-utils:$CI_UTILS_IMG_TAG
         user: root
     steps:
-      - setup_remote_docker:
-          version: docker24
+      - setup_remote_docker
           docker_layer_caching: true
       - checkout
       - docker/check:
