@@ -8,6 +8,22 @@ MAX_YEAR = Time.new.year + 6
 
 module PsulibTraject
   module Macros
+    # Extracts facets without owner field
+    #
+    # Checks to see if owner is in e subfield, if so it skips
+    def extract_marc_without_owner(fields)
+      lambda do |record, accumulator|
+        return nil unless record.is_a? MARC::Record
+
+        Traject::MarcExtractor.cached(fields).collect_matching_lines(record) do |field, spec, extractor|
+          next if field.subfields.any? { |subfield| subfield.code == 'e' && subfield.value.include?('owner') }
+          
+          values = extractor.collect_subfields(field, spec)
+          accumulator.concat(values) if values && !values.empty?
+        end
+      end
+    end
+
     # For genre facet and display
     #
     # limit to subfield $2 vocabularies for 655|*7 genres
