@@ -185,7 +185,12 @@ to_field 'author_demo_facet', extract_marc('386a'), trim_punctuation
 to_field 'author_person_display_ssm', extract_marc('100aqbcdkj'), trim_punctuation
 to_field 'author_corp_display_ssm', extract_marc('110abcdfgklnj'), trim_punctuation
 to_field 'author_meeting_display_ssm', extract_marc('111abcdfgklnpqj'), trim_punctuation
-to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq'), trim_punctuation
+to_field 'addl_author_display_ssm', extract_marc('700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq'), trim_punctuation do |record, acc|
+  rejects = record.fields('700:710').map { |field| field.any?{ |subfield| subfield.code == 'e' && subfield.value.include?('owner') } }
+  acc.zip(rejects).each do |val, reject|
+    acc.delete(val) if reject
+  end
+end
 
 # HathiTrust access
 if ht_overlap_hash

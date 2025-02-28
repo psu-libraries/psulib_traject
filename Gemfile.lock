@@ -237,6 +237,7 @@ PLATFORMS
   universal-java-17
   universal-java-19
   universal-java-21
+  universal-java-23
   x86_64-darwin-20
   x86_64-linux
 
