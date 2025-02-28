@@ -17,7 +17,7 @@ module PsulibTraject
 
         Traject::MarcExtractor.cached(fields).collect_matching_lines(record) do |field, spec, extractor|
           next if field.subfields.any? { |subfield| subfield.code == 'e' && subfield.value.include?('owner') }
-          
+
           values = extractor.collect_subfields(field, spec)
           accumulator.concat(values) if values && !values.empty?
         end
