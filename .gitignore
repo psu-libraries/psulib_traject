@@ -29,3 +29,4 @@ config/environments/*.local.yml
 .envrc
 data/
 vendor/**/*
+.irb_history
