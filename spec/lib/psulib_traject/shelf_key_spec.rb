@@ -38,4 +38,17 @@ RSpec.describe PsulibTraject::ShelfKey do
 
     its(:normalized) { is_expected.to eq('KJD0000.I13808') }
   end
+
+  context 'with colons in call numbers sorting correctly' do
+    let(:regular_call_number) { 'G3824.S8 1942.S8' }
+    let(:colon_call_number) { 'G3824.S8:2P4E635 2017 .P4' }
+    
+    it 'ensures colon call numbers sort after regular call numbers' do
+      regular_key = described_class.new(regular_call_number).normalized
+      colon_key = described_class.new(colon_call_number).normalized
+      
+      # The colon call number should sort after the regular one
+      expect(regular_key < colon_key).to be true
+    end
+  end
 end

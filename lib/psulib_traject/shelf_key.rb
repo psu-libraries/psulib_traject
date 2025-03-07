@@ -14,7 +14,9 @@ module PsulibTraject
 
     # @return [String]
     def normalized
-      Shelvit.normalize(call_number) || NullKey.new
+      # we want to make sure we sort after Z if there is a colon
+      processed_call_number = call_number.gsub(':', 'ZZ')
+      Shelvit.normalize(processed_call_number) || NullKey.new
     end
   end
 end
