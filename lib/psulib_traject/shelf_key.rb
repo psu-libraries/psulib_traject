@@ -9,19 +9,11 @@ module PsulibTraject
     # @param [String] call_number
     def initialize(call_number, prefix: '')
       @call_number = prefix + call_number
-      @has_colon = call_number.include?(':')
       freeze
     end
 
-    # @return [String]
     def normalized
-      normalized_call_number = Shelvit.normalize(call_number) || NullKey.new
-
-      if @has_colon
-        '~' + normalized_call_number
-      else
-        normalized_call_number
-      end
+      Shelvit.normalize(@call_number.gsub(':', '')) || NullKey.new
     end
   end
 end
