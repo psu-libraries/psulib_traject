@@ -30,3 +30,4 @@ config/environments/*.local.yml
 data/
 vendor/**/*
 .irb_history
+stuff*.txt

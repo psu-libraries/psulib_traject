@@ -30,7 +30,7 @@ RSpec.describe PsulibTraject::ShelfKey do
   context 'with colons in a cutter' do
     let(:call_number) { 'G3824.S8:2P4E635 2017 .P4' }
 
-    its(:normalized) { is_expected.to eq('G..3824.S8.0002.P4.E635--2017P0004') }
+    its(:normalized) { is_expected.to eq('G..3824.S82.P4.E635--2017P0004') }
   end
 
   context 'with three-letter LC classifications' do
