@@ -389,4 +389,19 @@ RSpec.describe 'Macros' do
       end
     end
   end
+
+  describe '#extract_marc_without_owner' do
+    let(:fields) { [{ '100' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Smith, John' }, { 'b' => 'Title' }, { 'c' => 'Role' }] } },
+                    { '700' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Doe, Jane' }, { 'e' => 'owner' }, { 'b' => 'Title' }] } },
+                    { '700' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Super, Duper' }, { 'e' => 'cool guy' }, { 'b' => 'Something' }] } },
+                    { '710' => { 'ind1' => '2', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Organization' }, { 'b' => 'Department' }] } }] }
+    let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => fields, 'leader' => leader)) }
+
+    it 'extracts fields without owner in subfield e' do
+      expect(result['author_addl_tsim']).not_to include('Smith, John Title Role')
+      expect(result['author_addl_tsim']).to include('Organization Department')
+      expect(result['author_addl_tsim']).to include('Super, Duper Something')
+      expect(result['author_addl_tsim']).not_to include('Doe, Jane Title')
+    end
+  end
 end

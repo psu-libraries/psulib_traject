@@ -12,9 +12,8 @@ module PsulibTraject
       freeze
     end
 
-    # @return [String]
     def normalized
-      Shelvit.normalize(call_number) || NullKey.new
+      Shelvit.normalize(@call_number.gsub(':', '')) || NullKey.new
     end
   end
 end

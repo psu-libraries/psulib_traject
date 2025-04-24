@@ -1,7 +1,8 @@
 version: 2.1
 orbs:
-  ruby: circleci/ruby@0.1.2
+  ruby: circleci/ruby@2.3.1
   docker: circleci/docker@2.8.2
+
 jobs:
   release:
     docker:
@@ -22,7 +23,6 @@ jobs:
       tag: "3.8"
     steps:
       - setup_remote_docker:
-          version: docker24
           docker_layer_caching: true
       - checkout
       - docker/check:
