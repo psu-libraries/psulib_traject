@@ -3,6 +3,7 @@
 source 'https://rubygems.org'
 
 gem 'base64'
+gem 'bigdecimal'
 gem 'config'
 gem 'library_stdnums'
 gem 'mail'
