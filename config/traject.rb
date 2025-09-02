@@ -4,7 +4,7 @@ $LOAD_PATH.prepend(Pathname.pwd.join('lib').to_s)
 
 ENV['RUBY_ENVIRONMENT'] ||= 'dev'
 
-require 'pry' if /dev|test/.match?(ENV['RUBY_ENVIRONMENT'])
+# require 'pry' if /dev|test/.match?(ENV['RUBY_ENVIRONMENT'])
 require 'bundler/setup'
 require 'psulib_traject'
 

@@ -6,19 +6,19 @@
 ## Dependencies
 
 ### Java
-To run JRuby you will need a JRE (the JVM runtime environment) version 7 or higher.
+To run JRuby you will need java version 21 or higher.
 
     $ java --version
-      java 9
-      Java(TM) SE Runtime Environment (build 9+181)
-      Java HotSpot(TM) 64-Bit Server VM (build 9+181, mixed mode)
+      openjdk version "21.0.8" 2025-07-15
+      OpenJDK Runtime Environment Homebrew (build 21.0.8)
+      OpenJDK 64-Bit Server VM Homebrew (build 21.0.8, mixed mode, sharing)
 
 ### Ruby
 Follow these instructions to [install JRuby](https://github.com/psu-libraries/psulib_traject/wiki/Install-JRuby) if you
 do not already have it.
 
     $ ruby --version
-      jruby 9.3.9.0
+      jruby 10.0.2.0
 
 ## Development Setup
 

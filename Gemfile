@@ -2,6 +2,7 @@
 
 source 'https://rubygems.org'
 
+gem 'base64'
 gem 'config'
 gem 'library_stdnums'
 gem 'mail'
@@ -22,11 +23,10 @@ group :development, :test do
   gem 'faker'
   gem 'marc_bot', '~> 0.2'
   gem 'pry-byebug', platform: :mri
-  gem 'pry-debugger-jruby', platform: :jruby
   gem 'rspec'
   gem 'rspec-its'
   gem 'rubocop', '~> 1.5'
   gem 'rubocop-performance', '~> 1.1'
   gem 'rubocop-rspec', '~> 2'
-  gem 'simplecov', '< 0.18' # CodeClimate does not work with .18 or later
+  gem 'simplecov'
 end
