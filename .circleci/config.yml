@@ -36,7 +36,7 @@ jobs:
           registry: harbor.k8s.libraries.psu.edu
   test:
     docker:
-      - image: cimg/ruby:3.1.2
+      - image: cimg/ruby:3.4.1
       - image: redis:5.0.7
     steps:
       - checkout
