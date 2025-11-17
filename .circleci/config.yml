@@ -273,19 +273,6 @@ workflows:
           requires:
             - build-image
             - test-application
-
-      - deploy-application:
-          name: deploy-application
-          context:
-            - org-global
-          clusters: << pipeline.parameters.CLUSTERS_DEV >>
-          filters:
-            branches:
-              only:
-                - main
-                - /preview\/.*/
-          requires:
-            - push-image
       
       - release-image: 
           name: release-image
