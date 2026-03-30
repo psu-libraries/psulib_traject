@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  ruby: circleci/ruby@2.3.1
+  ruby: circleci/ruby@2.6.0
   docker: circleci/docker@2.8.2
 
 parameters:
@@ -19,7 +19,7 @@ parameters:
     default: ""
   CI_UTILS_IMAGE_TAG:
     type: string
-    default: "v4.3.0"
+    default: "v4.6.2"
   CONFIG_REPO_NAME:
     type: string
     default: "catalog-config"
@@ -31,13 +31,13 @@ parameters:
     default: "uldev"
   CLUSTERS_PROD:
     type: string
-    default: "prod"    
+    default: "prod"
   REGISTRY_HOST:
     type: string
-    default: "harbor.k8s.libraries.psu.edu"    
+    default: "harbor.k8s.libraries.psu.edu"
   PIPELINE_CONFIG_VERSION:
     type: string
-    default: "1.0.1"    
+    default: "1.0.1"
 
 commands:
 
@@ -62,7 +62,7 @@ commands:
               SLUG=$(slugify-branch "$CIRCLE_BRANCH")
               TAG="${SLUG}--$CIRCLE_SHA1"
             fi
-            echo "export TAG=$TAG" >> "$BASH_ENV"    
+            echo "export TAG=$TAG" >> "$BASH_ENV"
 
 executors:
 
@@ -82,7 +82,7 @@ jobs:
       REGISTRY_REPO: "library/$CIRCLE_PROJECT_REPONAME"
     executor:
       name: ci-utils
-      image_tag: << pipeline.parameters.CI_UTILS_IMAGE_TAG >>  
+      image_tag: << pipeline.parameters.CI_UTILS_IMAGE_TAG >>
       registry_host: << pipeline.parameters.REGISTRY_HOST >>
     steps:
       - setup_remote_docker:
@@ -110,7 +110,7 @@ jobs:
           paths:
             - docker-image.tar
             - docker-image-info
-  
+
   push-image:
     environment:
       REGISTRY_HOST: << pipeline.parameters.REGISTRY_HOST >>
@@ -135,7 +135,7 @@ jobs:
       - docker/push:
           image: $REGISTRY_REPO
           registry: $REGISTRY_HOST
-          tag: $TAG          
+          tag: $TAG
 
   release-image:
     parameters:
@@ -173,7 +173,7 @@ jobs:
               export TARGET_CLUSTER="$cluster"
               echo "Processing cluster: $TARGET_CLUSTER"
               /usr/local/bin/image-release-pr "clusters/$TARGET_CLUSTER/manifests/$CIRCLE_PROJECT_REPONAME/prod.yaml"
-            done          
+            done
 
 
   # release:
@@ -265,15 +265,15 @@ workflows:
           context:
             - org-global
           filters:
-            branches:              
+            branches:
               only:
                 - main
                 - /preview\/.*/
           requires:
             - build-image
             - test-application
-      
-      - release-image: 
+
+      - release-image:
           name: release-image
           clusters: << pipeline.parameters.CLUSTERS_PROD >>
           context:
@@ -284,7 +284,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^v\d+\.\d+\.\d+.*/    
+              only: /^v\d+\.\d+\.\d+.*/
       # - release:
       #     context: org-global
       #     name: "Release Image"
