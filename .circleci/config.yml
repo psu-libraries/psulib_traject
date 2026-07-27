@@ -152,6 +152,7 @@ jobs:
     environment:
       clusters: << parameters.clusters >>
       CONFIG_REPO: git@github.com:psu-libraries/catalog-config.git
+      CONFIG_REPO_URL: git@github.com:psu-libraries/catalog-config.git
       REGISTRY_HOST: harbor.k8s.libraries.psu.edu
       FROM_TAG: << parameters.from_tag >>
       TO_TAG: << parameters.to_tag >>
