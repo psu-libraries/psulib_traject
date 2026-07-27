@@ -157,6 +157,7 @@ jobs:
       FROM_TAG: << parameters.from_tag >>
       TO_TAG: << parameters.to_tag >>
       PIPELINE_CONFIG_VERSION: << pipeline.parameters.PIPELINE_CONFIG_VERSION >>
+      TO_YAML_TAG_TARGET: .spec.source.helm.values.traject.image.tag
     steps:
       - clone-config-repo
       - run:
@@ -173,7 +174,7 @@ jobs:
             for cluster in "${CLUSTERS[@]}"; do
               export TARGET_CLUSTER="$cluster"
               echo "Processing cluster: $TARGET_CLUSTER"
-              /usr/local/bin/image-release-pr "clusters/$TARGET_CLUSTER/manifests/$CIRCLE_PROJECT_REPONAME/prod.yaml"
+              /usr/local/bin/image-release-pr "clusters/$TARGET_CLUSTER/manifests/psulib_blacklight/prod.yaml"
             done
 
 
