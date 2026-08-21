@@ -522,7 +522,7 @@ to_field 'related_materials_ssm', extract_marc('544|1*|abcden3:544| *|abcden3')
 to_field 'bio_admin_sketch_note_ssm', extract_marc('545abu')
 
 # 546 - Language Note
-to_field 'language_note_ssm', extract_marc('546ab3')
+to_field 'language_note_ssm', extract_marc('546abc3')
 
 # 547 - Title Varies
 to_field 'former_title_ssm', extract_marc('547a')
