@@ -370,6 +370,9 @@ to_field 'duration_ssm', extract_marc('306a')
 ## 344 Sound characteristics
 to_field 'sound_ssm', extract_marc('344abcdefgh3')
 
+# 362  - Dates of Publication and/or Sequential Designation
+to_field 'dates_of_pub_ssim', extract_marc('362a')
+
 ## 383 Numeric designation of musical work
 to_field 'music_numerical_ssm' do |record, accumulator|
   semi_colon_set = []
@@ -486,8 +489,8 @@ to_field 'supplement_ssm', extract_marc('525a')
 # 530 - Other Forms
 to_field 'other_forms_ssm', extract_marc('530abc3')
 
-# 532 - Dates of Publication and/or Sequential Designation
-to_field 'dates_of_pub_ssim', extract_marc('362a')
+# 532 - Accessibility Note
+to_field 'accessibility_note_ssm', extract_marc('532a3')
 
 # 533 - Reproduction Note
 to_field 'reproduction_note_ssm', extract_marc('533abcdefmn3')
