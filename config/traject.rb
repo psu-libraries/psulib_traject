@@ -32,8 +32,6 @@ end
 ATOZ = ('a'..'z').to_a.join
 ATOU = ('a'..'u').to_a.join
 
-ht_overlap_hash = ht_overlap.hashify
-
 logger.info RUBY_DESCRIPTION
 
 to_field 'marc_display_ss', serialized_marc(format: 'xml', allow_oversized: true)
