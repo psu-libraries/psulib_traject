@@ -22,7 +22,6 @@ settings do
   provide 'solr_writer.commit_on_close', ConfigSettings.solr_writer.commit_on_close
   provide 'reader_class_name', ConfigSettings.reader_class_name
   provide 'commit_timeout', ConfigSettings.commit_timeout
-  provide 'hathi_overlap_path', ConfigSettings.hathi_overlap_path
 
   if RUBY_ENGINE == 'jruby'
     provide 'marc4j_reader.permissive', ConfigSettings.marc4j_reader.permissive
@@ -33,7 +32,6 @@ end
 ATOZ = ('a'..'z').to_a.join
 ATOU = ('a'..'u').to_a.join
 
-ht_overlap = PsulibTraject::HathiOverlapReducer.new(ConfigSettings.hathi_overlap_path)
 ht_overlap_hash = ht_overlap.hashify
 
 logger.info RUBY_DESCRIPTION
@@ -185,14 +183,6 @@ to_field 'author_person_display_ssm', extract_marc('100aqbcdkj'), trim_punctuati
 to_field 'author_corp_display_ssm', extract_marc('110abcdfgklnj'), trim_punctuation
 to_field 'author_meeting_display_ssm', extract_marc('111abcdfgklnpqj'), trim_punctuation
 to_field 'addl_author_display_ssm', extract_marc_without_owner('700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq'), trim_punctuation
-
-# HathiTrust access
-if ht_overlap_hash
-  to_field 'ht_access_ss' do |_record, accumulator, context|
-    catkey = context.output_hash['id']&.first
-    accumulator << ht_overlap_hash[catkey]&.first&.[]('access')
-  end
-end
 
 ## Access facet
 access_facet_processor = PsulibTraject::Processors::AccessFacet.new

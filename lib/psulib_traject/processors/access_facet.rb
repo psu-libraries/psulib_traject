@@ -14,7 +14,6 @@ module PsulibTraject::Processors
     def extract_access_data(record, context)
       access = determine_access_label record
 
-      access << 'Online' if hathi_access? context
       access << 'Free to Read' if open_access? record
 
       access.compact!
@@ -72,12 +71,6 @@ module PsulibTraject::Processors
         return 'On Order' if field['l'] == 'ON-ORDER'
 
         'In the Library'
-      end
-
-      def hathi_access?(context)
-        return context.output_hash&.dig('ht_access_ss')&.any? if ConfigSettings&.hathi_etas
-
-        context.output_hash&.dig('ht_access_ss')&.include? 'allow'
       end
   end
 end
