@@ -20,8 +20,6 @@ symphony_incremental_subdir: incrementals
 # How long to keep the incrementals skip keys
 # we keep incrementals for 7 days, so we keep the lock for 10 to overlap
 incremental_skip_expire_seconds: 864000
-hathi_etas: false
-hathi_overlap_path: "<%= ENV.fetch('HATHI_OVERLAP_PATH', '/data/hathitrust_data/overlap.tsv') %>"
 marc4j_reader:
   permissive: true
   source_encoding: 'UTF-8'

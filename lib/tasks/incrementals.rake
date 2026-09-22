@@ -50,8 +50,6 @@ namespace :incrementals do
       'solr_writer.commit_on_close': ConfigSettings.solr_writer.commit_on_close,
       reader_class_name: ConfigSettings.reader_class_name,
       commit_timeout: ConfigSettings.commit_timeout,
-      hathi_overlap_path: ConfigSettings.hathi_overlap_path,
-      hathi_etas: ConfigSettings.hathi_etas,
       'marc4j_reader.permissive': ConfigSettings.marc4j_reader.permissive,
       'marc4j_reader.source_encoding': ConfigSettings.marc4j_reader.source_encoding,
       processing_thread_pool: ConfigSettings.processing_thread_pool
