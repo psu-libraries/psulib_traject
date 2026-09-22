@@ -11,7 +11,7 @@ module PsulibTraject::Processors
     end
 
     # Extract 949m for access facet
-    def extract_access_data(record, context)
+    def extract_access_data(record)
       access = determine_access_label record
 
       access << 'Free to Read' if open_access? record

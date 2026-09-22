@@ -184,8 +184,8 @@ to_field 'addl_author_display_ssm', extract_marc_without_owner('700aqbcdjk:710ab
 
 ## Access facet
 access_facet_processor = PsulibTraject::Processors::AccessFacet.new
-to_field 'access_facet' do |record, accumulator, context|
-  access_facet = access_facet_processor.extract_access_data record, context
+to_field 'access_facet' do |record, accumulator|
+  access_facet = access_facet_processor.extract_access_data record
   accumulator.replace(access_facet) unless !access_facet || access_facet.empty?
 end
 
