@@ -52,7 +52,6 @@ You will also need to set your environment variables with the Solr username and 
 When using jruby, traject will use multiple threads, but we want to tailor that to our system. In
 `config/settings.local.yml` add:
 
-    hathi_overlap_path: spec/fixtures/hathitrust/overlap.tsv
     processing_thread_pool: 5
    
 ## Build an Index
@@ -77,12 +76,3 @@ For testing purposes you can run traject with the `--debug-mode` flag to
 display the output to the console (and not push the data to Solr).
 
     $ bundle exec traject --debug-mode -c config/traject.rb solr/sample_data/sample_psucat.mrc
-
-## HathiTrust ETAS data
-
-HathiTrust access level can be recorded in `ht_access_ss`. It will expect to have an overlap report tsv from HathiTrust
-at `ConfigSettings.hathi_overlap_path`. This file should be the latest overlap report from HathiTrust.
-
-Because the monthly overlap file lives in a restricted area that can only be accessed by signing in to Box at UMich, we
-will need to manually set the overlap.tsv prior to indexing operations when there is a new overlap. This can be done by
-`scp`ing the file up to the location specified in `ConfigSettings.hathi_overlap_path`.
