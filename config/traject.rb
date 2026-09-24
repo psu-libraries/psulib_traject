@@ -175,7 +175,10 @@ to_field 'author_tsim', extract_marc('100aqbcdk:110abcdfgkln:111abcdfgklnpq')
 to_field 'author_addl_tsim', extract_marc_without_owner('700aqbcdk:710abcdfgkln:711abcdfgklnpq'), trim_punctuation
 
 ## Authors for faceting
-to_field 'all_authors_facet', extract_marc_without_owner('100aqbcdkj:110abcdfgklnj:111abcdfgklnpqj:700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq'), trim_punctuation
+to_field 'all_authors_facet', 
+         extract_marc_without_owner('100aqbcdkj:110abcdfgklnj:111abcdfgklnpqj:700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq'),
+         trim_punctuation, 
+         trim_two_letter_word_period
 
 # 386a Author Demographics facet
 to_field 'author_demo_facet', extract_marc('386a'), trim_punctuation
