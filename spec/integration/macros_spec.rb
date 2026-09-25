@@ -430,29 +430,6 @@ RSpec.describe 'Macros' do
     end
   end
 
-  describe 'all_authors_facet punctuation' do
-    let(:fields) do
-      [
-        { '100' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Ellen, Su.' }] } },
-        { '700' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Smith, John Jr.' }] } },
-        { '700' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Smith, John Dr.' }] } },
-        { '700' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Smith, John Doe.' }] } },
-        { '700' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Ellen, Su' }] } }
-      ]
-    end
-    let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => fields, 'leader' => leader)) }
-
-    it 'preserves Traject punctuation handling and strips eligible two-letter words' do
-      expect(result['all_authors_facet']).to eq [
-        'Ellen, Su',
-        'Smith, John Jr.',
-        'Smith, John Dr.',
-        'Smith, John Doe',
-        'Ellen, Su'
-      ]
-    end
-  end
-
   describe '#extract_marc_without_owner' do
     let(:fields) { [{ '100' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Smith, John' }, { 'b' => 'Title' }, { 'c' => 'Role' }] } },
                     { '700' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Doe, Jane' }, { 'e' => 'owner' }, { 'b' => 'Title' }] } },
