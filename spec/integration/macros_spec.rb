@@ -430,6 +430,25 @@ RSpec.describe 'Macros' do
     end
   end
 
+  describe 'additional author punctuation' do
+    let(:fields) do
+      [
+        { '100' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Primary, Su.' }] } },
+        { '700' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Additional, Su.' }] } },
+        { '710' => { 'ind1' => '2', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Organization, Su.' }] } },
+        { '711' => { 'ind1' => '2', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Meeting, Su.' }] } }
+      ]
+    end
+    let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => fields, 'leader' => leader)) }
+
+    it 'trims terminal periods only from 700 values' do
+      expect(result['author_tsim']).to eq ['Primary, Su.']
+      expect(result['author_addl_tsim']).to eq ['Additional, Su', 'Organization, Su.', 'Meeting, Su.']
+      expect(result['addl_author_display_ssm']).to eq ['Additional, Su', 'Organization, Su.', 'Meeting, Su.']
+      expect(result['all_authors_facet']).to eq ['Primary, Su.', 'Additional, Su', 'Organization, Su.', 'Meeting, Su.']
+    end
+  end
+
   describe '#extract_marc_without_owner' do
     let(:fields) { [{ '100' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Smith, John' }, { 'b' => 'Title' }, { 'c' => 'Role' }] } },
                     { '700' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Doe, Jane' }, { 'e' => 'owner' }, { 'b' => 'Title' }] } },
