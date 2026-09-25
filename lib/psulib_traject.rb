@@ -12,7 +12,6 @@ require 'yaml'
 
 module PsulibTraject
   require 'psulib_traject/call_number'
-  require 'psulib_traject/hathi_overlap_reducer'
   require 'psulib_traject/holdings'
   require 'psulib_traject/macros'
   require 'psulib_traject/macros/subjects'
