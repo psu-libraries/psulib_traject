@@ -1,9 +1,9 @@
 solr:
   version: 7.4
   protocol: "<%= ENV.fetch("SOLR_PROTO", "http") %>"
-  host: "<%= ENV.fetch("SOLR_HOST", "solr") %>"
-  username: "<%= ENV.fetch("SOLR_USERNAME", "catalog") %>"
-  password: "<%= ENV.fetch("SOLR_PASSWORD", "catalog") %>"
+  host: "<%= ENV.fetch("SOLR_HOST", "") %>"
+  username: "<%= ENV.fetch("SOLR_USERNAME", "") %>"
+  password: "<%= ENV.fetch("SOLR_PASSWORD", "") %>"
   port: "<%= ENV.fetch("SOLR_PORT", "8983") %>"
   collection: "<%= ENV.fetch("SOLR_COLLECTION", "psul_catalog") %>"
 log:
