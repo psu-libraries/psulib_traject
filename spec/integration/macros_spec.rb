@@ -435,15 +435,15 @@ RSpec.describe 'Macros' do
       [
         { '100' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Primary, Su.' }] } },
         { '700' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Additional, Su.' }] } },
-        { '710' => { 'ind1' => '2', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Big Company. Co.' }] } },
-        { '711' => { 'ind1' => '2', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Big Company. Co.' }] } }
+        { '710' => { 'ind1' => '2', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Historical Society of Pa.' }] } },
+        { '711' => { 'ind1' => '2', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Symposium on Artificial Intelligence, Pa.' }] } }
       ]
     end
     let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => fields, 'leader' => leader)) }
 
     it 'trims terminal periods only from 700 values' do
-      expect(result['addl_author_display_ssm']).to eq ['Additional, Su', 'Big Company. Co.', 'Big Company. Co.']
-      expect(result['all_authors_facet']).to eq ['Primary, Su', 'Additional, Su', 'Big Company. Co.', 'Big Company. Co.']
+      expect(result['addl_author_display_ssm']).to eq ['Additional, Su', 'Historical Society of Pa.', 'Symposium on Artificial Intelligence, Pa.']
+      expect(result['all_authors_facet']).to eq ['Primary, Su', 'Additional, Su', 'Historical Society of Pa.', 'Symposium on Artificial Intelligence, Pa.']
     end
   end
 
