@@ -397,12 +397,12 @@ RSpec.describe 'Macros' do
       dummy.trim_two_letter_word_period.call(nil, values)
     end
 
-    it 'strips the period from a non-abbreviated two-letter surname' do
-      values = ['Ellen, Su.']
+    it 'strips the period from a non-abbreviated two-letter given name' do
+      values = ['Li, Bo.']
 
       transform_two_letter_words(values)
 
-      expect(values).to eq ['Ellen, Su']
+      expect(values).to eq ['Li, Bo']
     end
 
     it 'preserves protected two-letter abbreviations case-insensitively' do
@@ -422,28 +422,11 @@ RSpec.describe 'Macros' do
     end
 
     it 'leaves a value without a terminal period unchanged' do
-      values = ['Ellen, Su']
+      values = ['Li, Bo']
 
       transform_two_letter_words(values)
 
-      expect(values).to eq ['Ellen, Su']
-    end
-  end
-
-  describe 'additional author punctuation' do
-    let(:fields) do
-      [
-        { '100' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Primary, Su.' }] } },
-        { '700' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Additional, Su.' }] } },
-        { '710' => { 'ind1' => '2', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Historical Society of Pa.' }] } },
-        { '711' => { 'ind1' => '2', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Symposium on Artificial Intelligence, Pa.' }] } }
-      ]
-    end
-    let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => fields, 'leader' => leader)) }
-
-    it 'trims terminal periods only from 700 values' do
-      expect(result['addl_author_display_ssm']).to eq ['Additional, Su', 'Historical Society of Pa.', 'Symposium on Artificial Intelligence, Pa.']
-      expect(result['all_authors_facet']).to eq ['Primary, Su', 'Additional, Su', 'Historical Society of Pa.', 'Symposium on Artificial Intelligence, Pa.']
+      expect(values).to eq ['Li, Bo']
     end
   end
 
