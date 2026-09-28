@@ -31,3 +31,7 @@ group :development, :test do
   gem 'rubocop-rspec', '~> 2'
   gem 'simplecov'
 end
+
+gem 'benchmark'
+gem 'logger'
+gem 'ostruct'

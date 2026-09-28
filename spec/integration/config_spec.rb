@@ -112,7 +112,7 @@ RSpec.describe 'Config' do
     end
     let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => fields, 'leader' => leader)) }
 
-    it 'trims terminal periods only from additional personal-name values' do
+    it 'trims terminal periods only from personal-name fields' do
       expect(result['addl_author_display_ssm']).to eq ['Additional, Su', 'Historical Society of Pa.', 'Symposium on Artificial Intelligence, Pa.']
       expect(result['all_authors_facet']).to eq ['Primary, Su', 'Additional, Su', 'Historical Society of Pa.', 'Symposium on Artificial Intelligence, Pa.']
     end
