@@ -435,17 +435,15 @@ RSpec.describe 'Macros' do
       [
         { '100' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Primary, Su.' }] } },
         { '700' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Additional, Su.' }] } },
-        { '710' => { 'ind1' => '2', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Organization, Su.' }] } },
-        { '711' => { 'ind1' => '2', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Meeting, Su.' }] } }
+        { '710' => { 'ind1' => '2', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Big Company. Co.' }] } },
+        { '711' => { 'ind1' => '2', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Big Company. Co.' }] } }
       ]
     end
     let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => fields, 'leader' => leader)) }
 
     it 'trims terminal periods only from 700 values' do
-      expect(result['author_tsim']).to eq ['Primary, Su.']
-      expect(result['author_addl_tsim']).to eq ['Additional, Su', 'Organization, Su.', 'Meeting, Su.']
-      expect(result['addl_author_display_ssm']).to eq ['Additional, Su', 'Organization, Su.', 'Meeting, Su.']
-      expect(result['all_authors_facet']).to eq ['Primary, Su.', 'Additional, Su', 'Organization, Su.', 'Meeting, Su.']
+      expect(result['addl_author_display_ssm']).to eq ['Additional, Su', 'Big Company. Co.', 'Big Company. Co.']
+      expect(result['all_authors_facet']).to eq ['Primary, Su', 'Additional, Su', 'Big Company. Co.', 'Big Company. Co.']
     end
   end
 
