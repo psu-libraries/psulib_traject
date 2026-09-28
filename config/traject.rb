@@ -168,9 +168,7 @@ to_field 'series_title_display_ssm', extract_series_title_display
 to_field 'author_tsim', extract_marc('100aqbcdk:110abcdfgkln:111abcdfgklnpq')
 
 ## Additional authors
-to_field 'author_addl_tsim',
-         extract_marc_without_owner('700aqbcdk:710abcdfgkln:711abcdfgklnpq'),
-         trim_punctuation
+to_field 'author_addl_tsim', extract_marc_without_owner('700aqbcdk:710abcdfgkln:711abcdfgklnpq'), trim_punctuation
 
 ## Authors for faceting
 # Process name values (100 and 700 fields) for all_authors_facet separately
