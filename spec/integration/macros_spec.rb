@@ -413,6 +413,14 @@ RSpec.describe 'Macros' do
       expect(values).to eq ['Smith, John Dr.', 'Smith, John Jr.', 'Smith, John Mr.', 'Smith, John Ms.', 'Smith, John Sr.', 'Smith, John St.', 'Smith, John DR.']
     end
 
+    it 'preserves the period in a single-letter given-name abbreviation' do
+      values = ['Smith, J.']
+
+      transform_two_letter_words(values)
+
+      expect(values).to eq ['Smith, J.']
+    end
+
     it 'leaves a three-letter terminal word unchanged' do
       values = ['Smith, John Doe.']
 
