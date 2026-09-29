@@ -100,4 +100,21 @@ RSpec.describe 'Config' do
       expect(result['subject_other_display_ssm']).to eq ['One', 'Two', 'Three', 'Four']
     end
   end
+
+  describe 'Author field punctuation trimming' do
+    let(:fields) do
+      [
+        { '100' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Primary, Su.' }] } },
+        { '700' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Additional, Su.' }] } },
+        { '710' => { 'ind1' => '2', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Historical Society of Pa.' }] } },
+        { '711' => { 'ind1' => '2', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Symposium on Artificial Intelligence, Pa.' }] } }
+      ]
+    end
+    let(:result) { indexer.map_record(MARC::Record.new_from_hash('fields' => fields, 'leader' => leader)) }
+
+    it 'trims terminal periods only from personal-name fields' do
+      expect(result['addl_author_display_ssm']).to eq ['Additional, Su', 'Historical Society of Pa.', 'Symposium on Artificial Intelligence, Pa.']
+      expect(result['all_authors_facet']).to eq ['Primary, Su', 'Additional, Su', 'Historical Society of Pa.', 'Symposium on Artificial Intelligence, Pa.']
+    end
+  end
 end

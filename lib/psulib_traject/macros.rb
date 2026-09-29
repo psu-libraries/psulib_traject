@@ -5,6 +5,7 @@ PSU_THESIS_CODE = /THESIS-D|THESIS-M/.freeze
 ESTIMATE_TOLERANCE = 15
 MIN_YEAR = 500
 MAX_YEAR = Time.new.year + 6
+AUTHOR_TWO_LETTER_ABBREVIATIONS = %w[dr jr mr ms sr st fr br].freeze
 
 module PsulibTraject
   module Macros
@@ -20,6 +21,19 @@ module PsulibTraject
 
           values = extractor.collect_subfields(field, spec)
           accumulator.concat(values) if values && !values.empty?
+        end
+      end
+    end
+
+    def trim_two_letter_word_period
+      lambda do |_record, accumulator|
+        accumulator.map! do |value|
+          word = /(?<![[:alpha:]])([[:alpha:]]{2})\.$/.match(value)
+          if word && !AUTHOR_TWO_LETTER_ABBREVIATIONS.include?(word[1].downcase)
+            value.delete_suffix('.')
+          else
+            value
+          end
         end
       end
     end

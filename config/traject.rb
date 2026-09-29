@@ -171,7 +171,15 @@ to_field 'author_tsim', extract_marc('100aqbcdk:110abcdfgkln:111abcdfgklnpq')
 to_field 'author_addl_tsim', extract_marc_without_owner('700aqbcdk:710abcdfgkln:711abcdfgklnpq'), trim_punctuation
 
 ## Authors for faceting
-to_field 'all_authors_facet', extract_marc_without_owner('100aqbcdkj:110abcdfgklnj:111abcdfgklnpqj:700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq'), trim_punctuation
+# Process name values (100 and 700 fields) for all_authors_facet separately
+# from the rest, to clean up some name edge case punctuation
+to_field 'all_authors_facet',
+         extract_marc_without_owner('100aqbcdkj:700aqbcdjk'),
+         trim_punctuation,
+         trim_two_letter_word_period
+to_field 'all_authors_facet',
+         extract_marc_without_owner('110abcdfgklnj:111abcdfgklnpqj:710abcdfgjkln:711abcdfgjklnpq'),
+         trim_punctuation
 
 # 386a Author Demographics facet
 to_field 'author_demo_facet', extract_marc('386a'), trim_punctuation
@@ -180,7 +188,15 @@ to_field 'author_demo_facet', extract_marc('386a'), trim_punctuation
 to_field 'author_person_display_ssm', extract_marc('100aqbcdkj'), trim_punctuation
 to_field 'author_corp_display_ssm', extract_marc('110abcdfgklnj'), trim_punctuation
 to_field 'author_meeting_display_ssm', extract_marc('111abcdfgklnpqj'), trim_punctuation
-to_field 'addl_author_display_ssm', extract_marc_without_owner('700aqbcdjk:710abcdfgjkln:711abcdfgjklnpq'), trim_punctuation
+# Process name values (700 fields) for addl_author_display_ssm separately
+# from the rest, to clean up some name edge case punctuation
+to_field 'addl_author_display_ssm',
+         extract_marc_without_owner('700aqbcdjk'),
+         trim_punctuation,
+         trim_two_letter_word_period
+to_field 'addl_author_display_ssm',
+         extract_marc_without_owner('710abcdfgjkln:711abcdfgjklnpq'),
+         trim_punctuation
 
 ## Access facet
 access_facet_processor = PsulibTraject::Processors::AccessFacet.new

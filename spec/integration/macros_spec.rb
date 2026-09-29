@@ -390,6 +390,54 @@ RSpec.describe 'Macros' do
     end
   end
 
+  describe '#trim_two_letter_word_period' do
+    let(:dummy) { Class.new { extend PsulibTraject::Macros } }
+
+    def transform_two_letter_words(values)
+      dummy.trim_two_letter_word_period.call(nil, values)
+    end
+
+    it 'strips the period from a non-abbreviated two-letter given name' do
+      values = ['Li, Bo.']
+
+      transform_two_letter_words(values)
+
+      expect(values).to eq ['Li, Bo']
+    end
+
+    it 'preserves protected two-letter abbreviations case-insensitively' do
+      values = ['Smith, John Dr.', 'Smith, John Jr.', 'Smith, John Mr.', 'Smith, John Ms.', 'Smith, John Sr.', 'Smith, John St.', 'Smith, John DR.']
+
+      transform_two_letter_words(values)
+
+      expect(values).to eq ['Smith, John Dr.', 'Smith, John Jr.', 'Smith, John Mr.', 'Smith, John Ms.', 'Smith, John Sr.', 'Smith, John St.', 'Smith, John DR.']
+    end
+
+    it 'preserves the period in a single-letter given-name abbreviation' do
+      values = ['Smith, J.']
+
+      transform_two_letter_words(values)
+
+      expect(values).to eq ['Smith, J.']
+    end
+
+    it 'leaves a three-letter terminal word unchanged' do
+      values = ['Smith, John Doe.']
+
+      transform_two_letter_words(values)
+
+      expect(values).to eq ['Smith, John Doe.']
+    end
+
+    it 'leaves a value without a terminal period unchanged' do
+      values = ['Li, Bo']
+
+      transform_two_letter_words(values)
+
+      expect(values).to eq ['Li, Bo']
+    end
+  end
+
   describe '#extract_marc_without_owner' do
     let(:fields) { [{ '100' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Smith, John' }, { 'b' => 'Title' }, { 'c' => 'Role' }] } },
                     { '700' => { 'ind1' => '1', 'ind2' => ' ', 'subfields' => [{ 'a' => 'Doe, Jane' }, { 'e' => 'owner' }, { 'b' => 'Title' }] } },
