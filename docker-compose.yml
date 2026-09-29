@@ -9,6 +9,8 @@ services:
       SYMPHONY_DATA_PATH: "${SYMPHONY_DATA_PATH:-/app/data/symphony_data}"
       # database 1 on catalog redis instance
       REDIS_URL: redis://host.docker.internal:6379/1
+      SOLR_USERNAME: "${SOLR_USERNAME:-}"
+      SOLR_PASSWORD: "${SOLR_PASSWORD:-}"
     build: 
       context: . 
     command: ["sleep", "999999"]
