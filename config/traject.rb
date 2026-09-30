@@ -335,7 +335,7 @@ end
 # Material Characteristics
 #
 ## 300 / 340 Physical description / physical medium
-to_field 'phys_desc_ssm', extract_marc('300abcefg3:340abcdefhijkmno3'), trim_punctuation
+to_field 'phys_desc_ssm', extract_marc('300abcefg3:340abcdefghijklmnopq3'), trim_punctuation
 
 ## 380 Form of work
 to_field 'form_work_ssm', extract_marc('380a'), trim_punctuation
