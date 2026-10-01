@@ -91,6 +91,6 @@ bundle exec traject -c config/traject.rb solr/sample_data/sample_psucat.mrc
 For testing purposes you can run traject with the `--debug-mode` flag to
 display the output to the console (and not push the data to Solr).
 
-```
+```bash
 bundle exec traject --debug-mode -c config/traject.rb solr/sample_data/sample_psucat.mrc
 ```
