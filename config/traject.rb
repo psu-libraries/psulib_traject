@@ -473,7 +473,7 @@ to_field 'file_data_type_ssm', extract_marc('516a')
 to_field 'date_place_event_note_ssm', extract_marc('518adop3')
 
 # 520 - Notes Summary
-to_field 'notes_summary_ssim', extract_marc('520ab')
+to_field 'notes_summary_ssim', extract_marc('520abc')
 
 # 521 - Audience
 to_field 'audience_notes_ssm', extract_marc('521| *|3ab:521|8*|3ab:521|3*|3ab:521|4*|3ab')
@@ -529,7 +529,7 @@ to_field 'related_materials_ssm', extract_marc('544|1*|abcden3:544| *|abcden3')
 to_field 'bio_admin_sketch_note_ssm', extract_marc('545abu')
 
 # 546 - Language Note
-to_field 'language_note_ssm', extract_marc('546abc3')
+to_field 'language_note_ssm', extract_marc('546ab3')
 
 # 547 - Title Varies
 to_field 'former_title_ssm', extract_marc('547a')
