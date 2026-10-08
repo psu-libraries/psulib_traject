@@ -586,7 +586,6 @@ to_field 'bound_with_struct' do |record, accumulator|
       when '3'
         { bound_materials_specified: subfield.value }
       end
-      # Test
     end
 
     accumulator << bound_with_arr.compact.reduce(:merge).to_json
