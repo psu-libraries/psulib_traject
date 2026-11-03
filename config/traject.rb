@@ -583,6 +583,8 @@ to_field 'bound_with_struct' do |record, accumulator|
         { bound_format: bound_in_format_map.translate_array([subfield.value])[0] }
       when 'n'
         { bound_callnumber: subfield.value }
+      when '3'
+        { bound_materials_specified: subfield.value }
       end
     end
 
